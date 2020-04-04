@@ -1,7 +1,7 @@
 import React from 'react';
 //import PrivateRoute from '../containers/PrivateRoute';
 import PublicRoute from '../containers/PublicRoute';
-// import Login from '../containers/auth/Login';
+import Login from '../containers/auth/Login';
 // import Register from '../containers/auth/Register';
 import WelcomePage from './WelcomePage'
 import { BrowserRouter, Switch } from 'react-router-dom';
@@ -17,6 +17,7 @@ import {
         <Switch>
           <PublicRoute restricted={false} component={WelcomePage} path={WELCOME} exact />
          
+          <PublicRoute restricted={true} component={Login} path={LOGIN} exact />
         </Switch>
       </BrowserRouter>
   );
