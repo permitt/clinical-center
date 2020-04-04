@@ -1,24 +1,27 @@
-import React from 'react';
-import '../styles/App.css'
+import React, { Component } from 'react'
+import { ConnectedRouter } from 'connected-react-router'
+import { Provider } from 'react-redux'
+import createHistory from 'history/createBrowserHistory'
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import '../styles/css/App.css'
+import Routes from './Routes'
+import store from '../store/Store'
+import '../styles/css/bootstrap.min.css'
+
+const history = createHistory();
+
+class App extends Component {
+  render() {
+    return (
+      <Provider store={store}>
+        <ConnectedRouter history={history}>
+          <div>
+            <Routes />
+          </div>
+        </ConnectedRouter>
+      </Provider>
+    );
+  }
 }
 
 export default App;
