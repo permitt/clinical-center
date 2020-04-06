@@ -1,10 +1,20 @@
-import { AUTH_USER } from '../actions/ActionTypes';
+import { AUTH_USER, SET_ROLE } from '../actions/ActionTypes';
 import AuthService from '../../services/AuthService';
+import { CLINIC_ADMIN } from '../../utils/constants';
 
-const authReducer = (state = AuthService.isAuthenticated(), action) => {
+const initialState = {
+  isAuth : AuthService.isAuthenticated(),
+  role : null
+}
+
+const authReducer = (state = initialState, action) => {
   switch (action.type) {
     case AUTH_USER:
-      return action.payload;
+      return {...state, isAuth: action.payload }
+    case SET_ROLE:
+      console.log('akcija', action)
+      console.log('prethodno stanje', state)
+      return {...state, role : action.payload }
     default:
       return state;
   }

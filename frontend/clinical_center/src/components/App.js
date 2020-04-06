@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import createHistory from 'history/createBrowserHistory'
 
 import '../styles/css/App.css'
-import Routes from './Routes'
+import Routes from './Routes/index'
 import store from '../store/Store'
 import '../styles/css/bootstrap.min.css'
 

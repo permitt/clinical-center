@@ -5,8 +5,8 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import { root, main, button } from '../styles/WelcomePageStyle'
-import { LOGIN, REGISTER } from '../routes'
+import { root, main, button } from '../../styles/WelcomePageStyle'
+import { LOGIN } from '../../routes'
   
 
  function WelcomePage() {
@@ -20,19 +20,11 @@ import { LOGIN, REGISTER } from '../routes'
         <Button
           component={RouterLink}
           to={LOGIN}
-          variant="outlined"
-          style={button}
-        >
-            Login
-        </Button>
-        <Button
-          component={RouterLink}
-          to={REGISTER}
           variant="contained"
           color="primary"
           style={button}
         >
-            Register
+            Login
         </Button>
       </Grid>
       <Container component="main" style={main} maxWidth="md">
