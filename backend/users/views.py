@@ -3,6 +3,8 @@ from rest_framework import generics, viewsets, permissions
 from .serializers import PatientSerializer, MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import Patient
+from .serializers import PatientRegisterSerializer
+from rest_framework import permissions
 # Create your views here.
 
 class PatientViewset(viewsets.ViewSet):
@@ -13,8 +15,13 @@ class PatientViewset(viewsets.ViewSet):
     def perform_create(self, serializer):
         pass
 
-class PatientRegistrationView(generics.GenericAPIView):
-    serializer_class =
+class PatientRegisterView(generics.CreateAPIView):
+    serializer_class = PatientRegisterSerializer
+
+    permission_classes_by_action = {'create': [permissions.AllowAny],
+                                    'list': [permissions.IsAdminUser],
+                                    'retrieve': [],
+                                    'destroy': []}
 
 
 
