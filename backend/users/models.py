@@ -14,13 +14,7 @@ class Patient(models.Model):
     country = models.CharField(max_length=30)
     phoneNumber = models.IntegerField()
     activated = models.BooleanField()
-
-    def __str__(self):
-        return f'{self.firstName} {self.lastName}'
-
-class PatientRegister(Patient):
     approved = models.BooleanField()
-    date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return f'{self.firstName} {self.lastName}'

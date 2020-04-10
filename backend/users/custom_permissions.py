@@ -7,4 +7,9 @@ class IsAdministrator(permissions.BasePermission):
         self.allowed_methods = allowed_methods
 
     def has_permission(self, request, view):
-        pass
+        try:
+            # Ispod ide model Admininistrator klase
+            permission = isinstance(request.user.account, str)
+        except:
+            permission = False
+        return permission

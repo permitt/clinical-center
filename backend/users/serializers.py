@@ -6,7 +6,8 @@ class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         exclude = ['user', 'activated']
-        extra_kwargs = {'email': {'write_only': True}, 'policyNumber': {'write_only': True}}
+        # Mozda neces moc uopste da ih kreiras ovako
+        extra_kwargs = {'email': {'read_only': True}, 'policyNumber': {'read_only': True}}
 
     def create(self, validated_data):
         pass
