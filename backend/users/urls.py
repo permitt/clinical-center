@@ -4,7 +4,7 @@ from . import views
 from rest_framework_simplejwt import views as jwt_views
 
 router = DefaultRouter()
-router.register(r'patient', views.PatientViewset)
+router.register('patient', views.PatientViewset, basename='patient')
 
 urlpatterns = [
     path('token/obtain/', views.MyTokenObtainPairView.as_view(), name='token_create'),  # override sjwt stock token

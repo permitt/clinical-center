@@ -1,5 +1,5 @@
 from django.shortcuts import render
-from rest_framework import viewsets, permissions
+from rest_framework import generics, viewsets, permissions
 from .serializers import PatientSerializer, MyTokenObtainPairSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import Patient
@@ -13,7 +13,8 @@ class PatientViewset(viewsets.ViewSet):
     def perform_create(self, serializer):
         pass
 
-
+class PatientRegistrationView(generics.GenericAPIView):
+    serializer_class =
 
 
 

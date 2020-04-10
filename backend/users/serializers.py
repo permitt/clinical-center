@@ -1,12 +1,24 @@
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import Patient
+from .models import Patient, PatientRegister
 
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
-        model: Patient
+        model = Patient
         exclude = ['user', 'activated']
         extra_kwargs = {'email': {'write_only': True}, 'policyNumber': {'write_only': True}}
+
+    def create(self, validated_data):
+        pass
+
+
+class PatientRegisterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = PatientRegister
+        fields = '__all__'
+        extra_kwargs = {}
+
+
 
 # JWT custom Serializer
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
@@ -20,6 +32,7 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             token['last_name'] = user.account.lastName
             token['email'] = user.account.email
 
+            # Will be expanded as we add more roles
             if isinstance(user.account, Patient):
                 token['role'] = "PATIENT"
             else:
