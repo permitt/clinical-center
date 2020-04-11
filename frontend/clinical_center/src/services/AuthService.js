@@ -1,7 +1,8 @@
-import ApiService from './ApiService';
+import ApiService from './ApiService'
+import jwt_decode from 'jwt-decode'
 
 const ENDPOINTS = {
-  LOGIN: '/api/auth/login',
+  LOGIN: 'api/token/obtain/',
   REGISTER: '/api/auth/register',
   LOGOUT: '/logout'
 };
@@ -32,55 +33,62 @@ class AuthService extends ApiService {
   };
 
   createSession = user => {
-    localStorage.setItem('user', JSON.stringify(user));
-    this.setAuthorizationHeader();
+    localStorage.setItem('user', JSON.stringify(user))
+    const decodedToken = jwt_decode(user.access)
+    localStorage.setItem('role', decodedToken.role)
+    this.setAuthorizationHeader()
   };
 
   destroySession = () => {
-    localStorage.clear();
-    this.api.removeHeaders(['Authorization']);
+    localStorage.clear()
+    this.api.removeHeaders(['Authorization'])
   };
 
   login = async loginData => {
-    const { data } = await this.apiClient.post(ENDPOINTS.LOGIN, loginData);
-    this.createSession(data);
-    return data;
+    const { data } = await this.apiClient.post(ENDPOINTS.LOGIN, loginData)
+    this.createSession(data)
+    return data
   };
 
   signup = async signupData => {
-    const { data } = await this.apiClient.post(ENDPOINTS.REGISTER, signupData);
+    const { data } = await this.apiClient.post(ENDPOINTS.REGISTER, signupData)
 
-    return data;
+    return data
   };
 
   logout = async () => {
-    const { data } = await this.apiClient.post(ENDPOINTS.LOGOUT);
-    this.destroySession();
-    return { ok: true, data };
+    const { data } = await this.apiClient.post(ENDPOINTS.LOGOUT)
+    this.destroySession()
+    return { ok: true, data }
   };
 
   getToken = () => {
-    const user = localStorage.getItem('user');
-    return user ? JSON.parse(user).access_token : undefined;
+    const user = localStorage.getItem('user')
+    return user ? JSON.parse(user).access : undefined
   };
 
   isAuthenticated = () => {
-    const user = JSON.parse(localStorage.getItem('user'));
-    return user && user.access_token ? true : false;
+    const user = JSON.parse(localStorage.getItem('user'))
+    return user && user.access ? true : false
   };
 
   getUser = () => {
-    const user = localStorage.getItem('user');
-    return JSON.parse(user);
+    const user = localStorage.getItem('user')
+    return JSON.parse(user)
   };
 
+  getUserRole = () => {
+    const role = localStorage.getItem('role')
+    return role
+  }
+
   updateUserInStorage = property => {
-    const user = localStorage.getItem('user');
-    let jsonUser = JSON.parse(user);
-    jsonUser = { ...jsonUser, ...property };
-    localStorage.setItem('user', JSON.stringify(jsonUser));
+    const user = localStorage.getItem('user')
+    let jsonUser = JSON.parse(user)
+    jsonUser = { ...jsonUser, ...property }
+    localStorage.setItem('user', JSON.stringify(jsonUser))
   };
 }
 
-const authService = new AuthService();
-export default authService;
+const authService = new AuthService()
+export default authService

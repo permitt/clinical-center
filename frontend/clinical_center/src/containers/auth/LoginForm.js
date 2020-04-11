@@ -23,7 +23,7 @@ class LoginForm extends Component {
     return (
         <Formik 
           initialValues={{
-            email: '',
+            username: '',
             password: ''
           }}
           validationSchema={loginSchema}
@@ -34,12 +34,12 @@ class LoginForm extends Component {
               <Grid item xs={12}>
               <Field
                 component={FormikTextField}
-                type="email"
-                name="email"
+                type="text"
+                name="username"
                 variant="outlined"
                 required
                 fullWidth
-                label="Email Address"
+                label="Username"
               />  
             </Grid>
             <Grid item xs={12}>

@@ -13,8 +13,7 @@ export const registerSchema = Yup.object().shape({
 });
 
 export const loginSchema = Yup.object().shape({
-  email: Yup.string()
-    .email()
+  username: Yup.string()
     .required()
     .max(255),
   password: Yup.string().required().min(6)

@@ -23,8 +23,9 @@ const homePage = role => {
 
 export function Dashboard({ role }) {
   
+    console.log(role)
     return (
-    <div> {homePage(role)}</div>
+    <div> nesto nmnogo jako</div>
         
     )
 }
