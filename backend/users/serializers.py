@@ -8,12 +8,13 @@ class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         exclude = ['user', 'activated']
-        extra_kwargs = {'email': {'read_only': True}, 'policyNumber': {'read_only': True}}
 
     def create(self, validated_data):
         email = validated_data.get("email", None)
         password = validated_data.get("password", None)
-        user = User.objects.create(email=email, password=password, is_active=False)
+        user = User.objects.create(username=email,email=email, is_active=False)
+        user.set_password(password)
+        user.save()
         patient = Patient(**validated_data)
         patient.user = user
         patient.save()

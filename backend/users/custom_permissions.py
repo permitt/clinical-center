@@ -2,9 +2,9 @@ from rest_framework import permissions
 
 class CustomPatientPermissions(permissions.BasePermission):
 
-    def __init__(self, allowed_methods):
+    def __init__(self, allowed_methods=['GET', 'POST', 'DELETE', 'PUT']):
         super().__init__()
-        self.allowed_methods = allowed_methods
+        self.allowed_methods=allowed_methods
 
     # def has_permission(self, request, view):
     #     try:
@@ -20,12 +20,13 @@ class CustomPatientPermissions(permissions.BasePermission):
             if obj.approved == True and obj.account == request.user:
                 return True
             # Only Administrator
-            if isinstance(request.user.account, str):
+            if hasattr(request.user, 'account'):
                 return True
             return False
         elif request.method == "DELETE":
             # Only Administrator
-            return isinstance(request.user.account, str)
+            print(request.user)
+            return hasattr(request.user, 'account')
         elif request.method == "GET":
             return request.user and request.user.is_authenticated
         else:
