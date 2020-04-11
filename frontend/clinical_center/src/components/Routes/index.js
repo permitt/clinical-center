@@ -15,7 +15,7 @@ function Routes() {
   return (
     <BrowserRouter>
         <Switch>
-          <PublicRoute restricted={false} component={WelcomePage} path={WELCOME} exact />
+          <PublicRoute restricted={true} component={WelcomePage} path={WELCOME} exact />
           <PublicRoute restricted={true} component={Login} path={LOGIN} exact />
           <PrivateRoute component={Dashboard} path={DASHBOARD} exact />
         </Switch>
