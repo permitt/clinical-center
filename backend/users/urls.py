@@ -11,5 +11,3 @@ urlpatterns = [
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     *router.urls,
 ]
-
-

@@ -3,15 +3,14 @@ from rest_framework import generics, viewsets, permissions
 from .serializers import PatientSerializer, MyTokenObtainPairSerializer, PatientRegisterSerializer
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import Patient
+from . import custom_permissions
 # Create your views here.
 
 class PatientViewset(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [custom_permissions.CustomPatientPermissions]
 
-    def perform_create(self, serializer):
-        pass
 
 
 # JWT customized view

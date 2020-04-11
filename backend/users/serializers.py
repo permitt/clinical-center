@@ -1,23 +1,29 @@
+from django.contrib.auth.models import User
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
-from .models import Patient, PatientRegister
+from .models import Patient
+
 
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
         exclude = ['user', 'activated']
-        # Mozda neces moc uopste da ih kreiras ovako
         extra_kwargs = {'email': {'read_only': True}, 'policyNumber': {'read_only': True}}
 
     def create(self, validated_data):
-        pass
+        email = validated_data.get("email", None)
+        password = validated_data.get("password", None)
+        user = User.objects.create(email=email, password=password, is_active=False)
+        patient = Patient(**validated_data)
+        patient.user = user
+        patient.save()
+        return patient
 
+    def update(self, instance, validated_data):
+        # Will send an email when updated to approved
+        if instance.approved is False and validated_data.approved is True:
+            pass
 
-class PatientRegisterSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PatientRegister
-        fields = '__all__'
-        extra_kwargs = {}
 
 
 

@@ -13,8 +13,8 @@ class Patient(models.Model):
     city = models.CharField(max_length=30)
     country = models.CharField(max_length=30)
     phoneNumber = models.IntegerField()
-    activated = models.BooleanField()
-    approved = models.BooleanField()
+    activated = models.BooleanField(default=False)
+    approved = models.BooleanField(default=False)
 
     def __str__(self):
         return f'{self.firstName} {self.lastName}'
