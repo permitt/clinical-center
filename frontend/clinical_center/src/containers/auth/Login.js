@@ -22,7 +22,7 @@ class Login extends Component {
         <Helmet>
           <title>Login</title>
         </Helmet>
-        <Paper style={paper}>
+        <Paper style={paper} elevation={3}>
           <Avatar style={avatar}>
             <LockOutlinedIcon />
           </Avatar>
