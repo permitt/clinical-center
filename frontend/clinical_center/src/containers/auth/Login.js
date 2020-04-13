@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link as RouterLink } from 'react-router-dom';
 import { Helmet } from 'react-helmet';
 import Container from '@material-ui/core/Container';
 import Grid from '@material-ui/core/Grid';
@@ -12,6 +12,8 @@ import { logIn } from '../../store/actions/AuthActions';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import LoginForm from './LoginForm';
 import { paper, avatar } from '../../styles/FormStyle';
+import Link from '@material-ui/core/Link';
+import { REGISTER } from '../../routes';
 
 
 class Login extends Component {
@@ -29,10 +31,17 @@ class Login extends Component {
           <Typography component="h1" variant="h5">
             Login
           </Typography>
-              <Grid>
-                <Divider />
-                <LoginForm onSubmit={logIn}/>
-              </Grid>
+          <Grid>
+            <Divider />
+            <LoginForm onSubmit={logIn} />
+          </Grid>
+          <Grid container justify="flex-end">
+            <Grid item>
+              <Link component={RouterLink} to={REGISTER} variant="body2">
+                Don't have an account? Register
+                  </Link>
+            </Grid>
+          </Grid>
         </Paper>
       </Container>
     );
