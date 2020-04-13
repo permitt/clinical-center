@@ -44,7 +44,7 @@ class RegisterForm extends Component {
               <Field
                 component={FormikTextField}
                 type="text"
-                name="name"
+                name="firstName"
                 variant="outlined"
                 required
                 fullWidth
@@ -56,7 +56,7 @@ class RegisterForm extends Component {
               <Field
                 component={FormikTextField}
                 type="text"
-                name="lastname"
+                name="lastName"
                 variant="outlined"
                 required
                 fullWidth
@@ -132,7 +132,6 @@ class RegisterForm extends Component {
                 required
                 fullWidth
                 label="Phone Number"
-                autoFocus
               />
             </Grid>
             <Grid item xs={6}>
@@ -179,9 +178,11 @@ const mapStateToProps = state => {
   };
 };
 
+const mapDispatchToProps = { register };
+
 export default withRouter(
   connect(
     mapStateToProps,
-    { register }
+    mapDispatchToProps,
   )(RegisterForm)
 );
