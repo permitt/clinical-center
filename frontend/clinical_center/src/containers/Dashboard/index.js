@@ -11,7 +11,7 @@ import GridContainer from "../../components/Grid/GridContainer.js";
 const homePage = role => {
     switch(role) {
         case CLINIC_ADMIN:
-           return <ClAdminHome />
+           return ClAdminHome 
         case PATIENT:
             return null
         case DOCTOR:
@@ -25,7 +25,9 @@ export function Dashboard({ role }) {
   
     console.log(role)
     return (
-    <div> nesto nmnogo jako</div>
+    <div>neki lejout 
+        {homePage(role)}
+    </div>
         
     )
 }

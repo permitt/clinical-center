@@ -8,6 +8,7 @@ function ClAdminHome() {
 
     return (
       <div>
+        admin klinike
          <Sidebar
         // routes={routes}
         // logoText={"Creative Tim"}

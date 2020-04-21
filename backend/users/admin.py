@@ -3,3 +3,5 @@ from . import models
 
 # Register your models here.
 admin.site.register(models.Patient)
+admin.site.register(models.ClinicAdmin)
+admin.site.register(models.Doctor)
