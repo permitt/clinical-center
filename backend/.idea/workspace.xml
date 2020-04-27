@@ -2,11 +2,20 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="38c194b1-7fdb-45e2-ac03-b17cc1705ce6" name="Default Changelist" comment="">
+<<<<<<< HEAD
       <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/components/Table/Table.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/components/Table/Table.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/store/actions/DoctorActions.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/store/actions/DoctorActions.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/store/reducers/DoctorReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/store/reducers/DoctorReducer.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/store/sagas/DoctorSagas.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/store/sagas/DoctorSagas.js" afterDir="false" />
+=======
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/db.sqlite3" beforeDir="false" afterPath="$PROJECT_DIR$/db.sqlite3" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/custom_permissions.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/custom_permissions.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/serializers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/urls.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/views.py" afterDir="false" />
+>>>>>>> 10b1c604680f8c828d5ab1201acd1a7b59ea8ec0
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,11 +25,16 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file pinned="false" current-in-tab="false">
+      <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/users/custom_permissions.py">
           <provider selected="true" editor-type-id="text-editor">
+<<<<<<< HEAD
             <state relative-caret-position="157">
               <caret line="67" selection-start-line="67" selection-end-line="67" />
+=======
+            <state relative-caret-position="142">
+              <caret line="94" column="54" selection-start-line="94" selection-start-column="42" selection-end-line="94" selection-end-column="54" />
+>>>>>>> 10b1c604680f8c828d5ab1201acd1a7b59ea8ec0
             </state>
           </provider>
         </entry>
@@ -38,7 +52,11 @@
         <entry file="file://$PROJECT_DIR$/users/serializers.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="-22">
+<<<<<<< HEAD
               <caret line="77" column="33" selection-start-line="77" selection-start-column="26" selection-end-line="77" selection-end-column="33" />
+=======
+              <caret line="73" column="33" selection-start-line="73" selection-start-column="26" selection-end-line="73" selection-end-column="33" />
+>>>>>>> 10b1c604680f8c828d5ab1201acd1a7b59ea8ec0
               <folding>
                 <element signature="e#0#43#0" expanded="true" />
               </folding>
@@ -59,7 +77,11 @@
         <entry file="file://$PROJECT_DIR$/users/urls.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="119">
+<<<<<<< HEAD
               <caret line="7" selection-start-line="7" selection-end-line="7" />
+=======
+              <caret line="7" column="45" selection-start-line="7" selection-start-column="45" selection-end-line="7" selection-end-column="45" />
+>>>>>>> 10b1c604680f8c828d5ab1201acd1a7b59ea8ec0
               <folding>
                 <element signature="e#0#28#0" expanded="true" />
               </folding>
@@ -71,7 +93,11 @@
         <entry file="file://$PROJECT_DIR$/users/views.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="459">
+<<<<<<< HEAD
               <caret line="39" column="63" selection-start-line="39" selection-start-column="63" selection-end-line="39" selection-end-column="63" />
+=======
+              <caret line="39" column="68" selection-start-line="39" selection-start-column="68" selection-end-line="39" selection-end-column="68" />
+>>>>>>> 10b1c604680f8c828d5ab1201acd1a7b59ea8ec0
               <folding>
                 <element signature="e#0#43#0" expanded="true" />
               </folding>
@@ -120,6 +146,7 @@
     <findStrings>
       <find>rest</find>
       <find>cors</find>
+      <find>CustomPatientPermissions</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -130,11 +157,12 @@
       <list>
         <option value="$PROJECT_DIR$/clinical_center/urls.py" />
         <option value="$PROJECT_DIR$/clinical_center/settings.py" />
-        <option value="$PROJECT_DIR$/users/custom_permissions.py" />
         <option value="$PROJECT_DIR$/users/models.py" />
-        <option value="$PROJECT_DIR$/users/views.py" />
-        <option value="$PROJECT_DIR$/users/serializers.py" />
         <option value="$PROJECT_DIR$/users/admin.py" />
+        <option value="$PROJECT_DIR$/users/urls.py" />
+        <option value="$PROJECT_DIR$/users/serializers.py" />
+        <option value="$PROJECT_DIR$/users/views.py" />
+        <option value="$PROJECT_DIR$/users/custom_permissions.py" />
       </list>
     </option>
   </component>
@@ -277,12 +305,16 @@
     <frame x="-7" y="-7" width="1295" height="735" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.24960254" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.24960254" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
+<<<<<<< HEAD
       <window_info anchor="bottom" id="Run" order="2" visible="true" weight="0.4859038" />
+=======
+      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.4859038" />
+>>>>>>> 10b1c604680f8c828d5ab1201acd1a7b59ea8ec0
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
@@ -297,10 +329,30 @@
     </layout>
   </component>
   <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/users/apps.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/users/admin.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="6" column="33" selection-start-line="6" selection-start-column="33" selection-end-line="6" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/clinical_center/settings.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-1563">
           <caret line="47" column="1" selection-start-line="47" selection-start-column="1" selection-end-line="47" selection-end-column="1" />
+<<<<<<< HEAD
+=======
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/clinical_center/wsgi.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="238">
+          <caret line="16" lean-forward="true" selection-start-line="16" selection-end-line="16" />
+>>>>>>> 10b1c604680f8c828d5ab1201acd1a7b59ea8ec0
         </state>
       </provider>
     </entry>
@@ -314,6 +366,7 @@
         </state>
       </provider>
     </entry>
+<<<<<<< HEAD
     <entry file="file://$PROJECT_DIR$/users/apps.py">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -328,6 +381,46 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-22">
           <caret line="77" column="33" selection-start-line="77" selection-start-column="26" selection-end-line="77" selection-end-column="33" />
+=======
+    <entry file="file://$PROJECT_DIR$/users/serializers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-22">
+          <caret line="73" column="33" selection-start-line="73" selection-start-column="26" selection-end-line="73" selection-end-column="33" />
+>>>>>>> 10b1c604680f8c828d5ab1201acd1a7b59ea8ec0
+          <folding>
+            <element signature="e#0#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+<<<<<<< HEAD
+    <entry file="file://$PROJECT_DIR$/users/models.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="85">
+          <caret line="24" column="64" selection-start-line="24" selection-start-column="52" selection-end-line="24" selection-end-column="64" />
+=======
+    <entry file="file://$PROJECT_DIR$/users/tests.py">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/users/urls.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="119">
+          <caret line="7" column="45" selection-start-line="7" selection-start-column="45" selection-end-line="7" selection-end-column="45" />
+          <folding>
+            <element signature="e#0#28#0" expanded="true" />
+          </folding>
+>>>>>>> 10b1c604680f8c828d5ab1201acd1a7b59ea8ec0
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/users/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="459">
+<<<<<<< HEAD
+          <caret line="39" column="63" selection-start-line="39" selection-start-column="63" selection-end-line="39" selection-end-column="63" />
+=======
+          <caret line="39" column="68" selection-start-line="39" selection-start-column="68" selection-end-line="39" selection-end-column="68" />
+>>>>>>> 10b1c604680f8c828d5ab1201acd1a7b59ea8ec0
           <folding>
             <element signature="e#0#43#0" expanded="true" />
           </folding>
@@ -341,23 +434,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/users/views.py">
+    <entry file="file://$PROJECT_DIR$/users/custom_permissions.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="459">
-          <caret line="39" column="63" selection-start-line="39" selection-start-column="63" selection-end-line="39" selection-end-column="63" />
-          <folding>
-            <element signature="e#0#43#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/users/tests.py">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/users/admin.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="85">
-          <caret line="6" column="33" selection-start-line="6" selection-start-column="33" selection-end-line="6" selection-end-column="33" />
+        <state relative-caret-position="142">
+          <caret line="94" column="54" selection-start-line="94" selection-start-column="42" selection-end-line="94" selection-end-column="54" />
         </state>
       </provider>
     </entry>
