@@ -1,5 +1,5 @@
 import React from 'react'
-import { BrowserRouter, Switch } from 'react-router-dom'
+import { BrowserRouter, Switch, Redirect } from 'react-router-dom'
 
 import PrivateRoute from '../../containers/PrivateRoute'
 import PublicRoute from '../../containers/PublicRoute'
@@ -14,6 +14,7 @@ import {
   REGISTER,
   DASHBOARD
 } from '../../routes'
+import ClAdminHome from '../HomePage/DoctorHome'
 
 function Routes() {
   return (
@@ -23,6 +24,7 @@ function Routes() {
           <PublicRoute restricted={true} component={Login} path={LOGIN} exact />
           <PrivateRoute component={Dashboard} path={DASHBOARD} />
           <PublicRoute restricted={true} component={Register} path={REGISTER} exact />
+          <PrivateRoute component={ClAdminHome} path="/dashboard/neka" />
         </Switch>
       </BrowserRouter>
   );

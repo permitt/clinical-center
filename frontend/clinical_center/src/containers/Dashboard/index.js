@@ -5,33 +5,18 @@ import { compose } from 'redux'
 
 import { CLINIC_ADMIN, PATIENT, DOCTOR } from '../../utils/constants'
 import ClAdminHome from '../../components/HomePage/ClAdminHome'
-import GridItem from "../../components/Grid/GridItem.js";
-import GridContainer from "../../components/Grid/GridContainer.js";
-
-const homePage = role => {
-    switch(role) {
-        case CLINIC_ADMIN:
-           return ClAdminHome 
-        case PATIENT:
-            return null
-        case DOCTOR:
-            return null
-        default:
-           return null
-    }
-}
+import PatientHome from '../../components/HomePage/PatientHome'
+import DoctorHome from '../../components/HomePage/DoctorHome'
 
 export function Dashboard({ role }) {
-  
-    console.log(role)
     return (
-    <div>neki lejout 
-        {homePage(role)}
+    <div>
+        { role === DOCTOR && <DoctorHome />}
+        { role === CLINIC_ADMIN && <ClAdminHome />}
+        { role === PATIENT && <PatientHome />}
     </div>
-        
     )
 }
-
 
 Dashboard.propTypes = {
     role: PropTypes.string
