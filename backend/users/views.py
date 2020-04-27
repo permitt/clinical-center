@@ -37,7 +37,7 @@ class ClinicAdminViewset(viewsets.ModelViewSet):
 class DoctorViewset(viewsets.ModelViewSet):
     queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [custom_permissions.CustomDoctorPermissions]
     lookup_field = 'email'
     lookup_value_regex = '[\w@.]+'
 

@@ -63,10 +63,6 @@ class DoctorSerializer(serializers.ModelSerializer):
         doctor.save()
         return doctor
 
-    def update(self, instance, validated_data):
-        # Will send an email when updated to approved
-        if instance.approved is False and validated_data.approved is True:
-            pass
 
 # JWT custom Serializer
 class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
