@@ -8,7 +8,7 @@ import GridItem from '../../components/Grid/GridItem'
 import Image from "../../assets/img/sidebar-3.jpg"
 import logo from "../../assets/img/reactlogo.png";
 
-import Sidebar from "../Sidebar/Sidebar"
+import Sidebar from "../../components/Sidebar/Sidebar"
 
 
 export default function DoctorHome({...rest}) {
@@ -38,7 +38,7 @@ export default function DoctorHome({...rest}) {
     <div> 
       nesto
       {/* //otkomentarisati kod ispod kad se doda komponenta table */}
-      {renderTable && <Table />}
+      {/* {renderTable && <Table />} */}
     </div>
   </div>
   );

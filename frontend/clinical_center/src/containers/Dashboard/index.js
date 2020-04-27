@@ -4,9 +4,9 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 
 import { CLINIC_ADMIN, PATIENT, DOCTOR } from '../../utils/constants'
-import ClAdminHome from '../../components/HomePage/ClAdminHome'
-import PatientHome from '../../components/HomePage/PatientHome'
-import DoctorHome from '../../components/HomePage/DoctorHome'
+import ClAdminHome from '../HomePage/ClAdminHome'
+import PatientHome from '../HomePage/PatientHome'
+import DoctorHome from '../HomePage/DoctorHome'
 
 export function Dashboard({ role }) {
     return (

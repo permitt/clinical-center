@@ -14,7 +14,6 @@ import {
   REGISTER,
   DASHBOARD
 } from '../../routes'
-import ClAdminHome from '../HomePage/DoctorHome'
 
 function Routes() {
   return (
@@ -24,7 +23,6 @@ function Routes() {
           <PublicRoute restricted={true} component={Login} path={LOGIN} exact />
           <PrivateRoute component={Dashboard} path={DASHBOARD} />
           <PublicRoute restricted={true} component={Register} path={REGISTER} exact />
-          <PrivateRoute component={ClAdminHome} path="/dashboard/neka" />
         </Switch>
       </BrowserRouter>
   );
