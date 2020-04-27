@@ -14,55 +14,57 @@ import { register } from '../../store/actions/AuthActions';
 const FormikTextField = withFormikField(TextField);
 
 class RegisterForm extends Component {
-  
+
   submit = (values) => {
+
     this.props.register(values);
   };
 
   render() {
-    return ( 
-        <Formik 
-          initialValues={{
-            name: '',
-            lastname: '',
-            email: '',
-            address: '',
-            city: '',
-            country: '',
-            jmbg: '',
-            password: '',
-            passwordConfirm: ''
-          }}
-          validationSchema={registerSchema}
-          onSubmit={this.submit}
-          style={formStyle}>
-          <Form>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
-                <Field
-                  component={FormikTextField}
-                  type="text"
-                  name="name"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  label="Name"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Field
-                  component={FormikTextField}
-                  type="text"
-                  name="lastname"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  label="Lastname"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12}>
+    return (
+      <Formik
+        initialValues={{
+          firstName: '',
+          lastName: '',
+          email: '',
+          address: '',
+          city: '',
+          country: '',
+          policyNumber: '',
+          phoneNumber: '',
+          password: '',
+          password2: ''
+        }}
+        validationSchema={registerSchema}
+        onSubmit={this.submit}
+        style={formStyle}>
+        <Form>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
+              <Field
+                component={FormikTextField}
+                type="text"
+                name="firstName"
+                variant="outlined"
+                required
+                fullWidth
+                label="Name"
+                autoFocus
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Field
+                component={FormikTextField}
+                type="text"
+                name="lastName"
+                variant="outlined"
+                required
+                fullWidth
+                label="Lastname"
+                autoFocus
+              />
+            </Grid>
+            <Grid item xs={12}>
               <Field
                 component={FormikTextField}
                 type="email"
@@ -74,53 +76,64 @@ class RegisterForm extends Component {
               />
             </Grid>
             <Grid item xs>
-                <Field
-                  component={FormikTextField}
-                  type="text"
-                  name="address"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  label="Address"
-                  autoFocus
-                />
+              <Field
+                component={FormikTextField}
+                type="text"
+                name="address"
+                variant="outlined"
+                required
+                fullWidth
+                label="Address"
+                autoFocus
+              />
             </Grid>
             <Grid item xs>
-                <Field
-                  component={FormikTextField}
-                  type="text"
-                  name="city"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  label="City"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs>
-                <Field
-                  component={FormikTextField}
-                  type="text"
-                  name="country"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  label="Country"
-                  autoFocus
-                />
-              </Grid>
-              <Grid item xs={12}>
-                <Field
-                  component={FormikTextField}
-                  type="text"
-                  name="jmbg"
-                  variant="outlined"
-                  required
-                  fullWidth
-                  label="Personal id"
-                  autoFocus
-                />
-              </Grid>
+              <Field
+                component={FormikTextField}
+                type="text"
+                name="city"
+                variant="outlined"
+                required
+                fullWidth
+                label="City"
+                autoFocus
+              />
+            </Grid>
+            <Grid item xs>
+              <Field
+                component={FormikTextField}
+                type="text"
+                name="country"
+                variant="outlined"
+                required
+                fullWidth
+                label="Country"
+                autoFocus
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Field
+                component={FormikTextField}
+                type="text"
+                name="policyNumber"
+                variant="outlined"
+                required
+                fullWidth
+                label="Policy Number"
+                autoFocus
+              />
+            </Grid>
+            <Grid item xs={12}>
+              <Field
+                component={FormikTextField}
+                type="text"
+                name="phoneNumber"
+                variant="outlined"
+                required
+                fullWidth
+                label="Phone Number"
+              />
+            </Grid>
             <Grid item xs={6}>
               <Field
                 component={FormikTextField}
@@ -136,7 +149,7 @@ class RegisterForm extends Component {
               <Field
                 component={FormikTextField}
                 type="password"
-                name="passwordConfirm"
+                name="password2"
                 variant="outlined"
                 required
                 fullWidth
@@ -165,13 +178,11 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = {
-  register
-};
+const mapDispatchToProps = { register };
 
 export default withRouter(
   connect(
     mapStateToProps,
-    mapDispatchToProps
+    mapDispatchToProps,
   )(RegisterForm)
 );

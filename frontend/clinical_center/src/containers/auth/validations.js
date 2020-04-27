@@ -1,12 +1,15 @@
 import * as Yup from 'yup';
 
 export const registerSchema = Yup.object().shape({
-  name: Yup.string().required(),
+  firstName: Yup.string().required(),
+  lastName: Yup.string().required(),
+  policyNumber: Yup.number().required(),
+  phoneNumber: Yup.number().required(),
   email: Yup.string()
     .email()
     .required(),
   password: Yup.string().required().min(6),
-  passwordConfirm: Yup.string()
+  password2: Yup.string()
     .oneOf([Yup.ref('password'), null], "Passwords don't match")
     .required()
 

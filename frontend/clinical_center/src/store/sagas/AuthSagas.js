@@ -13,7 +13,7 @@ export function* userLogin({ payload }) {
     const decoded = jwt_decode(response.access)
     yield put(setRole(decoded.role))
     yield put(push(DASHBOARD))
-  } catch (error) {    
+  } catch (error) {
     yield put(loginError(true))
   }
 }

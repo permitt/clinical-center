@@ -3,7 +3,7 @@ import jwt_decode from 'jwt-decode'
 
 const ENDPOINTS = {
   LOGIN: 'api/token/obtain/',
-  REGISTER: '/api/auth/register',
+  REGISTER: 'api/patient/',
   LOGOUT: '/logout'
 };
 
