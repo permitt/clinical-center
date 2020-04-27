@@ -11,7 +11,7 @@ import {
     };
   };
   
-  export const setDoctors = ({ data: payload })=> {
+  export const setDoctors = payload => {
     return {
       type: SET_DOCTORS,
       payload

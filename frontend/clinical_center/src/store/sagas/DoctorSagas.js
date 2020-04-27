@@ -6,6 +6,7 @@ import { setDoctors } from '../actions/DoctorActions';
 export function* doctorsGet(action) {
   try {
     const { data } = yield call(() => doctorService.getDoctors())
+    console.log('iz sage', data)
     yield put(setDoctors(data));
   } catch (error) {
     console.log({ error });

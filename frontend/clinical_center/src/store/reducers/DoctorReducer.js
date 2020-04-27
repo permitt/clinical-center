@@ -6,6 +6,7 @@ const initialState = {
 const doctorReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_DOCTORS:
+      console.log(action.payload)
       return { ...state, all: action.payload }
     default:
       return state;
