@@ -1,7 +1,7 @@
 import ApiService from './ApiService';
 
 const ENDPOINTS = {
-  DOCTORS: '/api/doctors',
+  DOCTORS: '/api/doctor',
 };
 
 class DoctorService extends ApiService {
