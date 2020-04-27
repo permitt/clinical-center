@@ -2,7 +2,7 @@ import {
   drawerWidth,
   transition,
   container
-} from "assets/jss/material-dashboard-react.js";
+} from "../../material-dashboard-react"
 
 const appStyle = theme => ({
   wrapper: {
@@ -30,6 +30,14 @@ const appStyle = theme => ({
   container,
   map: {
     marginTop: "70px"
+  },
+  table: {
+    display: 'block',
+    marginLeft: 'auto',
+    marginRight: 'auto',
+    marginTop:'40px',
+    height:'80%',
+    width: '80%'
   }
 });
 

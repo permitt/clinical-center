@@ -1,73 +1,71 @@
-import React from "react";
-import PropTypes from "prop-types";
-// @material-ui/core components
-import { makeStyles } from "@material-ui/core/styles";
-import Table from "@material-ui/core/Table";
-import TableHead from "@material-ui/core/TableHead";
-import TableRow from "@material-ui/core/TableRow";
-import TableBody from "@material-ui/core/TableBody";
-import TableCell from "@material-ui/core/TableCell";
-// core components
-import styles from "../assets/jss/material-dashboard-react/components/tableStyle.js";
+import React from 'react';
+import MaterialTable from 'material-table';
 
-const useStyles = makeStyles(styles);
+export default function Table() {
+  const [state, setState] = React.useState({
+    columns: [
+      { title: 'Name', field: 'name' },
+      { title: 'Surname', field: 'surname' },
+      { title: 'Birth Year', field: 'birthYear', type: 'numeric' },
+      {
+        title: 'Birth Place',
+        field: 'birthCity',
+        lookup: { 34: 'İstanbul', 63: 'Şanlıurfa' },
+      },
+    ],
+    data: [
+      { name: 'Mehmet', surname: 'Baran', birthYear: 1987, birthCity: 63 },
+      {
+        name: 'Zerya Betül',
+        surname: 'Baran',
+        birthYear: 2017,
+        birthCity: 34,
+      },
+    ],
+  });
 
-export default function CustomTable(props) {
-  const classes = useStyles();
-  const { tableHead, tableData, tableHeaderColor } = props;
   return (
-    <div className={classes.tableResponsive}>
-      <Table className={classes.table}>
-        {tableHead !== undefined ? (
-          <TableHead className={classes[tableHeaderColor + "TableHeader"]}>
-            <TableRow className={classes.tableHeadRow}>
-              {tableHead.map((prop, key) => {
-                return (
-                  <TableCell
-                    className={classes.tableCell + " " + classes.tableHeadCell}
-                    key={key}
-                  >
-                    {prop}
-                  </TableCell>
-                );
-              })}
-            </TableRow>
-          </TableHead>
-        ) : null}
-        <TableBody>
-          {tableData.map((prop, key) => {
-            return (
-              <TableRow key={key} className={classes.tableBodyRow}>
-                {prop.map((prop, key) => {
-                  return (
-                    <TableCell className={classes.tableCell} key={key}>
-                      {prop}
-                    </TableCell>
-                  );
-                })}
-              </TableRow>
-            );
-          })}
-        </TableBody>
-      </Table>
-    </div>
+    <MaterialTable
+      title="Editable Example"
+      columns={state.columns}
+      data={state.data}
+      editable={{
+        onRowAdd: (newData) =>
+          new Promise((resolve) => {
+            setTimeout(() => {
+              resolve();
+              setState((prevState) => {
+                const data = [...prevState.data];
+                data.push(newData);
+                return { ...prevState, data };
+              });
+            }, 600);
+          }),
+        onRowUpdate: (newData, oldData) =>
+          new Promise((resolve) => {
+            setTimeout(() => {
+              resolve();
+              if (oldData) {
+                setState((prevState) => {
+                  const data = [...prevState.data];
+                  data[data.indexOf(oldData)] = newData;
+                  return { ...prevState, data };
+                });
+              }
+            }, 600);
+          }),
+        onRowDelete: (oldData) =>
+          new Promise((resolve) => {
+            setTimeout(() => {
+              resolve();
+              setState((prevState) => {
+                const data = [...prevState.data];
+                data.splice(data.indexOf(oldData), 1);
+                return { ...prevState, data };
+              });
+            }, 600);
+          }),
+      }}
+    />
   );
 }
-
-CustomTable.defaultProps = {
-  tableHeaderColor: "gray"
-};
-
-CustomTable.propTypes = {
-  tableHeaderColor: PropTypes.oneOf([
-    "warning",
-    "primary",
-    "danger",
-    "success",
-    "info",
-    "rose",
-    "gray"
-  ]),
-  tableHead: PropTypes.arrayOf(PropTypes.string),
-  tableData: PropTypes.arrayOf(PropTypes.arrayOf(PropTypes.string))
-};
