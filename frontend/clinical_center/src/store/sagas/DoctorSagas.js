@@ -6,8 +6,16 @@ import { setDoctors } from '../actions/DoctorActions';
 export function* doctorsGet(action) {
   try {
     const { data } = yield call(() => doctorService.getDoctors())
-    console.log('iz sage', data)
     yield put(setDoctors(data));
+  } catch (error) {
+    console.log({ error });
+  }
+}
+
+export function* doctorDelete(action) {
+  try {
+    const email = action.payload
+    const { data } = yield call(() => doctorService.deleteDoctor(email))
   } catch (error) {
     console.log({ error });
   }

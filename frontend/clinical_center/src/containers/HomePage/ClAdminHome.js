@@ -7,11 +7,18 @@ import { makeStyles } from "@material-ui/core/styles";
 import Sidebar from "../../components/Sidebar/Sidebar"
 import Table from "../../components/Table/Table"
 import styles from "../../assets/jss/material-dashboard-react/layouts/adminStyle.js";
-import { getDoctors } from '../../store/actions/DoctorActions'
+import { getDoctors, deleteDoctor } from '../../store/actions/DoctorActions'
+import { DELETE } from '../../utils/constants'
 
 const useStyles = makeStyles(styles);
 
-
+const columns = [
+  { id: 'firstName', label: 'Name', minWidth: 170 },
+  { id: 'email', label: 'Email', minWidth: 100 },
+  { id: 'city', label: 'City', minWidth: 100 },
+  { id: 'country', label: 'Country', minWidth: 100 },
+  { id: 'phoneNumber', label: 'Phone number', minWidth: 100 },
+];
 
 
 function ClAdminHome(props) {
@@ -22,6 +29,14 @@ function ClAdminHome(props) {
   const showDoctorList = () => {
     props.getDoctors()
     setRenderTable(true)
+  }
+
+  const action = (type, email) => {
+    if (type === DELETE) {
+      console.log(email)
+      props.deleteDoctor(email)
+    }
+    
   }
   const sidebarOptions =  [ 
     {
@@ -41,7 +56,7 @@ function ClAdminHome(props) {
       <Sidebar options={sidebarOptions} />
     <div className={classes.mainPanel}>
       <div className={classes.table}>
-        {renderTable && <Table data={props.doctors}/> }
+        {renderTable && <Table data={props.doctors} columns={columns} action={action}/> }
       </div>
     </div>
   </div>
@@ -56,7 +71,8 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
-  getDoctors
+  getDoctors,
+  deleteDoctor
 };
 
 export default withRouter(

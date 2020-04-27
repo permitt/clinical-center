@@ -12,3 +12,5 @@ export const SET_DOCTORS = 'SET_DOCTORS'
 
 export const ADD_DOCTOR = 'ADD_DOCTOR'
 export const SET_DOCTOR = 'SET_DOCTOR'
+
+export const DELETE_DOCTOR = 'DELETE_DOCTOR'

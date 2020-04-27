@@ -27,7 +27,7 @@ class AuthService extends ApiService {
     const token = this.getToken();
     if (token) {
       this.api.attachHeaders({
-        Authorization: `Bearer ${token}`
+        Authorization: `JWT ${token}`
       });
     }
   };

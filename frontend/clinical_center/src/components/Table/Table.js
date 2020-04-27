@@ -8,19 +8,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
+import DeleteIcon from '@material-ui/icons/Delete';
 
-const columns = [
-  { id: 'firstName', label: 'Name', minWidth: 170 },
-  { id: 'email', label: 'Email', minWidth: 100 },
-  { id: 'city', label: 'City', minWidth: 100 },
-  { id: 'country', label: 'Country', minWidth: 100 },
-  { id: 'phoneNumber', label: 'Phone number', minWidth: 100 },
-];
+import { DELETE } from '../../utils/constants'
 
-function createData(name, code, population, size) {
-  const density = population / size;
-  return { name, code, population, size, density };
-}
 const useStyles = makeStyles({
   root: {
     width: '100%',
@@ -35,6 +26,7 @@ export default function StickyHeadTable(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const rows = props.data
+  const columns = props.columns
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -60,20 +52,26 @@ export default function StickyHeadTable(props) {
                   {column.label}
                 </TableCell>
               ))}
+              <TableCell key="delete" align="right">
+                  Delete
+              </TableCell>
             </TableRow>
           </TableHead>
           <TableBody>
             {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
               return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.code}>
+                <TableRow hover role="checkbox" tabIndex={-1} key={row.email}>
                   {columns.map((column) => {
                     const value = row[column.id];
                     return (
                       <TableCell key={column.id} align={column.align}>
-                        {column.format && typeof value === 'number' ? column.format(value) : value}
+                        {column.id === 'firstName'? value + ' ' + row.lastName : value}
                       </TableCell>
                     );
                   })}
+                  <TableCell key="delete" align="right">
+                    <DeleteIcon onClick={() => props.action(DELETE, row.email)}/>
+                  </TableCell>
                 </TableRow>
               );
             })}
