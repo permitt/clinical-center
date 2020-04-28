@@ -1,15 +1,6 @@
 import React from 'react';
 
-import GridContainer from '../../components/Grid/GridContainer'
-import GridItem from '../../components/Grid/GridItem'
-
-
-
-import Image from "../../assets/img/sidebar-3.jpg"
-import logo from "../../assets/img/reactlogo.png";
-
 import Sidebar from "../../components/Sidebar/Sidebar"
-
 
 export default function DoctorHome({...rest}) {
 
@@ -38,7 +29,7 @@ export default function DoctorHome({...rest}) {
     <div> 
       nesto
       {/* //otkomentarisati kod ispod kad se doda komponenta table */}
-      {/* {renderTable && <Table />} */}
+      {/* {renderTable && <Table data={} columns={columns} action={action} />} */}
     </div>
   </div>
   );

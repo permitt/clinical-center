@@ -73,7 +73,7 @@ class AuthService extends ApiService {
     }
     const jwt = JSON.parse(atob(jwtToken.split('.')[1]));
 
-    return jwt && jwt.exp && jwt.exp * 1000 || null;
+    return jwt && jwt.exp && jwt.exp * 1000 ;
   };
 
   isExpired = (exp) => {
