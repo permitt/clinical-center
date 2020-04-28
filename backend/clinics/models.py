@@ -6,7 +6,7 @@ class Clinic(models.Model):
     address = models.CharField(max_length=30)
     city = models.CharField(max_length=30)
     country = models.CharField(max_length=30)
-    descripion = models.TextField()
+    description = models.TextField()
     #availableTerms - should just check the reserved dateTimes
 
     class Meta:
