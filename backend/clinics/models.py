@@ -1,5 +1,5 @@
 from django.db import models
-from users.models import Doctor,Patient
+
 
 class Clinic(models.Model):
     name = models.CharField(max_length=30)
@@ -20,7 +20,7 @@ class OperatingRoom(models.Model):
 
 class PriceList(models.Model):
     clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='prices')
-    appointmentType = models.CharField(unique=True)
+    appointmentType = models.CharField(max_length=30, unique=True)
     price = models.FloatField()
 
 class Appointment(models.Model):
@@ -29,10 +29,10 @@ class Appointment(models.Model):
     typeOf = models.CharField(max_length=30)
     #price from .clinic.prices
     discount = models.IntegerField(default=0)
-    doctor = models.ForeignKey(to=Doctor, on_delete=models.CASCADE, related_name='appointments')
+    doctor = models.ForeignKey(to='users.Doctor', on_delete=models.CASCADE, related_name='appointments')
     operatingRoom = models.ForeignKey(to=OperatingRoom, on_delete=models.CASCADE, related_name='appointments')
     # if the patient is null => the appointment was set inAdvance
-    patient = models.ForeignKey(to=Patient, on_delete=models.CASCADE, related_name='appointments', null=True)
+    patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE, related_name='appointments', null=True)
 
 class Ratings(models.IntegerChoices):
     ONE = 1
@@ -42,11 +42,11 @@ class Ratings(models.IntegerChoices):
     FIVE = 5
 
 class DoctorRating(models.Model):
-    doctor = models.ForeignKey(to=Doctor, on_delete=models.CASCADE, related_name='ratings')
-    patient = models.ForeignKey(to=Patient, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(to='users.Doctor', on_delete=models.CASCADE, related_name='ratings')
+    patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE)
     rating = models.IntegerField(choices=Ratings.choices)
 
 class ClinicRating(models.Model):
     clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='ratings')
-    patient = models.ForeignKey(to=Patient, on_delete=models.CASCADE)
+    patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE)
     rating = models.IntegerField(choices=Ratings.choices)
