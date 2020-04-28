@@ -10,7 +10,7 @@ class Clinic(models.Model):
     #availableTerms - should just check the reserved dateTimes
 
     class Meta:
-        ordering = ['name','city','country']
+        ordering = ['name', 'city', 'country']
 
 class OperatingRoom(models.Model):
     clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='operating_rooms')
@@ -31,6 +31,7 @@ class Appointment(models.Model):
     discount = models.IntegerField(default=0)
     doctor = models.ForeignKey(to=Doctor, on_delete=models.CASCADE, related_name='appointments')
     operatingRoom = models.ForeignKey(to=OperatingRoom, on_delete=models.CASCADE, related_name='appointments')
+    # if the patient is null => the appointment was set inAdvance
     patient = models.ForeignKey(to=Patient, on_delete=models.CASCADE, related_name='appointments', null=True)
 
 class Ratings(models.IntegerChoices):
@@ -41,11 +42,11 @@ class Ratings(models.IntegerChoices):
     FIVE = 5
 
 class DoctorRating(models.Model):
-    doctor = models.ForeignKey(to=Doctor, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(to=Doctor, on_delete=models.CASCADE, related_name='ratings')
     patient = models.ForeignKey(to=Patient, on_delete=models.CASCADE)
     rating = models.IntegerField(choices=Ratings.choices)
 
 class ClinicRating(models.Model):
-    clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE)
+    clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='ratings')
     patient = models.ForeignKey(to=Patient, on_delete=models.CASCADE)
     rating = models.IntegerField(choices=Ratings.choices)

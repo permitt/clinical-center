@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import User
-
+from clinics.models import Clinic
 
 class Patient(models.Model):
     email = models.EmailField(max_length=70, primary_key=True, unique=True)
@@ -37,6 +37,8 @@ class ClinicAdmin(models.Model):
 
 class Doctor(models.Model):
     email = models.EmailField(max_length=70, primary_key=True, unique=True)
+    employedAt = models.ForeignKey(to=Clinic, on_delete=models.SET_NULL, related_name='doctors')
+    #Treba dodati radno vrijeme doktora
     user = models.OneToOneField(User, related_name='docAccount', on_delete=models.CASCADE, null=True)
     firstName = models.CharField(max_length=30)
     lastName = models.CharField(max_length=30)
