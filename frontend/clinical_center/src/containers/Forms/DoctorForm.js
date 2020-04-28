@@ -8,16 +8,15 @@ import Button from '@material-ui/core/Button';
 
 import { withFormikField } from '../../utils/withFormikField'
 import { formStyle, submitButton } from '../../assets/jss/material-dashboard-react/components/FormStyle';
-import { registerSchema } from './validations'
-import { register } from '../../store/actions/AuthActions';
+import { registerDoctorSchema } from './validations'
+import { addDoctor } from '../../store/actions/DoctorActions';
 
 const FormikTextField = withFormikField(TextField);
 
-class RegisterForm extends Component {
+class DoctorForm extends Component {
 
   submit = (values) => {
-
-    this.props.register(values);
+    this.props.addDoctor(values);
   };
 
   render() {
@@ -30,12 +29,11 @@ class RegisterForm extends Component {
           address: '',
           city: '',
           country: '',
-          policyNumber: '',
           phoneNumber: '',
           password: '',
           password2: ''
         }}
-        validationSchema={registerSchema}
+        validationSchema={registerDoctorSchema}
         onSubmit={this.submit}
         style={formStyle}>
         <Form>
@@ -46,9 +44,8 @@ class RegisterForm extends Component {
                 type="text"
                 name="firstName"
                 variant="outlined"
-                required
                 fullWidth
-                label="Name"
+                label="First name"
               />
             </Grid>
             <Grid item xs={12}>
@@ -59,7 +56,7 @@ class RegisterForm extends Component {
                 variant="outlined"
                 required
                 fullWidth
-                label="Lastname"
+                label="Last name"
               />
             </Grid>
             <Grid item xs={12}>
@@ -94,7 +91,6 @@ class RegisterForm extends Component {
                 required
                 fullWidth
                 label="City"
-                autoFocus
               />
             </Grid>
             <Grid item xs>
@@ -106,18 +102,6 @@ class RegisterForm extends Component {
                 required
                 fullWidth
                 label="Country"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Field
-                component={FormikTextField}
-                type="text"
-                name="policyNumber"
-                variant="outlined"
-                required
-                fullWidth
-                label="Policy Number"
                 autoFocus
               />
             </Grid>
@@ -162,7 +146,7 @@ class RegisterForm extends Component {
             color="primary"
             style={submitButton}
           >
-            Register
+            Save
         </Button>
         </Form>
       </Formik>
@@ -176,11 +160,11 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = { register };
+const mapDispatchToProps = { addDoctor };
 
 export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps,
-  )(RegisterForm)
+  )(DoctorForm)
 );

@@ -54,8 +54,8 @@ const TableToolbar = props => {
             </InputAdornment>
           ),
         }}/>
-        <IconButton aria-label="filter list">
-            <AddBoxIcon onClick={handleOpen} />
+        <IconButton aria-label="filter list" onClick={handleOpen}>
+            <AddBoxIcon />
         </IconButton> 
         <Modal
           aria-labelledby="transition-modal-title"
@@ -70,10 +70,7 @@ const TableToolbar = props => {
           }}
       >
         <Fade in={open}>
-          <div className={classes.paper}>
-            <h2 id="transition-modal-title">Transition modal</h2>
-            <p id="transition-modal-description">react-transition-group animates me.</p>
-          </div>
+            {props.form}
         </Fade>
       </Modal>  
       </Toolbar>
@@ -98,7 +95,7 @@ export default function SimpleTable(props) {
 
   return (
     <Paper className={classes.root}>
-      <TableToolbar title={props.title}/>
+      <TableToolbar title={props.title} form={props.form}/>
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>

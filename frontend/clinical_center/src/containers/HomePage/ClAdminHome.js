@@ -9,6 +9,8 @@ import Table from "../../components/Table/Table"
 import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
 import { getDoctors, deleteDoctor } from '../../store/actions/DoctorActions'
 import { DELETE } from '../../utils/constants'
+import DoctorForm from '../Forms/DoctorForm'
+import FormContainer from '../../components/FormContainer/FormContainer'
 
 const useStyles = makeStyles(styles);
 
@@ -60,6 +62,7 @@ function ClAdminHome(props) {
                           columns={columns} 
                           action={action} 
                           title="Doctors in clinic"
+                          form={<FormContainer form={<DoctorForm />} title="Add new doctor" />}
                           /> }
       </div>
     </div>
