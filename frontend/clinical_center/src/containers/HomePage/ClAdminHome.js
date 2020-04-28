@@ -34,7 +34,6 @@ function ClAdminHome(props) {
 
   const action = (type, email) => {
     if (type === DELETE) {
-      console.log(email)
       props.deleteDoctor(email)
     }
     

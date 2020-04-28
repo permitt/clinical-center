@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
 import Table from '@material-ui/core/Table';
@@ -39,6 +39,9 @@ const TableToolbar = props => {
     setOpen(false);
   };
 
+  useEffect(()=> {
+    setOpen(false)
+  },[props])
   return (
     <Toolbar className={classes.root}>
       <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
@@ -70,7 +73,7 @@ const TableToolbar = props => {
           }}
       >
         <Fade in={open}>
-            {props.form}
+          {props.form}
         </Fade>
       </Modal>  
       </Toolbar>

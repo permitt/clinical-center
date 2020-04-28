@@ -5,6 +5,7 @@ import { Formik, Form, Field } from 'formik';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Alert from '@material-ui/lab/Alert';
 
 import { withFormikField } from '../../utils/withFormikField'
 import { formStyle, submitButton } from '../../assets/jss/material-dashboard-react/components/FormStyle';
@@ -16,7 +17,8 @@ const FormikTextField = withFormikField(TextField);
 class DoctorForm extends Component {
 
   submit = (values) => {
-    this.props.addDoctor(values);
+    console.log(this.props)
+    this.props.addDoctor(values)
   };
 
   render() {
@@ -54,7 +56,6 @@ class DoctorForm extends Component {
                 type="text"
                 name="lastName"
                 variant="outlined"
-                required
                 fullWidth
                 label="Last name"
               />
@@ -65,7 +66,6 @@ class DoctorForm extends Component {
                 type="email"
                 name="email"
                 variant="outlined"
-                required
                 fullWidth
                 label="Email address"
               />
@@ -76,7 +76,6 @@ class DoctorForm extends Component {
                 type="text"
                 name="address"
                 variant="outlined"
-                required
                 fullWidth
                 label="Address"
                 autoFocus
@@ -88,7 +87,6 @@ class DoctorForm extends Component {
                 type="text"
                 name="city"
                 variant="outlined"
-                required
                 fullWidth
                 label="City"
               />
@@ -99,7 +97,6 @@ class DoctorForm extends Component {
                 type="text"
                 name="country"
                 variant="outlined"
-                required
                 fullWidth
                 label="Country"
                 autoFocus
@@ -111,7 +108,6 @@ class DoctorForm extends Component {
                 type="text"
                 name="phoneNumber"
                 variant="outlined"
-                required
                 fullWidth
                 label="Phone Number"
               />
@@ -122,7 +118,6 @@ class DoctorForm extends Component {
                 type="password"
                 name="password"
                 variant="outlined"
-                required
                 fullWidth
                 label="Password"
               />
@@ -133,12 +128,12 @@ class DoctorForm extends Component {
                 type="password"
                 name="password2"
                 variant="outlined"
-                required
                 fullWidth
                 label="Confirm password"
               />
             </Grid>
           </Grid>
+          {this.props.registerError && <Alert severity="error" style={{marginTop:'10px'}}>User with this email already exists</Alert>}
           <Button
             type="submit"
             fullWidth

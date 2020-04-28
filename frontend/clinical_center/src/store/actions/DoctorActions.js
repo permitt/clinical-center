@@ -34,7 +34,7 @@ import {
   };
 
   export const addDoctor = payload => {
-    console.log(payload)
+
     return {
       type: ADD_DOCTOR,
       payload
