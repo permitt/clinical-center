@@ -5,7 +5,7 @@ class HttpService {
   constructor(options = {}) {
     this.client = axios.create(options);
     this.client.interceptors.response.use(this.handleSuccessResponse, this.handleErrorResponse);
-    this.unauthorizedCallback = () => {};
+    this.unauthorizedCallback = () => { };
   }
 
   attachHeaders(headers) {

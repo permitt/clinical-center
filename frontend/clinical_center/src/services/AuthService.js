@@ -2,8 +2,8 @@ import ApiService from './ApiService'
 import jwt_decode from 'jwt-decode'
 
 const ENDPOINTS = {
-  LOGIN: 'api/token/obtain/',
-  REGISTER: 'api/patient/',
+  LOGIN: 'api/users/token/obtain/',
+  REGISTER: 'api/users/patient/',
   LOGOUT: '/logout'
 };
 
@@ -69,25 +69,25 @@ class AuthService extends ApiService {
 
   getExpirationDate = jwtToken => {
     if (!jwtToken) {
-        return null;
+      return null;
     }
     const jwt = JSON.parse(atob(jwtToken.split('.')[1]));
 
-    return jwt && jwt.exp && jwt.exp * 1000 ;
+    return jwt && jwt.exp && jwt.exp * 1000;
   };
 
   isExpired = (exp) => {
     if (!exp) {
-        return false;
+      return false;
     }
 
     return Date.now() > exp;
-};
+  };
 
   isAuthenticated = () => {
     const user = JSON.parse(localStorage.getItem('user'))
     console.log('pvdee')
-    return user && user.access? !this.isExpired(this.getExpirationDate(user.access)) : false
+    return user && user.access ? !this.isExpired(this.getExpirationDate(user.access)) : false
   };
 
   getUser = () => {
