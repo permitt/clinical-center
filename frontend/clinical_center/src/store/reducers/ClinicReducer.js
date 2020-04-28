@@ -3,7 +3,7 @@ import { SET_CLINICAL_CENTERS } from '../actions/ActionTypes';
 const initialState = {
     all: []
 };
-const clinicalCenterReducer = (state = initialState, action) => {
+const clinicReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_CLINICAL_CENTERS:
             return { ...state, all: action.payload }
@@ -12,4 +12,4 @@ const clinicalCenterReducer = (state = initialState, action) => {
     }
 };
 
-export default clinicalCenterReducer;
+export default clinicReducer;

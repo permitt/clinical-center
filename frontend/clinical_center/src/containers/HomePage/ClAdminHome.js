@@ -25,7 +25,7 @@ const columns = [
 
 function ClAdminHome(props) {
   const classes = useStyles();
-  const [renderTable, setRenderTable ] =  React.useState(false)
+  const [renderTable, setRenderTable] = React.useState(false)
 
   const showDoctorList = () => {
     props.getDoctors()
@@ -36,9 +36,9 @@ function ClAdminHome(props) {
     if (type === DELETE) {
       props.deleteDoctor(email)
     }
-    
+
   }
-  const sidebarOptions =  [ 
+  const sidebarOptions = [
     {
       name: 'Doctors',
       onClick: showDoctorList,
@@ -52,21 +52,22 @@ function ClAdminHome(props) {
   ]
   return (
     <>
-    <div className={classes.wrapper}>
-      <Sidebar options={sidebarOptions} />
-    <div className={classes.mainPanel}>
-      <div className={classes.table}>
-        {renderTable && <Table 
-                          data={props.doctors} 
-                          columns={columns} 
-                          action={action} 
-                          title="Doctors in clinic"
-                          form={<FormContainer form={<DoctorForm />} title="Add new doctor" />}
-                          /> }
+      <div className={classes.wrapper}>
+        <Sidebar options={sidebarOptions} />
+        <div className={classes.mainPanel}>
+          <div className={classes.table}>
+            {renderTable && <Table
+              role={'ADMIN'}
+              data={props.doctors}
+              columns={columns}
+              action={action}
+              title="Doctors in clinic"
+              form={<FormContainer form={<DoctorForm />} title="Add new doctor" />}
+            />}
+          </div>
+        </div>
       </div>
-    </div>
-  </div>
-  </>
+    </>
   );
 }
 

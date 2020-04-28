@@ -112,10 +112,10 @@ export default function SimpleTable(props) {
                   {column.label}
                 </TableCell>
               ))}
-              {/* Nece nam uvijek bit delet akcija, ovo bi mogli izmijenit da prima prop akciju  */}
-              {/* <TableCell key="delete" align="right" style={{ minWidth: '20' }}>
+              {props.role == 'ADMIN' ? <TableCell key="delete" align="right" style={{ minWidth: '20' }}>
                 Delete
-              </TableCell> */}
+              </TableCell> : ''}
+
             </TableRow>
           </TableHead>
           <TableBody>
@@ -130,10 +130,10 @@ export default function SimpleTable(props) {
                       </TableCell>
                     );
                   })}
-                  {/*                   Nece nam uvijek bit delet akcija, ovo bi mogli izmijenit da prima prop akciju
-                  <TableCell key="delete" align="right">
-                    <DeleteIcon onClick={() => props.action(DELETE, row.email)}/>
-                  </TableCell> */}
+                  {props.role == "ADMIN" ? <TableCell key="delete" align="right">
+                    <DeleteIcon onClick={() => props.action(DELETE, row.email)} />
+                  </TableCell> : ''}
+
                 </TableRow>
               );
             })}

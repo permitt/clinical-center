@@ -10,7 +10,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Sidebar from "../../components/Sidebar/Sidebar"
 import Table from "../../components/Table/Table"
 import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
-import { getClinicalCenters } from '../../store/actions/ClinicalCenterActions';
+import { getClinics } from '../../store/actions/ClinicActions';
 import { ADD } from '../../utils/constants'
 
 
@@ -30,7 +30,7 @@ function ClAdminHome(props) {
     const [renderTable, setRenderTable] = React.useState(false)
 
     const showClinicalCenters = () => {
-        props.getClinicalCenters()
+        props.getClinics()
         setRenderTable(true)
     }
 
@@ -69,9 +69,10 @@ function ClAdminHome(props) {
                 <div className={classes.mainPanel}>
                     <div className={classes.table}>
                         {renderTable && <Table
-                            data={props.clinicalCenters}
+                            data={props.clinics}
                             columns={columns}
                             action={action}
+
                             title="Clinical Centers" />
                         }
 
@@ -84,12 +85,12 @@ function ClAdminHome(props) {
 
 const mapStateToProps = state => {
     return {
-        clinicalCenters: state.clinicalCenter.all
+        clinics: state.clinic.all
     };
 };
 
 const mapDispatchToProps = {
-    getClinicalCenters,
+    getClinics,
 };
 
 export default withRouter(
