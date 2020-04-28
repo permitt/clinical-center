@@ -7,7 +7,7 @@ import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 
 import { withFormikField } from '../../utils/withFormikField'
-import { formStyle, submitButton } from '../../styles/FormStyle'
+import { formStyle, submitButton } from '../../assets/jss/material-dashboard-react/components/FormStyle';
 import { registerSchema } from './validations'
 import { register } from '../../store/actions/AuthActions';
 

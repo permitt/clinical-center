@@ -2,6 +2,7 @@ import React from "react"
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
+import { Helmet } from 'react-helmet';
 
 import { CLINIC_ADMIN, PATIENT, DOCTOR } from '../../utils/constants'
 import ClAdminHome from '../HomePage/ClAdminHome'
@@ -11,6 +12,9 @@ import DoctorHome from '../HomePage/DoctorHome'
 export function Dashboard({ role }) {
     return (
     <div>
+        <Helmet>
+          <title>Jungle groove</title>
+        </Helmet>
         { role === DOCTOR && <DoctorHome />}
         { role === CLINIC_ADMIN && <ClAdminHome />}
         { role === PATIENT && <PatientHome />}

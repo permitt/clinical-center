@@ -6,23 +6,22 @@ import { makeStyles } from "@material-ui/core/styles";
 
 import Sidebar from "../../components/Sidebar/Sidebar"
 import Table from "../../components/Table/Table"
-import styles from "../../assets/jss/material-dashboard-react/layouts/adminStyle.js";
+import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
 import { getDoctors, deleteDoctor } from '../../store/actions/DoctorActions'
 import { DELETE } from '../../utils/constants'
 
 const useStyles = makeStyles(styles);
 
 const columns = [
-  { id: 'firstName', label: 'Name', minWidth: 170 },
-  { id: 'email', label: 'Email', minWidth: 100 },
-  { id: 'city', label: 'City', minWidth: 100 },
-  { id: 'country', label: 'Country', minWidth: 100 },
-  { id: 'phoneNumber', label: 'Phone number', minWidth: 100 },
+  { id: 'firstName', label: 'Name', minWidth: 100 },
+  { id: 'email', label: 'Email', minWidth: 80 },
+  { id: 'city', label: 'City', minWidth: 80 },
+  { id: 'country', label: 'Country', minWidth: 80 },
+  { id: 'phoneNumber', label: 'Phone number', minWidth: 60 },
 ];
 
 
 function ClAdminHome(props) {
-
   const classes = useStyles();
   const [renderTable, setRenderTable ] =  React.useState(false)
 
@@ -56,7 +55,12 @@ function ClAdminHome(props) {
       <Sidebar options={sidebarOptions} />
     <div className={classes.mainPanel}>
       <div className={classes.table}>
-        {renderTable && <Table data={props.doctors} columns={columns} action={action}/> }
+        {renderTable && <Table 
+                          data={props.doctors} 
+                          columns={columns} 
+                          action={action} 
+                          title="Doctors in clinic"
+                          /> }
       </div>
     </div>
   </div>

@@ -29,7 +29,7 @@ export default function DoctorHome({...rest}) {
     <div> 
       nesto
       {/* //otkomentarisati kod ispod kad se doda komponenta table */}
-      {/* {renderTable && <Table data={} columns={columns} action={action} />} */}
+      {/* {renderTable && <Table data={} columns={columns} action={action} title={}/>} */}
     </div>
   </div>
   );

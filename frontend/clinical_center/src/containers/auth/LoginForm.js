@@ -9,11 +9,10 @@ import Alert from '@material-ui/lab/Alert';
 
 import { logIn } from '../../store/actions/AuthActions'
 import { loginSchema } from './validations'
-import { formStyle, submitButton } from '../../styles/FormStyle'
+import { formStyle, submitButton } from '../../assets/jss/material-dashboard-react/components/FormStyle';
 import { withFormikField } from '../../utils/withFormikField'
 
 const FormikTextField = withFormikField(TextField);
-
 
 class LoginForm extends Component {
   
