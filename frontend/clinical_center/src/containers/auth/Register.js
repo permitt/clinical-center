@@ -10,11 +10,10 @@ import Typography from '@material-ui/core/Typography';
 import Link from '@material-ui/core/Link';
 import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
-import { register } from '../../store/actions/AuthActions';
-import { paper, avatar } from '../../styles/FormStyle';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 
-
+import { register } from '../../store/actions/AuthActions';
+import { paper, avatar } from '../../assets/jss/material-dashboard-react/components/FormStyle';
 import RegisterForm from './RegisterForm'
 import { LOGIN } from '../../routes';
 

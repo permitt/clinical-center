@@ -24,11 +24,7 @@ export default function Sidebar(props) {
   var links = (
     <List className={classes.list}>
       {options.map((prop, key) => {
-        
-        //menjace se css zanemariti ovo
-        const whiteFontClasses = classNames({
-          [" " + classes.whiteFont]: true
-        });
+        const whiteFontClasses = classNames(classes.whiteFont);
         return (
           <div className={classes.item} key={key} >
             <ListItem button className={classes.itemLink} onClick={prop.onClick}>

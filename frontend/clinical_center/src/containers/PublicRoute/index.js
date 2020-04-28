@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { Route, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
+
 import { DASHBOARD } from '../../routes'
 
 export function PublicRoute({

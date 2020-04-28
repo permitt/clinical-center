@@ -5,19 +5,20 @@ import { Formik, Form, Field } from 'formik';
 import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
+import Alert from '@material-ui/lab/Alert';
 
 import { withFormikField } from '../../utils/withFormikField'
 import { formStyle, submitButton } from '../../assets/jss/material-dashboard-react/components/FormStyle';
-import { registerSchema } from './validations'
-import { register } from '../../store/actions/AuthActions';
+import { registerDoctorSchema } from './validations'
+import { addDoctor } from '../../store/actions/DoctorActions';
 
 const FormikTextField = withFormikField(TextField);
 
-class RegisterForm extends Component {
+class DoctorForm extends Component {
 
   submit = (values) => {
-
-    this.props.register(values);
+    console.log(this.props)
+    this.props.addDoctor(values)
   };
 
   render() {
@@ -30,12 +31,11 @@ class RegisterForm extends Component {
           address: '',
           city: '',
           country: '',
-          policyNumber: '',
           phoneNumber: '',
           password: '',
           password2: ''
         }}
-        validationSchema={registerSchema}
+        validationSchema={registerDoctorSchema}
         onSubmit={this.submit}
         style={formStyle}>
         <Form>
@@ -46,9 +46,8 @@ class RegisterForm extends Component {
                 type="text"
                 name="firstName"
                 variant="outlined"
-                required
                 fullWidth
-                label="Name"
+                label="First name"
               />
             </Grid>
             <Grid item xs={12}>
@@ -57,9 +56,8 @@ class RegisterForm extends Component {
                 type="text"
                 name="lastName"
                 variant="outlined"
-                required
                 fullWidth
-                label="Lastname"
+                label="Last name"
               />
             </Grid>
             <Grid item xs={12}>
@@ -68,7 +66,6 @@ class RegisterForm extends Component {
                 type="email"
                 name="email"
                 variant="outlined"
-                required
                 fullWidth
                 label="Email address"
               />
@@ -79,7 +76,6 @@ class RegisterForm extends Component {
                 type="text"
                 name="address"
                 variant="outlined"
-                required
                 fullWidth
                 label="Address"
                 autoFocus
@@ -91,10 +87,8 @@ class RegisterForm extends Component {
                 type="text"
                 name="city"
                 variant="outlined"
-                required
                 fullWidth
                 label="City"
-                autoFocus
               />
             </Grid>
             <Grid item xs>
@@ -103,7 +97,6 @@ class RegisterForm extends Component {
                 type="text"
                 name="country"
                 variant="outlined"
-                required
                 fullWidth
                 label="Country"
                 autoFocus
@@ -113,21 +106,8 @@ class RegisterForm extends Component {
               <Field
                 component={FormikTextField}
                 type="text"
-                name="policyNumber"
-                variant="outlined"
-                required
-                fullWidth
-                label="Policy Number"
-                autoFocus
-              />
-            </Grid>
-            <Grid item xs={12}>
-              <Field
-                component={FormikTextField}
-                type="text"
                 name="phoneNumber"
                 variant="outlined"
-                required
                 fullWidth
                 label="Phone Number"
               />
@@ -138,7 +118,6 @@ class RegisterForm extends Component {
                 type="password"
                 name="password"
                 variant="outlined"
-                required
                 fullWidth
                 label="Password"
               />
@@ -149,12 +128,12 @@ class RegisterForm extends Component {
                 type="password"
                 name="password2"
                 variant="outlined"
-                required
                 fullWidth
                 label="Confirm password"
               />
             </Grid>
           </Grid>
+          {this.props.registerError && <Alert severity="error" style={{marginTop:'10px'}}>User with this email already exists</Alert>}
           <Button
             type="submit"
             fullWidth
@@ -162,7 +141,7 @@ class RegisterForm extends Component {
             color="primary"
             style={submitButton}
           >
-            Register
+            Save
         </Button>
         </Form>
       </Formik>
@@ -176,11 +155,11 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = { register };
+const mapDispatchToProps = { addDoctor };
 
 export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps,
-  )(RegisterForm)
+  )(DoctorForm)
 );

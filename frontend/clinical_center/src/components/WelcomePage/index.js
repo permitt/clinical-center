@@ -5,11 +5,10 @@ import Container from '@material-ui/core/Container';
 import Typography from '@material-ui/core/Typography';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import { root, main, button } from '../../styles/WelcomePageStyle'
+import { root, main, button } from '../../assets/jss/material-dashboard-react/components/WelcomePageStyle'
 import { LOGIN, REGISTER } from '../../routes'
   
-
- function WelcomePage() {
+function WelcomePage() {
 
   return (
     <div style={root}>

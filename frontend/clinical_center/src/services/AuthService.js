@@ -27,7 +27,7 @@ class AuthService extends ApiService {
     const token = this.getToken();
     if (token) {
       this.api.attachHeaders({
-        Authorization: `Bearer ${token}`
+        Authorization: `JWT ${token}`
       });
     }
   };
@@ -67,9 +67,27 @@ class AuthService extends ApiService {
     return user ? JSON.parse(user).access : undefined
   };
 
+  getExpirationDate = jwtToken => {
+    if (!jwtToken) {
+        return null;
+    }
+    const jwt = JSON.parse(atob(jwtToken.split('.')[1]));
+
+    return jwt && jwt.exp && jwt.exp * 1000 ;
+  };
+
+  isExpired = (exp) => {
+    if (!exp) {
+        return false;
+    }
+
+    return Date.now() > exp;
+};
+
   isAuthenticated = () => {
     const user = JSON.parse(localStorage.getItem('user'))
-    return user && user.access ? true : false
+    console.log('pvdee')
+    return user && user.access? !this.isExpired(this.getExpirationDate(user.access)) : false
   };
 
   getUser = () => {

@@ -8,11 +8,13 @@ import Avatar from '@material-ui/core/Avatar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
-import { logIn } from '../../store/actions/AuthActions';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-import LoginForm from './LoginForm';
-import { paper, avatar } from '../../styles/FormStyle';
 import Link from '@material-ui/core/Link';
+
+import { logIn } from '../../store/actions/AuthActions';
+
+import LoginForm from './LoginForm';
+import { paper, avatar } from '../../assets/jss/material-dashboard-react/components/FormStyle';
 import { REGISTER } from '../../routes';
 
 
