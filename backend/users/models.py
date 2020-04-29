@@ -4,7 +4,7 @@ from django.contrib.auth.models import User
 
 class Patient(models.Model):
     email = models.EmailField(max_length=70, primary_key=True, unique=True)
-    user = models.OneToOneField(User, related_name='account', on_delete=models.CASCADE, null=True)
+    user = models.OneToOneField(User, related_name='patient', on_delete=models.CASCADE, null=True)
     firstName = models.CharField(max_length=30)
     lastName = models.CharField(max_length=30)
     policyNumber = models.CharField(max_length=40, unique=True)

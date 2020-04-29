@@ -71,32 +71,22 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
     def get_token(cls, user):
         token = super().get_token(user)
         # Add custom claims
-        if hasattr(user, 'account'):
-            token['first_name'] = user.account.firstName
-            token['last_name'] = user.account.lastName
-            token['email'] = user.account.email
+        if hasattr(user, 'patient'):
+            token['first_name'] = user.patient.firstName
+            token['last_name'] = user.patient.lastName
+            token['email'] = user.patient.email
+            token['role'] = "PATIENT"
 
-            # Will be expanded as we add more roles
-            if isinstance(user.account, Patient):
-                token['role'] = "PATIENT"
-            else:
-                token['role'] = "NONE"
         if hasattr(user, 'adminAccount'):
             token['first_name'] = user.adminAccount.firstName
             token['last_name'] = user.adminAccount.lastName
             token['email'] = user.adminAccount.email
-
-            # Will be expanded as we add more roles
-
             token['role'] = "CLINIC_ADMIN"
 
         if hasattr(user, 'docAccount'):
             token['first_name'] = user.docAccount.firstName
             token['last_name'] = user.docAccount.lastName
             token['email'] = user.docAccount.email
-
-            # Will be expanded as we add more roles
-
             token['role'] = "DOCTOR"
         # ...
 
