@@ -5,7 +5,7 @@ const ENDPOINTS = {
     GET_CLINIC: '/api/clinics/clinic/:id',
 };
 
-class clinicService extends ApiService {
+class clinicServiceApi extends ApiService {
 
     getAll = async () => {
         const { data } = await this.apiClient.get(ENDPOINTS.GET_ALL_CLINICS)
@@ -13,11 +13,11 @@ class clinicService extends ApiService {
         return data;
     }
 
-    getClinicalCenter = id => {
+    getClinic = id => {
 
         return this.apiClient.delete(ENDPOINTS.GET_CLINIC.replace(":id", id));
     }
 
 }
 
-export const clinicService = new clinicService();
+export const clinicService = new clinicServiceApi();

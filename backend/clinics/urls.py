@@ -3,6 +3,8 @@ from rest_framework import routers
 from . import views
 
 router = routers.SimpleRouter()
-router.register('clinic', views.ClinicViewset)
+#router.register('clinic', views.ClinicListView)
 
-urlpatterns = router.urls
+urlpatterns = [
+        path('clinic/', views.ClinicListView.as_view())
+    ]

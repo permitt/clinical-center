@@ -7,7 +7,8 @@ class ClinicListView(generics.ListAPIView):
     permission_classes = []
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     ordering_fields = ['name', 'address', 'city', 'country']
-
+    queryset = Clinic.objects.all()
+    
 #     def get_queryset(self):
 #         queryset = Clinic.objects.all()
 #         #obavezni parametri za zakazivanje
