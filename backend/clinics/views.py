@@ -1,14 +1,14 @@
-from rest_framework import viewsets, generics, filters
+from rest_framework import viewsets, generics, filters, permissions
 from .models import *
 from .serializers import *
 
 class ClinicListView(generics.ListAPIView):
     serializer_class = ClinicSerializer
-    permission_classes = []
+    permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     ordering_fields = ['name', 'address', 'city', 'country']
     queryset = Clinic.objects.all()
-    
+
 #     def get_queryset(self):
 #         queryset = Clinic.objects.all()
 #         #obavezni parametri za zakazivanje
