@@ -35,7 +35,10 @@ class PriceList(models.Model):
     price = models.FloatField()
 
     class Meta:
-        unique_together = ('clinic', 'appointmentType',)
+        constraints = [
+            models.UniqueConstraint(fields=['clinic', 'appointmentType'], name='unique appointment type price for clinic')
+        ]
+
 
     def __str__(self):
         return f'{self.clinic.name} {self.appointmentType.typeName}'
@@ -52,7 +55,9 @@ class Appointment(models.Model):
     patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE, related_name='appointments', null=True)
 
     class Meta:
-        unique_together = ('clinic', 'dateTime', 'doctor',)
+        constraints = [
+            models.UniqueConstraint(fields=['clinic','dateTime','doctor'], name='unique doctor date time for a clinic')
+        ]
 
     def __str__(self):
         return f'{self.clinic.name} - {self.typeOf.typeName} - {self.dateTime}'
