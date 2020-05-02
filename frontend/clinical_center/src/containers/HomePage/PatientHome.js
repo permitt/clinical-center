@@ -7,7 +7,8 @@ import Healing from '@material-ui/icons/Healing';
 import Person from '@material-ui/icons/Person';
 import { makeStyles } from "@material-ui/core/styles";
 
-import Sidebar from "../../components/Sidebar/Sidebar"
+import Sidebar from "../../components/Sidebar/Sidebar";
+import Modal from '@material-ui/core/Modal';
 import Table from "../../components/Table/Table"
 import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
 import { getClinics } from '../../store/actions/ClinicActions';
@@ -25,14 +26,21 @@ const columns = [
 ];
 
 
-function ClAdminHome(props) {
+function PatientHome(props) {
     const classes = useStyles();
     const [renderTable, setRenderTable] = React.useState(false)
+    const [orderBy, setOrderBy] = React.useState('name')
+
+    const orderByOptions = ['name', 'address', 'city', 'country'];
 
     const showClinicalCenters = () => {
-        props.getClinics()
+        props.getClinics(orderBy)
         setRenderTable(true)
     }
+
+    React.useEffect(() => {
+        props.getClinics(orderBy);
+    }, [orderBy])
 
     const action = (type, email) => {
         if (type === ADD) {
@@ -42,7 +50,7 @@ function ClAdminHome(props) {
     }
     const sidebarOptions = [
         {
-            name: 'Clinical Centers',
+            name: 'Clinics',
             onClick: showClinicalCenters,
             icon: LocalHospital
         },
@@ -72,8 +80,9 @@ function ClAdminHome(props) {
                             data={props.clinics}
                             columns={columns}
                             action={action}
-
-                            title="Clinical Centers" />
+                            sortOptions={orderByOptions}
+                            changeSortBy={val => setOrderBy(val)}
+                            title="Clinics" />
                         }
 
                     </div>
@@ -97,5 +106,5 @@ export default withRouter(
     connect(
         mapStateToProps,
         mapDispatchToProps
-    )(ClAdminHome)
+    )(PatientHome)
 );

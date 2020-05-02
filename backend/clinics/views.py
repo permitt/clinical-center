@@ -4,7 +4,7 @@ from .serializers import *
 
 class ClinicListView(generics.ListAPIView):
     serializer_class = ClinicSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    #permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     ordering_fields = ['name', 'address', 'city', 'country']
     queryset = Clinic.objects.all()

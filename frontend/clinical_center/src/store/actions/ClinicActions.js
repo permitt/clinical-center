@@ -3,9 +3,10 @@ import {
     SET_CLINICS
 } from './ActionTypes';
 
-export const getClinics = () => {
+export const getClinics = (orderBy) => {
     return {
         type: GET_CLINICS,
+        orderBy
     };
 };
 

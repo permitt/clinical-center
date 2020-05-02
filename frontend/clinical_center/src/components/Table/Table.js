@@ -16,10 +16,12 @@ import SearchIcon from '@material-ui/icons/Search';
 import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import AddBoxIcon from '@material-ui/icons/AddBox';
+import SortIcon from '@material-ui/icons/Sort';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-
+import Menu from '@material-ui/core/Menu';
+import MenuItem from '@material-ui/core/MenuItem';
 import { DELETE } from '../../utils/constants'
 import styles from "../../assets/jss/material-dashboard-react/components/tableStyle.js";
 import toolbarStyles from "../../assets/jss/material-dashboard-react/components/tableToolbarStyle"
@@ -30,6 +32,8 @@ const useToolbarStyles = makeStyles(toolbarStyles)
 const TableToolbar = props => {
   const classes = useToolbarStyles();
   const [open, setOpen] = React.useState(false);
+  const [sortByOpen, setSortByOpen] = React.useState(false);
+  const [sortByAnchor, setSortByAnchor] = React.useState(null);
 
   const handleOpen = () => {
     setOpen(true);
@@ -39,9 +43,18 @@ const TableToolbar = props => {
     setOpen(false);
   };
 
+  const handleSortClick = (val) => {
+    setSortByOpen(false);
+    setSortByAnchor(null);
+    props.changeSortBy(val);
+
+  }
+
   useEffect(() => {
-    setOpen(false)
+    setOpen(false);
+    setSortByOpen(false);
   }, [props])
+
   return (
     <Toolbar className={classes.root}>
       <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
@@ -57,6 +70,27 @@ const TableToolbar = props => {
             </InputAdornment>
           ),
         }} />
+      <IconButton aria-label="sort list" onClick={(e) => { setSortByAnchor(e.currentTarget); setSortByOpen(true) }}>
+        <SortIcon />
+      </IconButton>
+      <Menu
+        id="sort-menu"
+        keepMounted
+        anchorEl={sortByAnchor}
+        open={sortByOpen}
+        onClose={() => { setSortByOpen(false); }}
+      >
+        <MenuItem disabled >Sort by</MenuItem>
+        {props.sortOptions.map(sortBy => (
+          <div>
+            <MenuItem onClick={() => handleSortClick(sortBy)}>{sortBy} ascending</MenuItem>
+            <MenuItem onClick={() => handleSortClick('-' + sortBy)}>{sortBy} descending</MenuItem>
+          </div>
+        ))}
+
+
+      </Menu>
+
       <IconButton aria-label="filter list" onClick={handleOpen}>
         <AddBoxIcon />
       </IconButton>
@@ -76,7 +110,7 @@ const TableToolbar = props => {
           {props.form}
         </Fade>
       </Modal>
-    </Toolbar>
+    </Toolbar >
   );
 };
 
@@ -98,7 +132,7 @@ export default function SimpleTable(props) {
 
   return (
     <Paper className={classes.root}>
-      <TableToolbar title={props.title} form={props.form} />
+      <TableToolbar title={props.title} form={props.form} sortOptions={props.sortOptions} changeSortBy={props.changeSortBy} />
       <TableContainer className={classes.container}>
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
