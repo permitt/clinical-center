@@ -9,6 +9,11 @@ class ClinicListView(generics.ListAPIView):
     ordering_fields = ['name', 'address', 'city', 'country']
     queryset = Clinic.objects.all()
 
+
+class AppointmentTypeListView(generics.ListAPIView):
+    queryset = AppointmentType.objects.all()
+    #permission_classes = [permissions.IsAuthenticated]
+    serializer_class = AppointmentTypeSerializer
 #     def get_queryset(self):
 #         queryset = Clinic.objects.all()
 #         #obavezni parametri za zakazivanje

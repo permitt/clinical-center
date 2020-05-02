@@ -23,14 +23,22 @@ class OperatingRoom(models.Model):
         return f'{self.name} {self.number}'
 
 class AppointmentType(models.Model):
-    typeName = models.CharField(max_length=30)
+    typeName = models.CharField(max_length=30, unique=True)
     duration = models.IntegerField()
 
+    def __str__(self):
+        return self.typeName
 
 class PriceList(models.Model):
     clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='prices')
     appointmentType = models.ForeignKey(to=AppointmentType, on_delete=models.CASCADE, related_name='prices')
     price = models.FloatField()
+
+    class Meta:
+        unique_together = ('clinic', 'appointmentType',)
+
+    def __str__(self):
+        return f'{self.clinic.name} {self.appointmentType.typeName}'
 
 class Appointment(models.Model):
     clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='appointments')
@@ -43,7 +51,11 @@ class Appointment(models.Model):
     # if the patient is null => the appointment was set inAdvance
     patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE, related_name='appointments', null=True)
 
+    class Meta:
+        unique_together = ('clinic', 'dateTime', 'doctor',)
 
+    def __str__(self):
+        return f'{self.clinic.name} - {self.typeOf.typeName} - {self.dateTime}'
 
 class Ratings(models.IntegerChoices):
     ONE = 1
@@ -56,6 +68,7 @@ class DoctorRating(models.Model):
     doctor = models.ForeignKey(to='users.Doctor', on_delete=models.CASCADE, related_name='ratings')
     patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE)
     rating = models.IntegerField(choices=Ratings.choices)
+
 
 class ClinicRating(models.Model):
     clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='ratings')

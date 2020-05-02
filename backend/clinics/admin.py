@@ -5,6 +5,7 @@ from . import models
 admin.site.register(models.PriceList)
 admin.site.register(models.Clinic)
 admin.site.register(models.Appointment)
+admin.site.register(models.AppointmentType)
 admin.site.register(models.OperatingRoom)
 admin.site.register(models.ClinicRating)
 admin.site.register(models.DoctorRating)
