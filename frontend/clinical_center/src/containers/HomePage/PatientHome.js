@@ -10,9 +10,16 @@ import { makeStyles } from "@material-ui/core/styles";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Modal from '@material-ui/core/Modal';
 import Table from "../../components/Table/Table"
+import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
+import DateFnsUtils from '@date-io/date-fns';
+import MenuItem from '@material-ui/core/MenuItem';
+import Grid from '@material-ui/core/Grid';
+import Button from '@material-ui/core/Button';
+import Select from '@material-ui/core/Select';
 import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
 import { getClinics } from '../../store/actions/ClinicActions';
 import { ADD } from '../../utils/constants'
+import { Typography } from '@material-ui/core';
 
 
 const useStyles = makeStyles(styles);
@@ -30,7 +37,8 @@ function PatientHome(props) {
     const classes = useStyles();
     const [renderTable, setRenderTable] = React.useState(false)
     const [orderBy, setOrderBy] = React.useState('name')
-
+    const [appointmentDate, setAppointmentDate] = React.useState(new Date())
+    const [appointmentType, setAppointmentType] = React.useState('')
     const orderByOptions = ['name', 'address', 'city', 'country'];
 
     const showClinicalCenters = () => {
@@ -72,10 +80,49 @@ function PatientHome(props) {
     ]
     return (
         <>
+
             <div className={classes.wrapper}>
                 <Sidebar options={sidebarOptions} />
                 <div className={classes.mainPanel}>
+                    <div>
+                        <Grid item xs={12}>
+                            <Grid container justify="center" >
+                                <Grid item>
+                                    <Typography variant='h5'>Want to book an appointment? Select a date and type</Typography>
+                                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
+
+                                        <DatePicker
+                                            minDate={new Date()}
+                                            label="Appointment Date"
+                                            value={appointmentDate}
+                                            onChange={(date) => setAppointmentDate(date)}
+                                            animateYearScrolling
+                                        />
+                                    </MuiPickersUtilsProvider>
+                                    <Select
+                                        style={{ margin: '16px 10px' }}
+                                        label="Appointment Date"
+                                        id="appointment-type"
+                                        value={"Select appointment type"}
+                                        onChange={() => { }}
+                                    >
+                                        <MenuItem value={"Select appointment type"}>Select appointment type</MenuItem>
+                                        <MenuItem value={20}>Nzm</MenuItem>
+                                        <MenuItem value={30}>Nista</MenuItem>
+                                    </Select>
+                                    <Button variant="contained" color="primary">Check</Button>
+                                </Grid>
+                                <Grid item>
+
+
+                                </Grid>
+                            </Grid>
+                        </Grid>
+
+
+                    </div>
                     <div className={classes.table}>
+
                         {renderTable && <Table
                             data={props.clinics}
                             columns={columns}

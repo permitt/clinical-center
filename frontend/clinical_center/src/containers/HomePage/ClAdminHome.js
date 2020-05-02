@@ -62,6 +62,8 @@ function ClAdminHome(props) {
               columns={columns}
               action={action}
               title="Doctors in clinic"
+              sortOptions={['']}  // Opcije za sortiranje
+              changeSortBy={() => { }}   // setter za sort
               form={<FormContainer form={<DoctorForm />} title="Add new doctor" />}
             />}
           </div>
