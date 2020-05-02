@@ -10,6 +10,7 @@ import { makeStyles } from "@material-ui/core/styles";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import Modal from '@material-ui/core/Modal';
 import Table from "../../components/Table/Table"
+import InputLabel from '@material-ui/core/InputLabel';
 import { DatePicker, MuiPickersUtilsProvider } from "@material-ui/pickers";
 import DateFnsUtils from '@date-io/date-fns';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -99,16 +100,20 @@ function PatientHome(props) {
                                             animateYearScrolling
                                         />
                                     </MuiPickersUtilsProvider>
+
                                     <Select
                                         style={{ margin: '16px 10px' }}
                                         label="Appointment Date"
+                                        displayEmpty
                                         id="appointment-type"
-                                        value={"Select appointment type"}
-                                        onChange={() => { }}
+                                        value={appointmentType}
+                                        onChange={(e) => setAppointmentType(e.target.value)}
                                     >
-                                        <MenuItem value={"Select appointment type"}>Select appointment type</MenuItem>
-                                        <MenuItem value={20}>Nzm</MenuItem>
-                                        <MenuItem value={30}>Nista</MenuItem>
+                                        <MenuItem disabled value="">
+                                            Select Appointment Type
+                                        </MenuItem>
+                                        <MenuItem value={'lol'}>Twenty</MenuItem>
+                                        < MenuItem value={30}>Thirty</MenuItem>
                                     </Select>
                                     <Button variant="contained" color="primary">Check</Button>
                                 </Grid>
