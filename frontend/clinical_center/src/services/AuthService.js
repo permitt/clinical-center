@@ -34,8 +34,6 @@ class AuthService extends ApiService {
 
   createSession = user => {
     localStorage.setItem('user', JSON.stringify(user))
-    const decodedToken = jwt_decode(user.access)
-    localStorage.setItem('role', decodedToken.role)
     this.setAuthorizationHeader()
   };
 
@@ -86,7 +84,7 @@ class AuthService extends ApiService {
 
   isAuthenticated = () => {
     const user = JSON.parse(localStorage.getItem('user'))
-    console.log('pvdee')
+
     return user && user.access ? !this.isExpired(this.getExpirationDate(user.access)) : false
   };
 
@@ -96,8 +94,10 @@ class AuthService extends ApiService {
   };
 
   getUserRole = () => {
-    const role = localStorage.getItem('role')
-    return role
+    const user = localStorage.getItem('user')
+    const decodedToken = user ? jwt_decode(user.access) : null
+
+    return decodedToken ? decodedToken.role : null
   }
 
   updateUserInStorage = property => {
