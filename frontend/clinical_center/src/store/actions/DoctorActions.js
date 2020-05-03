@@ -27,6 +27,7 @@ import {
   };
 
   export const deleteDoctor = payload => {
+
     return {
       type: DELETE_DOCTOR,
       payload

@@ -9,7 +9,6 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import DeleteIcon from '@material-ui/icons/Delete';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import SearchIcon from '@material-ui/icons/Search';
@@ -25,9 +24,11 @@ import MenuItem from '@material-ui/core/MenuItem';
 import { DELETE } from '../../utils/constants'
 import styles from "../../assets/jss/material-dashboard-react/components/tableStyle.js";
 import toolbarStyles from "../../assets/jss/material-dashboard-react/components/tableToolbarStyle"
+import DeleteIcon from '@material-ui/icons/Delete';
 
 const useStyles = makeStyles(styles);
 const useToolbarStyles = makeStyles(toolbarStyles)
+
 
 const TableToolbar = props => {
   const classes = useToolbarStyles();
@@ -83,8 +84,8 @@ const TableToolbar = props => {
         <MenuItem disabled >Sort by</MenuItem>
         {props.sortOptions.map(sortBy => (
           <div>
-            <MenuItem onClick={() => handleSortClick(sortBy)}>{sortBy} ascending</MenuItem>
-            <MenuItem onClick={() => handleSortClick('-' + sortBy)}>{sortBy} descending</MenuItem>
+            <MenuItem key={sortBy + 'asc'} onClick={() => handleSortClick(sortBy)}>{sortBy} ascending</MenuItem>
+            <MenuItem key={sortBy + 'desc'} onClick={() => handleSortClick('-' + sortBy)}>{sortBy} descending</MenuItem>
           </div>
         ))}
 
@@ -146,10 +147,6 @@ export default function SimpleTable(props) {
                   {column.label}
                 </TableCell>
               ))}
-              {props.role == 'ADMIN' ? <TableCell key="delete" align="right" style={{ minWidth: '20' }}>
-                Delete
-              </TableCell> : ''}
-
             </TableRow>
           </TableHead>
           <TableBody>
@@ -157,17 +154,21 @@ export default function SimpleTable(props) {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.email}>
                   {columns.map((column) => {
-                    const value = row[column.id];
-                    return (
-                      <TableCell key={column.id} align={column.align}>
-                        {column.id === 'firstName' ? value + ' ' + row.lastName : value}
+                    const value = row[column.id]
+                    if (column.id !== 'action')
+                      return (
+                        <TableCell key={column.id} align={column.align}>
+                          {column.id === 'firstName' ? value + ' ' + row.lastName : value}
+                        </TableCell> 
+                      );
+                    else 
+                      return (
+                        <TableCell key={column.label} align="right">
+                          {column.icon === 'delete' &&
+                          <DeleteIcon onClick={() => column.action(row.email)} /> }
                       </TableCell>
-                    );
+                      )
                   })}
-                  {props.role == "ADMIN" ? <TableCell key="delete" align="right">
-                    <DeleteIcon onClick={() => props.action(DELETE, row.email)} />
-                  </TableCell> : ''}
-
                 </TableRow>
               );
             })}

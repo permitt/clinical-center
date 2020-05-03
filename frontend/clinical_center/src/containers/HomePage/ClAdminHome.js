@@ -12,32 +12,33 @@ import { DELETE } from '../../utils/constants'
 import DoctorForm from '../Forms/DoctorForm'
 import FormContainer from '../../components/FormContainer/FormContainer'
 
+
 const useStyles = makeStyles(styles);
 
-const columns = [
-  { id: 'firstName', label: 'Name', minWidth: 100 },
-  { id: 'email', label: 'Email', minWidth: 80 },
-  { id: 'city', label: 'City', minWidth: 80 },
-  { id: 'country', label: 'Country', minWidth: 80 },
-  { id: 'phoneNumber', label: 'Phone number', minWidth: 60 },
-];
 
 
 function ClAdminHome(props) {
   const classes = useStyles();
   const [renderTable, setRenderTable] = React.useState(false)
 
+  const columns = [
+    { id: 'firstName', label: 'Name', minWidth: 100 },
+    { id: 'email', label: 'Email', minWidth: 80 },
+    { id: 'city', label: 'City', minWidth: 80 },
+    { id: 'country', label: 'Country', minWidth: 80 },
+    { id: 'phoneNumber', label: 'Phone number', minWidth: 60 },
+    { id: 'action', label: 'Delete', minWidth: 20, icon: 'delete', action: props.deleteDoctor}
+  ];
+  
+
   const showDoctorList = () => {
     props.getDoctors()
     setRenderTable(true)
   }
 
-  const action = (type, email) => {
-    if (type === DELETE) {
-      props.deleteDoctor(email)
-    }
-
-  }
+  // const delete = email => {
+  //     props.deleteDoctor(email)
+  // }
   const sidebarOptions = [
     {
       name: 'Doctors',
@@ -60,10 +61,9 @@ function ClAdminHome(props) {
               role={'ADMIN'}
               data={props.doctors}
               columns={columns}
-              action={action}
               title="Doctors in clinic"
-              sortOptions={['']}  // Opcije za sortiranje
-              changeSortBy={() => { }}   // setter za sort
+              sortOptions={[]}  
+              changeSortBy={() => { }}  
               form={<FormContainer form={<DoctorForm />} title="Add new doctor" />}
             />}
           </div>
