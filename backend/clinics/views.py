@@ -37,3 +37,4 @@ class AppointmentTypeListView(generics.ListAPIView):
 #     serializer_class = ClinicSerializer
 #     #permission_classes = [custom_permissions.CustomPatientPermissions]
 
+

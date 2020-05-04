@@ -8,6 +8,6 @@ router = routers.SimpleRouter()
 urlpatterns = [
         path('clinic/', views.ClinicListView.as_view()),
         path('appointment-type/', views.AppointmentTypeListView.as_view()),
-        path('appointment/check/', views.appointmentCheck),
+        #path('appointment/check/', views.appointmentCheck),
 
     ]
