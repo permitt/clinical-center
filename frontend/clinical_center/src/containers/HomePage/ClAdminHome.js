@@ -34,8 +34,9 @@ function ClAdminHome(props) {
   ];
 
   const hallColumns = [
-    { id: 'name', label: 'Name', minWidth: 100 },
-    { id: 'number', label: 'Email', minWidth: 80 },
+    { id: 'name', label: 'Name', minWidth: 60 },
+    { id: 'number', label: 'Number', minWidth: 60 },
+    { id: 'date', label: 'Available date', minWidth: 60 },
     { id: 'action', label: 'Delete', minWidth: 20, icon: 'delete', action: ()=> console.log('fa')}
   ];
   
@@ -66,8 +67,8 @@ function ClAdminHome(props) {
           columns: doctorColumns, 
           title: "Doctors in clinic", 
           form: <FormContainer form={<DoctorForm />} title="Add new doctor" />}
-        ) 
-        break;}
+        ) }
+        break;
       case HALL_TABLE:{
         setTableData({ 
           data: props.halls, 
@@ -75,6 +76,7 @@ function ClAdminHome(props) {
           title: "Operating rooms in clinic", 
           form: <FormContainer form={<DoctorForm />} title="Add new operationg room" />}
         ) }
+        break;
     }
   },[props])
 

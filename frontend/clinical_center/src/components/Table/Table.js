@@ -21,6 +21,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+
 import styles from "../../assets/jss/material-dashboard-react/components/tableStyle.js";
 import toolbarStyles from "../../assets/jss/material-dashboard-react/components/tableToolbarStyle"
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -34,6 +35,16 @@ const TableToolbar = props => {
   const [open, setOpen] = React.useState(false);
   const [sortByOpen, setSortByOpen] = React.useState(false);
   const [sortByAnchor, setSortByAnchor] = React.useState(null);
+  const [searchInput, setSearchInput] = React.useState('')
+
+  const handleChange = event => {
+    setSearchInput(event.target.value)
+    props.search(event.target.value)
+  }
+
+  // const search = name => {
+  //   const searchData = 
+  // }
 
   const handleOpen = () => {
     setOpen(true);
@@ -63,6 +74,8 @@ const TableToolbar = props => {
       <TextField
         id="standard-search"
         type="search"
+        value={searchInput || ""}
+        onChange={handleChange}
         InputProps={{
           startAdornment: (
             <InputAdornment position="start">
@@ -119,8 +132,12 @@ export default function SimpleTable(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const rows = props.data
+  const [filteredData, setFilteredData] = React.useState(rows)
   const columns = props.columns
 
+  useEffect(()=> {
+    setFilteredData(rows)
+  }, [props])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -131,10 +148,30 @@ export default function SimpleTable(props) {
     setPage(0);
   };
 
+  const search = name => {
+    name = name.toLowerCase()
+    const columnLabels = columns.map(column => column.id.toLowerCase())
+    const data = rows.filter(row => {
+        for (const property in row) {
+          if (!(columnLabels.includes(property.toLowerCase())))
+            continue;
+          if (String(row[property]).toLowerCase().startsWith(name))
+            return true
+        }
+        return false
+       })
+       setFilteredData(data)
+    }
+
   return (
     <Paper className={classes.root}>
-      <TableToolbar title={props.title} form={props.form} sortOptions={props.sortOptions} changeSortBy={props.changeSortBy} />
-      <TableContainer className={classes.container}>
+      <TableToolbar 
+        title={props.title} 
+        form={props.form} 
+        sortOptions={props.sortOptions} 
+        changeSortBy={props.changeSortBy} 
+        search={search}/>
+      <TableContainer className={classes.container} >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
@@ -150,7 +187,7 @@ export default function SimpleTable(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+            {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={row.email}>
                   {columns.map((column) => {
@@ -163,7 +200,7 @@ export default function SimpleTable(props) {
                       );
                     else 
                       return (
-                        <TableCell key={column.label} align="right">
+                        <TableCell key={column.label} align="left">
                           {column.icon === 'delete' &&
                           <DeleteIcon onClick={() => column.action(row.email)} /> }
                       </TableCell>
