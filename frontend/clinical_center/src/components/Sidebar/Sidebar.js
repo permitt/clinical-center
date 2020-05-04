@@ -1,5 +1,6 @@
-/*eslint-disable*/
 import React from "react";
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import classNames from "classnames";
 import PropTypes from "prop-types";
 import { makeStyles } from "@material-ui/core/styles";
@@ -9,22 +10,24 @@ import List from "@material-ui/core/List";
 import ListItem from "@material-ui/core/ListItem";
 import ListItemText from "@material-ui/core/ListItemText";
 import Icon from "@material-ui/core/Icon";
+import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 
 import Image from "../../assets/img/sidebar-3.jpg"
 import Logo from "../../assets/img/reactlogo.png";
 import styles from "../../assets/jss/material-dashboard-react/components/sidebarStyle.js";
+import { logOut } from '../../store/actions/AuthActions';
 
 const useStyles = makeStyles(styles);
 
-export default function Sidebar(props) {
+function Sidebar(props) {
   const classes = useStyles();
  
-
+  const whiteFontClasses = classNames(classes.whiteFont);
   const { options } = props;
   var links = (
     <List className={classes.list}>
       {options.map((prop, key) => {
-        const whiteFontClasses = classNames(classes.whiteFont);
+
         return (
           <div className={classes.item} key={key} >
             <ListItem button className={classes.itemLink} onClick={prop.onClick}>
@@ -48,6 +51,19 @@ export default function Sidebar(props) {
           </div>
         );
       })}
+      <div key='logout' style={{position: 'absolute',right:0,bottom:0}} >
+        <ListItem button className={classes.itemLink} onClick={props.logOut} 
+          >
+            <Icon className={classNames(classes.itemIcon, whiteFontClasses)}>
+              <ExitToAppIcon />
+            </Icon>
+          <ListItemText
+            primary="Logout"
+            className={classNames(classes.itemText, whiteFontClasses)}
+            disableTypography={true}
+          />
+        </ListItem>
+      </div>
     </List>
   );
   var brand = (
@@ -84,3 +100,18 @@ export default function Sidebar(props) {
 Sidebar.propTypes = {
   options: PropTypes.arrayOf(PropTypes.object),
 };
+
+
+const mapStateToProps = state => {
+  return {
+  };
+};
+
+const mapDispatchToProps = { logOut };
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(Sidebar)
+);

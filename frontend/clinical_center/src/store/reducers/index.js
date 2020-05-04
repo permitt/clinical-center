@@ -6,11 +6,13 @@ import errorReducer from './ErrorReducer';
 import doctorReducer from './DoctorReducer';
 import clinicReducer from './ClinicReducer';
 import appointmetReducer from './AppointmentReducer';
+import hallReducer from './HallReducer'
 
 export default history =>
   combineReducers({
     authUser: authReducer,
     error: errorReducer,
+    hall: hallReducer,
     doctor: doctorReducer,
     clinic: clinicReducer,
     appointment: appointmetReducer,

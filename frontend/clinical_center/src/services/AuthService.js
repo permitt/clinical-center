@@ -3,8 +3,7 @@ import jwt_decode from 'jwt-decode'
 
 const ENDPOINTS = {
   LOGIN: 'api/users/token/obtain/',
-  REGISTER: 'api/users/patient/',
-  LOGOUT: '/logout'
+  REGISTER: 'api/users/patient/'
 };
 
 class AuthService extends ApiService {
@@ -54,10 +53,9 @@ class AuthService extends ApiService {
     return data
   };
 
-  logout = async () => {
-    const { data } = await this.apiClient.post(ENDPOINTS.LOGOUT)
+  logout = () => {
     this.destroySession()
-    return { ok: true, data }
+    return { ok: true }
   };
 
   getToken = () => {
