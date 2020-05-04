@@ -47,7 +47,10 @@ class ClinicAdminSerializer(serializers.ModelSerializer):
         if instance.approved is False and validated_data.approved is True:
             pass
 
+
+
 class DoctorSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Doctor
         exclude = ['user', 'activated']
@@ -58,6 +61,8 @@ class DoctorSerializer(serializers.ModelSerializer):
         user = User.objects.create(username=email,email=email, is_active=False)
         user.set_password(password)
         user.save()
+        print(validated_data)
+
         doctor = Doctor(**validated_data)
         doctor.user = user
         doctor.save()

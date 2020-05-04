@@ -21,7 +21,6 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
-import { DELETE } from '../../utils/constants'
 import styles from "../../assets/jss/material-dashboard-react/components/tableStyle.js";
 import toolbarStyles from "../../assets/jss/material-dashboard-react/components/tableToolbarStyle"
 import DeleteIcon from '@material-ui/icons/Delete';
@@ -121,6 +120,7 @@ export default function SimpleTable(props) {
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const rows = props.data
   const columns = props.columns
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

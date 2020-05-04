@@ -81,6 +81,7 @@ class CustomDoctorPermissions(permissions.BasePermission):
     #     return permission
 
     def has_object_permission(self, request, view, obj):
+        print('ovde aaabaho')
         if request.method == 'PUT' or request.method == 'PATCH':
             # If the profile is approved by Administrator and the logged in user is trying to access it
             if obj.approved == True and obj.account == request.user:
@@ -94,6 +95,8 @@ class CustomDoctorPermissions(permissions.BasePermission):
             print(request.user)
             return hasattr(request.user, 'adminAccount')
         elif request.method == "GET":
-            return request.user and request.user.is_authenticated
+            print('ovde baho')
+            return request.user and hasattr(request.user, 'adminAccount') and request.user.is_authenticated
         else:
+            print('ovde aaabaho')
             return True
