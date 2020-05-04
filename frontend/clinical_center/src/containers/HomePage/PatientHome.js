@@ -30,6 +30,7 @@ const columns = [
     { id: 'address', label: 'Address', minWidth: 80 },
     { id: 'city', label: 'City', minWidth: 80 },
     { id: 'country', label: 'Country', minWidth: 80 },
+    { id: 'rating', label: 'Rating', minWidth: 80 },
     { id: 'description', label: 'Description', minWidth: 90 },
 ];
 
@@ -52,6 +53,7 @@ function PatientHome(props) {
 
     React.useEffect(() => {
         props.getClinics(orderBy);
+        console.log("MOJE KLINIKEE BRE : ", props.clinics);
     }, [orderBy])
 
 

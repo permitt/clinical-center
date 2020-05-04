@@ -3,6 +3,8 @@ from .models import *
 
 
 class ClinicSerializer(serializers.ModelSerializer):
+    rating = serializers.FloatField()
+
     class Meta:
         model = Clinic
         fields = '__all__'
