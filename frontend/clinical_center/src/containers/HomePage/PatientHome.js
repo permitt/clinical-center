@@ -19,7 +19,7 @@ import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
 import { getClinics } from '../../store/actions/ClinicActions';
-import { ADD } from '../../utils/constants'
+import { getAppointmentTypes } from '../../store/actions/AppointmentActions';
 import { Typography } from '@material-ui/core';
 
 
@@ -43,20 +43,18 @@ function PatientHome(props) {
     const orderByOptions = ['name', 'address', 'city', 'country'];
 
     const showClinicalCenters = () => {
-        props.getClinics(orderBy)
-        setRenderTable(true)
+        props.getClinics(orderBy);
+        setRenderTable(true);
+
     }
+
+    React.useEffect(() => { props.getAppointmentTypes() }, []);
 
     React.useEffect(() => {
         props.getClinics(orderBy);
     }, [orderBy])
 
-    const action = (type, email) => {
-        if (type === ADD) {
-            props.deleteDoctor(email)
-        }
 
-    }
     const sidebarOptions = [
         {
             name: 'Clinics',
@@ -112,8 +110,11 @@ function PatientHome(props) {
                                         <MenuItem disabled value="">
                                             Select Appointment Type
                                         </MenuItem>
-                                        <MenuItem value={'lol'}>Twenty</MenuItem>
-                                        < MenuItem value={30}>Thirty</MenuItem>
+                                        {props.appointmentTypes.map(type => (
+                                            <MenuItem value={type.typeName}>{type.typeName}</MenuItem>
+                                        ))}
+
+
                                     </Select>
                                     <Button variant="contained" color="primary">Check</Button>
                                 </Grid>
@@ -131,7 +132,7 @@ function PatientHome(props) {
                         {renderTable && <Table
                             data={props.clinics}
                             columns={columns}
-                            action={action}
+                            action={() => { }}
                             sortOptions={orderByOptions}
                             changeSortBy={val => setOrderBy(val)}
                             title="Clinics" />
@@ -146,12 +147,14 @@ function PatientHome(props) {
 
 const mapStateToProps = state => {
     return {
-        clinics: state.clinic.all
+        clinics: state.clinic.all,
+        appointmentTypes: state.appointment.types
     };
 };
 
 const mapDispatchToProps = {
     getClinics,
+    getAppointmentTypes
 };
 
 export default withRouter(

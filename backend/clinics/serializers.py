@@ -12,6 +12,11 @@ class AppointmentSerializer(serializers.ModelSerializer):
         model = Appointment
         fields = '__all__'
 
+class AppointmentTypeSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AppointmentType
+        fields = '__all__'
+
 class OperatingRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = OperatingRoom

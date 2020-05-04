@@ -6,5 +6,6 @@ router = routers.SimpleRouter()
 #router.register('clinic', views.ClinicListView)
 
 urlpatterns = [
-        path('clinic/', views.ClinicListView.as_view())
+        path('clinic/', views.ClinicListView.as_view()),
+        path('appointment-type/', views.AppointmentTypeListView.as_view()),
     ]
