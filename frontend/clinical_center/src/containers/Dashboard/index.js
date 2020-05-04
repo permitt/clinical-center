@@ -10,6 +10,7 @@ import PatientHome from '../HomePage/PatientHome'
 import DoctorHome from '../HomePage/DoctorHome'
 
 export function Dashboard({ role }) {
+    
     return (
     <div>
         <Helmet>
