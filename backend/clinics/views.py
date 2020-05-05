@@ -1,5 +1,6 @@
 from rest_framework import viewsets, generics, filters, permissions
 from .models import *
+from users.models import ClinicAdmin
 from .serializers import *
 from django.db.models import Avg
 
@@ -14,7 +15,12 @@ class ClinicListView(generics.ListAPIView):
 class OperatingRoomView(generics.ListAPIView):
     serializer_class = OperatingRoomSerializer
     #permission_classes = [permissions.IsAuthenticated]
-    queryset = OperatingRoom.objects.all()
+    def get_queryset(self):
+        user = self.request.user
+        userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
+        query = OperatingRoom.objects.filter(clinic=userLogged.values('employedAt')[:1])
+
+        return query
 
 class AppointmentTypeListView(generics.ListAPIView):
     queryset = AppointmentType.objects.all()

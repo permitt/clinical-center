@@ -35,7 +35,6 @@ class ClinicAdminViewset(viewsets.ModelViewSet):
 # JWT customized view
 
 class DoctorViewset(viewsets.ModelViewSet):
-    #queryset = Doctor.objects.all(fristName='ana')
     serializer_class = DoctorSerializer
     permission_classes = [custom_permissions.CustomDoctorPermissions]
     lookup_field = 'email'
