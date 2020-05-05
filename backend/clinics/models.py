@@ -52,8 +52,8 @@ class PriceList(models.Model):
 
 class Appointment(models.Model):
     clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='appointments')
-    date = models.DateField()
-    time = models.TimeField()
+    date = models.DateField(null=True, blank=True)
+    time = models.TimeField(null=True, blank=True)
     typeOf = models.ForeignKey(to=AppointmentType, on_delete=models.CASCADE)
     #price from .clinic.prices
     discount = models.IntegerField(default=0)
@@ -64,11 +64,11 @@ class Appointment(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['clinic','dateTime','doctor'], name='unique doctor date time for a clinic')
+            models.UniqueConstraint(fields=['clinic','date','time', 'doctor'], name='unique doctor date time for a clinic')
         ]
 
     def __str__(self):
-        return f'{self.clinic.name} - {self.typeOf.typeName} - {self.dateTime}'
+        return f'{self.clinic.name} - {self.typeOf.typeName} - {self.date} : {self.time}'
 
 class Ratings(models.IntegerChoices):
     ONE = 1

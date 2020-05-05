@@ -4,6 +4,10 @@ from .models import *
 
 class ClinicSerializer(serializers.ModelSerializer):
     rating = serializers.FloatField()
+    appointmentPrice = serializers.SerializerMethodField('get_price')
+
+    def get_price(self,obj):
+        return getattr(obj, 'appointmentPrice', None)
 
     class Meta:
         model = Clinic
@@ -24,7 +28,7 @@ class OperatingRoomSerializer(serializers.ModelSerializer):
         model = OperatingRoom
         fields = '__all__'
 
-class PriceList(serializers.ModelSerializer):
+class PriceListSerializer(serializers.ModelSerializer):
     class Meta:
         model = PriceList
         fields = '__all__'
