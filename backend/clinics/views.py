@@ -5,8 +5,12 @@ from django.db.models import Avg, F, Sum, OuterRef, Subquery, When, Case
 from django.db.models.functions import Coalesce
 from users.models import Doctor, Schedule
 from users.serializers import DoctorSerializer
+from rest_framework import viewsets, generics, filters, permissions
+from .models import *
+from users.models import ClinicAdmin
 from .serializers import *
 import datetime
+from django.db.models import Avg
 
 class ClinicListView(generics.ListAPIView):
     serializer_class = ClinicSerializer
@@ -14,12 +18,17 @@ class ClinicListView(generics.ListAPIView):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     ordering_fields = ['name', 'address', 'city', 'country']
     queryset = Clinic.objects.annotate(rating=Avg('ratings__rating')).all()
-
+    queryset = Clinic.objects.all()
 
 class OperatingRoomView(generics.ListAPIView):
     serializer_class = OperatingRoomSerializer
     #permission_classes = [permissions.IsAuthenticated]
-    queryset = OperatingRoom.objects.all()
+    def get_queryset(self):
+        user = self.request.user
+        userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
+        query = OperatingRoom.objects.filter(clinic=userLogged.values('employedAt')[:1])
+
+        return query
 
 class AppointmentTypeListView(generics.ListAPIView):
     queryset = AppointmentType.objects.all()

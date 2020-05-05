@@ -93,7 +93,6 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             token['last_name'] = user.docAccount.lastName
             token['email'] = user.docAccount.email
             token['role'] = "DOCTOR"
-        # ...
 
         return token
 

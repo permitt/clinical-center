@@ -5,7 +5,7 @@ from .serializers import *
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import *
 from . import custom_permissions
-# Create your views here.
+
 
 class PatientViewset(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
@@ -35,11 +35,18 @@ class ClinicAdminViewset(viewsets.ModelViewSet):
 # JWT customized view
 
 class DoctorViewset(viewsets.ModelViewSet):
-    queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
     permission_classes = [custom_permissions.CustomDoctorPermissions]
     lookup_field = 'email'
     lookup_value_regex = '[\w@.]+'
+
+    def get_queryset(self):
+        user = self.request.user
+        userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
+        query = Doctor.objects.filter(employedAt=userLogged.values('employedAt')[:1])
+
+        return query
+
 
     def perform_destroy(self, instance):
         # Delete the user as well
