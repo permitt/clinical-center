@@ -37,10 +37,10 @@ function WelcomePage() {
       </Grid>
       <Container component="main" style={main} maxWidth="md">
         <Typography variant="h2" component="h1" gutterBottom>
-            Neki naslov
+            Clinical centers 
         </Typography>
         <Typography variant="h5" component="h2" gutterBottom>
-            Neki malo duzi podnaslov. Ovo u sustini mozemo i izbaciti. Ali bi bilo okej posle da ubacimo neku i sliku i da ovo bude kao pocetna stranica za klinicki centar.
+        A clinic (or outpatient clinic or ambulatory care clinic) is a healthcare facility that is primarily focused on the care of outpatients. Clinics can be privately operated or publicly managed and funded. They typically cover the primary healthcare needs of populations in local communities, in contrast to larger hospitals which offer specialised treatments and admit inpatients for overnight stays.
         </Typography>
       </Container>
     </div>
