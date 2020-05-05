@@ -49,11 +49,12 @@ def appointmentCheck(request):
         date = datetime.datetime.strptime(request.data['appointmentDate'], '%d-%m-%Y')
         dateDay = date.weekday() + 1
         appointmentType = request.data['appointmentType']
+        duration = AppointmentType.objects.get(typeName=appointmentType).duration
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':"Invalid parameters."})
 
     try:
-        duration = AppointmentType.objects.get(typeName=appointmentType).duration
+
         schedule = Schedule.objects.filter(employee_id = OuterRef('email'), day=dateDay)
         doctors = Doctor.objects\
             .annotate(busyHours = Coalesce(Sum(Case(When(appointments__date=date, then='appointments__typeOf__duration'))), 0),
