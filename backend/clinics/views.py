@@ -7,6 +7,7 @@ class ClinicListView(generics.ListAPIView):
     #permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     ordering_fields = ['name', 'address', 'city', 'country']
+    queryset = Clinic.objects.annotate(rating=Avg('ratings__rating')).all()
     queryset = Clinic.objects.all()
 
 class OperatingRoomView(generics.ListAPIView):

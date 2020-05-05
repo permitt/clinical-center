@@ -29,6 +29,13 @@ class AppointmentType(models.Model):
     def __str__(self):
         return self.typeName
 
+class Specialization(models.Model):
+    typeOf = models.ForeignKey(to=AppointmentType, on_delete=models.CASCADE)
+    doctor = models.ForeignKey(to='users.Doctor', on_delete=models.CASCADE, related_name='specializations')
+
+    def __str__(self):
+        return f'{self.doctor.firstName} {self.doctor.lastName} {self.typeOf.typeName}'
+
 class PriceList(models.Model):
     clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='prices')
     appointmentType = models.ForeignKey(to=AppointmentType, on_delete=models.CASCADE, related_name='prices')
@@ -45,7 +52,8 @@ class PriceList(models.Model):
 
 class Appointment(models.Model):
     clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='appointments')
-    dateTime = models.DateTimeField()
+    date = models.DateField()
+    time = models.TimeField()
     typeOf = models.ForeignKey(to=AppointmentType, on_delete=models.CASCADE)
     #price from .clinic.prices
     discount = models.IntegerField(default=0)
@@ -74,8 +82,22 @@ class DoctorRating(models.Model):
     patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE)
     rating = models.IntegerField(choices=Ratings.choices)
 
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['doctor','patient'], name='one doctor rating per patient')
+        ]
+
+    def __str__(self):
+        return f'{self.patient.firstName} {self.patient.lastName} {self.doctor.name} {self.rating}'
 
 class ClinicRating(models.Model):
     clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='ratings')
     patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE)
     rating = models.IntegerField(choices=Ratings.choices)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['clinic', 'patient'], name='one clinic rating per patient')
+        ]
+    def __str__(self):
+        return f'{self.patient.firstName} {self.patient.lastName} {self.clinic.name} {self.rating}'
