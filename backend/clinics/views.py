@@ -1,6 +1,7 @@
 from rest_framework import viewsets, generics, filters, permissions
 from .models import *
 from .serializers import *
+from django.db.models import Avg
 
 class ClinicListView(generics.ListAPIView):
     serializer_class = ClinicSerializer
