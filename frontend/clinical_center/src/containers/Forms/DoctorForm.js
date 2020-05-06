@@ -15,11 +15,9 @@ import Input from '@material-ui/core/Input';
 import MenuItem from '@material-ui/core/MenuItem';
 import ListItemText from '@material-ui/core/ListItemText';
 import Checkbox from '@material-ui/core/Checkbox';
-import Chip from '@material-ui/core/Chip';
 
 import { withFormikField } from '../../utils/withFormikField'
 import { formStyle, submitButton } from '../../assets/jss/material-dashboard-react/components/FormStyle';
-import { registerDoctorSchema } from './validations'
 import { addDoctor } from '../../store/actions/DoctorActions';
 
 const FormikTextField = withFormikField(TextField);
@@ -57,7 +55,7 @@ function DoctorForm (props) {
   const submit = (values) => {
     const from = startTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
     const to = endTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
-    days.forEach((day, index) => values.schedule.push({index: {from, to}}))
+    days.forEach((day, index) => values.schedule.push({day: index, from, to}))
     props.addDoctor(values)
   };
   return (

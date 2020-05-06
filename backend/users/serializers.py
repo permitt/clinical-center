@@ -51,21 +51,38 @@ class ClinicAdminSerializer(serializers.ModelSerializer):
 
 class DoctorSerializer(serializers.ModelSerializer):
 
+    def getClinicId(self, obj):
+        user = self.context['request'].user
+        userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
+        clinicId = userLogged.employedAt
+
+        return clinicId
     class Meta:
         model = Doctor
         exclude = ['user', 'activated']
 
     def create(self, validated_data):
+        requestBody = self.context['request'].data
+        schedule = requestBody['schedule']
+
         email = validated_data.get("email", None)
         password = validated_data.get("password", None)
         user = User.objects.create(username=email,email=email, is_active=False)
         user.set_password(password)
         user.save()
-        print(validated_data)
-
         doctor = Doctor(**validated_data)
         doctor.user = user
+        userLogged = ClinicAdmin.objects.filter(email=self.context['request'].user.username).get()
+        clinicId = userLogged.employedAt
+        doctor.employedAt = clinicId
         doctor.save()
+        try:
+            for day in schedule:
+                schedule = Schedule.objects.create(employee=doctor, day=day['day'], startTime=day['from'], endTime=day['to'])
+                schedule.save()
+        except:
+            doctor.delete()
+
         return doctor
 
 

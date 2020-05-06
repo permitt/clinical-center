@@ -56,21 +56,23 @@ class Doctor(models.Model):
 
 
 class Schedule(models.Model):
+
+
     class WeekDay(models.IntegerChoices):
-        MONDAY = 1
-        TUESDAY = 2
-        WEDNESDAY = 3
-        THURSDAY = 4
-        FIRDAY = 5
-        SATURDAY = 6
-        SUNDAY = 7
+        MONDAY = 0
+        TUESDAY = 1
+        WEDNESDAY = 2
+        THURSDAY = 3
+        FIRDAY = 4
+        SATURDAY = 5
+        SUNDAY = 6
     employee = models.ForeignKey(Doctor, on_delete=models.CASCADE, related_name='schedule')
     day = models.IntegerField(choices=WeekDay.choices)
     startTime = models.TimeField()
     endTime = models.TimeField()
 
     class Meta:
-        unique_together = ['day', 'startTime', 'endTime']
+        unique_together = ['day', 'employee']
 
     def __str__(self):
         return f'{self.employee.firstName} {self.employee.lastName} {self.day} {self.startTime} {self.endTime}'
