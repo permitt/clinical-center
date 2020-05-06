@@ -7,6 +7,7 @@ from users.models import Doctor, Schedule
 from users.serializers import DoctorSerializer
 from rest_framework import viewsets, generics, filters, permissions
 from .models import *
+from .custom_permissions import *
 from users.models import ClinicAdmin
 from .serializers import *
 import datetime
@@ -22,7 +23,7 @@ class ClinicListView(generics.ListAPIView):
 
 class OperatingRoomView(generics.ListAPIView):
     serializer_class = OperatingRoomSerializer
-    #permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [OperatingRoomPermissions]
     def get_queryset(self):
         user = self.request.user
         userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()

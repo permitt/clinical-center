@@ -72,31 +72,13 @@ class CustomDoctorPermissions(permissions.BasePermission):
         super().__init__()
         self.allowed_methods=allowed_methods
 
-    # def has_permission(self, request, view):
-    #     try:
-    #         # Ispod ide model Admininistrator klase
-    #         permission = isinstance(request.user.account, str)
-    #     except:
-    #         permission = False
-    #     return permission
+    def has_permission(self, request, view):
 
-    def has_object_permission(self, request, view, obj):
-        print('ovde aaabaho')
         if request.method == 'PUT' or request.method == 'PATCH':
-            # If the profile is approved by Administrator and the logged in user is trying to access it
-            if obj.approved == True and obj.account == request.user:
-                return True
-            # Only Administrator
-            if hasattr(request.user, 'adminAccount'):
-                return True
-            return False
+            return hasattr(request.user, 'adminAccount')
         elif request.method == "DELETE":
-            # Only Administrator of the clinic
-            print(request.user)
             return hasattr(request.user, 'adminAccount')
         elif request.method == "GET":
-            print('ovde baho')
             return request.user and hasattr(request.user, 'adminAccount') and request.user.is_authenticated
         else:
-            print('ovde aaabaho')
-            return True
+            return False
