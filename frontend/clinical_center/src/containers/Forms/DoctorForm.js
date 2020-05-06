@@ -19,6 +19,7 @@ import Checkbox from '@material-ui/core/Checkbox';
 import { withFormikField } from '../../utils/withFormikField'
 import { formStyle, submitButton } from '../../assets/jss/material-dashboard-react/components/FormStyle';
 import { addDoctor } from '../../store/actions/DoctorActions';
+import { registerDoctorSchema } from './validations'
 
 const FormikTextField = withFormikField(TextField);
 const ITEM_HEIGHT = 48;
