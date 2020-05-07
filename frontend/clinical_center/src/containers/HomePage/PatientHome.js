@@ -21,9 +21,8 @@ import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.
 import { getClinics } from '../../store/actions/ClinicActions';
 import { getAppointmentTypes, checkAppointmentAvailable } from '../../store/actions/AppointmentActions';
 import { Typography } from '@material-ui/core';
-import Backdrop from '@material-ui/core/Backdrop';
-import Fade from '@material-ui/core/Fade';
 
+import CardList from '../../components/CardList/CardList';
 
 const useStyles = makeStyles(styles);
 
@@ -39,21 +38,31 @@ const columns = [
 
 function PatientHome(props) {
     const classes = useStyles();
-    const [renderClinicsTable, setRenderClinicsTable] = React.useState(false)
-    const [orderBy, setOrderBy] = React.useState('name')
-    const [appointmentDate, setAppointmentDate] = React.useState(new Date())
-    const [appointmentType, setAppointmentType] = React.useState('')
+    const [renderClinicsTable, setRenderClinicsTable] = React.useState(false);
+    const [orderBy, setOrderBy] = React.useState('name');
+    const [appointmentDate, setAppointmentDate] = React.useState(new Date());
+    const [appointmentType, setAppointmentType] = React.useState('');
+    const [renderAppointmentClinics, setRenderAppointmentClinics] = React.useState(false);
+    const [renderAppointmentDoctors, setRenderAppointmentDoctors] = React.useState(false);
     const orderByOptions = ['name', 'address', 'city', 'country'];
 
     const showClinicalCenters = () => {
         props.getClinics(orderBy);
         setRenderClinicsTable(true);
-
+        setRenderAppointmentClinics(false);
+        setRenderAppointmentDoctors(false);
     }
 
     const handleCheckClick = (e) => {
+        if (appointmentType === "") {
+            alert("NE MOZE PRAZNO");
+            return;
+        }
         const date = appointmentDate.toISOString().split('T')[0];
         props.checkAppointmentAvailable({ appointmentDate: date, appointmentType });
+        setRenderClinicsTable(false);
+        setRenderAppointmentClinics(true);
+
 
     }
 
@@ -147,11 +156,44 @@ function PatientHome(props) {
                             changeSortBy={val => setOrderBy(val)}
                             title="Clinics" />
                         }
+                        {renderAppointmentClinics &&
+                            <CardList sortOptions={['haha']} data={prepareClinicsData(props.clinics)} action={() => { setRenderAppointmentDoctors(true); setRenderAppointmentClinics(false); }} />
+                        }
+                        {renderAppointmentDoctors &&
+                            <CardList sortOptions={['haha']} data={prepareDoctorData(props.doctors)} />
+                        }
                     </div>
+
                 </div>
             </div>
         </>
     );
+}
+
+const prepareClinicsData = (data) => {
+    return data.map(unit => (
+        {
+            title: unit.name,
+            subHeading: unit.address + ', ' + unit.city + ', ' + unit.country,
+            rating: unit.rating,
+            description: unit.description,
+            detail: 'Appointment price: ' + unit.appointmentPrice + '.00$',
+            button: 'SEE DOCTORS',
+        }
+    ));
+}
+
+const prepareDoctorData = (data) => {
+    return data.map(unit => (
+        {
+            title: unit.firstName + ' ' + unit.lastName,
+            subHeading: '',
+            rating: 4,
+            description: '',
+            detail: <Select type='text'></Select>,
+            button: 'RESERVE',
+        }
+    ));
 }
 
 const mapStateToProps = state => {

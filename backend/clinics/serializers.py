@@ -3,7 +3,7 @@ from .models import *
 
 
 class ClinicSerializer(serializers.ModelSerializer):
-    rating = serializers.FloatField()
+    rating = serializers.DecimalField(decimal_places=2, max_digits=4)
     appointmentPrice = serializers.SerializerMethodField('get_price')
 
     def get_price(self,obj):
