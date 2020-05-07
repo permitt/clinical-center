@@ -19,7 +19,6 @@ class ClinicListView(generics.ListAPIView):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     ordering_fields = ['name', 'address', 'city', 'country']
     queryset = Clinic.objects.annotate(rating=Avg('ratings__rating')).all()
-    queryset = Clinic.objects.all()
 
 class OperatingRoomView(generics.ListAPIView):
     serializer_class = OperatingRoomSerializer
@@ -28,7 +27,6 @@ class OperatingRoomView(generics.ListAPIView):
         user = self.request.user
         userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
         query = OperatingRoom.objects.filter(clinic=userLogged.values('employedAt')[:1])
-
         return query
 
 class AppointmentTypeListView(generics.ListAPIView):
@@ -56,7 +54,7 @@ class AppointmentTypeListView(generics.ListAPIView):
 @api_view(["POST"])
 def appointmentCheck(request):
     try:
-        date = datetime.datetime.strptime(request.data['appointmentDate'], '%d-%m-%Y')
+        date = datetime.datetime.strptime(request.data['appointmentDate'], '%Y-%m-%d')
         dateDay = date.weekday() + 1
         appointmentType = request.data['appointmentType']
         duration = AppointmentType.objects.get(typeName=appointmentType).duration

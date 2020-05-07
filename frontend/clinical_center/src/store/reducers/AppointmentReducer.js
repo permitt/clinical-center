@@ -1,4 +1,4 @@
-import { SET_APPOINTMENT_TYPES } from '../actions/ActionTypes';
+import { SET_APPOINTMENT_TYPES, GET_APPOINTMENT_CHECK } from '../actions/ActionTypes';
 
 const initialState = {
     types: []

@@ -19,8 +19,10 @@ import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
 import { getClinics } from '../../store/actions/ClinicActions';
-import { getAppointmentTypes } from '../../store/actions/AppointmentActions';
+import { getAppointmentTypes, checkAppointmentAvailable } from '../../store/actions/AppointmentActions';
 import { Typography } from '@material-ui/core';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
 
 
 const useStyles = makeStyles(styles);
@@ -37,7 +39,7 @@ const columns = [
 
 function PatientHome(props) {
     const classes = useStyles();
-    const [renderTable, setRenderTable] = React.useState(false)
+    const [renderClinicsTable, setRenderClinicsTable] = React.useState(false)
     const [orderBy, setOrderBy] = React.useState('name')
     const [appointmentDate, setAppointmentDate] = React.useState(new Date())
     const [appointmentType, setAppointmentType] = React.useState('')
@@ -45,7 +47,13 @@ function PatientHome(props) {
 
     const showClinicalCenters = () => {
         props.getClinics(orderBy);
-        setRenderTable(true);
+        setRenderClinicsTable(true);
+
+    }
+
+    const handleCheckClick = (e) => {
+        const date = appointmentDate.toISOString().split('T')[0];
+        props.checkAppointmentAvailable({ appointmentDate: date, appointmentType });
 
     }
 
@@ -59,7 +67,7 @@ function PatientHome(props) {
 
     const sidebarOptions = [
         {
-            name: 'Clinics',
+            name: 'All Clinics',
             onClick: showClinicalCenters,
             icon: LocalHospital
         },
@@ -118,7 +126,7 @@ function PatientHome(props) {
 
 
                                     </Select>
-                                    <Button variant="contained" color="primary">Check</Button>
+                                    <Button variant="contained" onClick={handleCheckClick} color="primary">CHECK</Button>
                                 </Grid>
                                 <Grid item>
 
@@ -131,7 +139,7 @@ function PatientHome(props) {
                     </div>
                     <div className={classes.table}>
 
-                        {renderTable && <Table
+                        {renderClinicsTable && <Table
                             data={props.clinics}
                             columns={columns}
                             action={() => { }}
@@ -139,7 +147,6 @@ function PatientHome(props) {
                             changeSortBy={val => setOrderBy(val)}
                             title="Clinics" />
                         }
-
                     </div>
                 </div>
             </div>
@@ -150,13 +157,17 @@ function PatientHome(props) {
 const mapStateToProps = state => {
     return {
         clinics: state.clinic.all,
-        appointmentTypes: state.appointment.types
+        appointmentTypes: state.appointment.types,
+        doctors: state.doctor.all,
+
     };
 };
 
 const mapDispatchToProps = {
     getClinics,
-    getAppointmentTypes
+    getAppointmentTypes,
+    checkAppointmentAvailable,
+
 };
 
 export default withRouter(
