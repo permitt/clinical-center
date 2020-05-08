@@ -37,6 +37,10 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentSerializer
     queryset = Appointment.objects.all()
 
+    def create(self, request, *args, **kwargs):
+        response = super(AppointmentViewSet, self).create(request, *args, **kwargs)
+        send_email()  # sending mail
+        return response
 
 class AppointmentTypeListView(generics.ListAPIView):
     queryset = AppointmentType.objects.all()
@@ -92,31 +96,39 @@ def appointmentCheck(request):
             filter(doctors__in=doctors).distinct()
 
         docSer = DoctorSerializer(doctors, many=True)
+        print(docSer.data, " DOKTORIIII BRE")
         clinicSer = ClinicSerializer(clinics, many=True)
         appointments = []
 
         for doc in doctors:
             #appointments.append()
+            print(" OVOLIKO ZAUZET DOKTOR JU ", doc.busyHours)
             doctorElement = {'doctor':doc.email, 'time':[]}
             time = doc.startTime
-            print(time, ' je start a dur ', duration)
             endTime = doc.endTime
             appointmentsQS = Appointment.objects.filter(doctor=doc, date=date)
 
-            while(time < endTime):
+            while(time_add(time, duration) <= endTime):
+                print(time, '  je sad provjera')
+                time_advanced = False
                 for app in appointmentsQS:
                     appEndTime = time_add(app.time, app.typeOf.duration)
                     nextEndTime = time_add(time, duration)
-                    if (app.time <= time <= appEndTime or app.time <= nextEndTime <= appEndTime):
+                    if (app.time <= time < appEndTime or app.time < nextEndTime <= appEndTime):
                         time = appEndTime
-                    elif(time <= app.time <= nextEndTime or time <= appEndTime <= nextEndTime ):
+                        time_advanced = True
+                    elif(time <= app.time < nextEndTime or time < appEndTime <= nextEndTime ):
                         time = appEndTime
+                        time_advanced = True
+
+                if time_advanced:
+                    print("PRESKACEM SA OVIM TIMEOM ", time)
+                    continue
 
                 doctorElement['time'].append(time)
                 time = time_add(time, duration)
 
             appointments.append(doctorElement)
-
         return Response(status=status.HTTP_200_OK, data={"doctors": docSer.data, "clinics": clinicSer.data, "availableTerms":appointments})
     except Exception as inst:
         print(inst)
