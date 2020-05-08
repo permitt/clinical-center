@@ -19,7 +19,7 @@ import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
 import { getClinics } from '../../store/actions/ClinicActions';
-import { getAppointmentTypes, checkAppointmentAvailable } from '../../store/actions/AppointmentActions';
+import { getAppointmentTypes, checkAppointmentAvailable, setAppointmentTerms } from '../../store/actions/AppointmentActions';
 import { Typography } from '@material-ui/core';
 
 import CardList from '../../components/CardList/CardList';
@@ -39,8 +39,10 @@ const columns = [
 function PatientHome(props) {
     const classes = useStyles();
     const [renderClinicsTable, setRenderClinicsTable] = React.useState(false);
+    const [chosenClinic, setChosenClinic] = React.useState(null);
     const [orderBy, setOrderBy] = React.useState('name');
     const [appointmentDate, setAppointmentDate] = React.useState(new Date());
+    const [appointmentTime, setAppointmentTime] = React.useState("")
     const [appointmentType, setAppointmentType] = React.useState('');
     const [renderAppointmentClinics, setRenderAppointmentClinics] = React.useState(false);
     const [renderAppointmentDoctors, setRenderAppointmentDoctors] = React.useState(false);
@@ -61,16 +63,63 @@ function PatientHome(props) {
         const date = appointmentDate.toISOString().split('T')[0];
         props.checkAppointmentAvailable({ appointmentDate: date, appointmentType });
         setRenderClinicsTable(false);
+        setRenderAppointmentDoctors(false);
+        setAppointmentTime('');
         setRenderAppointmentClinics(true);
-
-
     }
+
+    const handleClinicClick = (id) => {
+        setChosenClinic(id);
+        setRenderClinicsTable(false);
+        setRenderAppointmentDoctors(true);
+        setRenderAppointmentClinics(false);
+    }
+
+    const handleReserveClick = id => {
+        if (appointmentTime === "") {
+            alert("VRIJEME");
+            return;
+        }
+        const appTypeID = props.appointmentTypes.filter(type => type.typeName == appointmentType)[0].id;
+        const data = {
+            date: appointmentDate.toISOString().split('T')[0],
+            time: appointmentTime,
+            clinic: chosenClinic,
+            typeOf: appTypeID,
+            doctor: id,
+            patient: props.email,
+        }
+        console.log("DATA DOBIJENA : ", data);
+    }
+
+
+    const prepareDoctorData = () => {
+
+        return props.doctors.filter(doc => doc.employedAt == chosenClinic).map(doctor => {
+            const selector = (<Select displayEmpty value={appointmentTime} onChange={(e) => setAppointmentTime(e.target.value)} >
+                <MenuItem disabled value=""> Select Appointment Time </MenuItem>
+                {props.appointmentTerms.filter(at => at.doctor === doctor.email)[0].time.map(timeExact => (
+                    <MenuItem value={timeExact}>{timeExact}</MenuItem>
+                ))}
+            </Select >);
+
+            return {
+                title: doctor.firstName + ' ' + doctor.lastName,
+                id: doctor.email,
+                subHeading: '',
+                rating: 0,
+                description: '',
+                detail: selector,
+                button: 'RESERVE',
+            }
+        });
+    }
+
 
     React.useEffect(() => { props.getAppointmentTypes() }, []);
 
     React.useEffect(() => {
         props.getClinics(orderBy);
-        console.log("MOJE KLINIKEE BRE : ", props.clinics);
     }, [orderBy])
 
 
@@ -157,10 +206,10 @@ function PatientHome(props) {
                             title="Clinics" />
                         }
                         {renderAppointmentClinics &&
-                            <CardList sortOptions={['haha']} data={prepareClinicsData(props.clinics)} action={() => { setRenderAppointmentDoctors(true); setRenderAppointmentClinics(false); }} />
+                            <CardList sortOptions={['haha']} data={prepareClinicsData(props.clinics)} action={(clinic) => { handleClinicClick(clinic); }} />
                         }
                         {renderAppointmentDoctors &&
-                            <CardList sortOptions={['haha']} data={prepareDoctorData(props.doctors)} />
+                            <CardList sortOptions={['haha']} data={prepareDoctorData()} action={(doctor) => handleReserveClick(doctor)} />
                         }
                     </div>
 
@@ -174,6 +223,7 @@ const prepareClinicsData = (data) => {
     return data.map(unit => (
         {
             title: unit.name,
+            id: unit.id,
             subHeading: unit.address + ', ' + unit.city + ', ' + unit.country,
             rating: unit.rating,
             description: unit.description,
@@ -183,24 +233,13 @@ const prepareClinicsData = (data) => {
     ));
 }
 
-const prepareDoctorData = (data) => {
-    return data.map(unit => (
-        {
-            title: unit.firstName + ' ' + unit.lastName,
-            subHeading: '',
-            rating: 4,
-            description: '',
-            detail: <Select type='text'></Select>,
-            button: 'RESERVE',
-        }
-    ));
-}
-
 const mapStateToProps = state => {
     return {
         clinics: state.clinic.all,
         appointmentTypes: state.appointment.types,
+        appointmentTerms: state.appointment.availableTerms,
         doctors: state.doctor.all,
+        email: state.authUser.email,
 
     };
 };

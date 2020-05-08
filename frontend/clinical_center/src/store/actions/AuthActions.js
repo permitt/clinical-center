@@ -1,4 +1,4 @@
-import { LOGIN, AUTH_USER, REGISTER, LOGIN_ERROR, REGISTER_ERROR, SET_ROLE, LOGOUT } from './ActionTypes';
+import { LOGIN, AUTH_USER, REGISTER, LOGIN_ERROR, REGISTER_ERROR, SET_ROLE, LOGOUT, SET_USER_EMAIL } from './ActionTypes';
 
 export const logIn = logInData => {
   return {
@@ -33,6 +33,14 @@ export const setRole = payload => {
     payload
   }
 }
+
+export const setEmail = payload => {
+  return {
+    type: SET_USER_EMAIL,
+    payload
+  }
+}
+
 
 export const loginError = payload => {
   return {

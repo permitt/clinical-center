@@ -1,7 +1,7 @@
 import { call, put, select } from 'redux-saga/effects';
 import { push, go } from 'connected-react-router'
 import { appointmentService } from '../../services/AppointmentService';
-import { setAppointmentTypes } from '../actions/AppointmentActions';
+import { setAppointmentTypes, setAppointmentTerms } from '../actions/AppointmentActions';
 import { setDoctors } from '../actions/DoctorActions';
 import { setClinics } from '../actions/ClinicActions';
 
@@ -19,6 +19,7 @@ export function* appointmentChecking(action) {
         const resp = yield call(() => appointmentService.getAppointmentCheck(action.payload));
         yield put(setDoctors(resp.doctors));
         yield put(setClinics(resp.clinics));
+        yield put(setAppointmentTerms(resp.availableTerms));
     } catch (err) {
         console.log(err);
     }

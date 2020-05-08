@@ -50,14 +50,6 @@ class ClinicAdminSerializer(serializers.ModelSerializer):
 
 
 class DoctorSerializer(serializers.ModelSerializer):
-    startTime = serializers.SerializerMethodField('get_start_time')
-    endTime = serializers.SerializerMethodField('get_end_time')
-
-    def get_start_time(self, obj):
-        return getattr(obj, 'startTime', None)
-
-    def get_end_time(self, obj):
-        return getattr(obj, 'endTime', None)
 
     def getClinicId(self, obj):
         user = self.context['request'].user

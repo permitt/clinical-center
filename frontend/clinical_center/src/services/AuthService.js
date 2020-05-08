@@ -104,6 +104,19 @@ class AuthService extends ApiService {
     return decodedToken.role
   }
 
+  getUserEmail = () => {
+    const user = JSON.parse(localStorage.getItem('user'))
+    let decodedToken;
+    try {
+      decodedToken = jwt_decode(user.access)
+    } catch (error) {
+      console.log(error)
+      return null
+    }
+
+    return decodedToken.email
+  }
+
   updateUserInStorage = property => {
     const user = localStorage.getItem('user')
     let jsonUser = JSON.parse(user)

@@ -58,7 +58,8 @@ class Appointment(models.Model):
     #price from .clinic.prices
     discount = models.IntegerField(default=0)
     doctor = models.ForeignKey(to='users.Doctor', on_delete=models.CASCADE, related_name='appointments')
-    operatingRoom = models.ForeignKey(to=OperatingRoom, on_delete=models.CASCADE, related_name='appointments')
+    # if the operatingRoom is Null => this is a request for the ClinicAdmin to approve
+    operatingRoom = models.ForeignKey(to=OperatingRoom, on_delete=models.CASCADE, related_name='appointments', null=True)
     # if the patient is null => the appointment was set inAdvance
     patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE, related_name='appointments', null=True)
 

@@ -1,3 +1,5 @@
+import sys
+
 from rest_framework import viewsets, generics, filters, permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -12,6 +14,7 @@ from users.models import ClinicAdmin
 from .serializers import *
 import datetime
 from django.db.models import Avg
+import json
 
 class ClinicListView(generics.ListAPIView):
     serializer_class = ClinicSerializer
@@ -28,6 +31,12 @@ class OperatingRoomView(generics.ListAPIView):
         userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
         query = OperatingRoom.objects.filter(clinic=userLogged.values('employedAt')[:1])
         return query
+
+
+class AppointmentViewSet(viewsets.ModelViewSet):
+    serializer_class = AppointmentSerializer
+    queryset = Appointment.objects.all()
+
 
 class AppointmentTypeListView(generics.ListAPIView):
     queryset = AppointmentType.objects.all()
@@ -50,6 +59,13 @@ class AppointmentTypeListView(generics.ListAPIView):
 #     serializer_class = ClinicSerializer
 #     #permission_classes = [custom_permissions.CustomPatientPermissions]
 
+
+def time_add(time, duration):
+    start = datetime.datetime(
+        2000, 1, 1,
+        hour=time.hour, minute=time.minute, second=time.second)
+    end = start + datetime.timedelta(minutes=duration)
+    return end.time()
 
 @api_view(["POST"])
 def appointmentCheck(request):
@@ -77,12 +93,31 @@ def appointmentCheck(request):
 
         docSer = DoctorSerializer(doctors, many=True)
         clinicSer = ClinicSerializer(clinics, many=True)
-        appointments = [{'doctor':'da', 'time':[]}]
-        print(doctors.appointments, ' SU APPPSSSS')
-        for app in doctors.appointments:
-            appointments.append({''})
+        appointments = []
 
+        for doc in doctors:
+            #appointments.append()
+            doctorElement = {'doctor':doc.email, 'time':[]}
+            time = doc.startTime
+            print(time, ' je start a dur ', duration)
+            endTime = doc.endTime
+            appointmentsQS = Appointment.objects.filter(doctor=doc, date=date)
 
-        return Response(status=status.HTTP_200_OK, data={"doctors": docSer.data, "clinics": clinicSer.data, "appointments":appointments})
-    except:
+            while(time < endTime):
+                for app in appointmentsQS:
+                    appEndTime = time_add(app.time, app.typeOf.duration)
+                    nextEndTime = time_add(time, duration)
+                    if (app.time <= time <= appEndTime or app.time <= nextEndTime <= appEndTime):
+                        time = appEndTime
+                    elif(time <= app.time <= nextEndTime or time <= appEndTime <= nextEndTime ):
+                        time = appEndTime
+
+                doctorElement['time'].append(time)
+                time = time_add(time, duration)
+
+            appointments.append(doctorElement)
+
+        return Response(status=status.HTTP_200_OK, data={"doctors": docSer.data, "clinics": clinicSer.data, "availableTerms":appointments})
+    except Exception as inst:
+        print(inst)
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':'Cannot book an appointment.'})
