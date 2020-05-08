@@ -8,13 +8,11 @@ from django.db.models.functions import Coalesce
 from users.models import Doctor, Schedule
 from users.serializers import DoctorSerializer
 from rest_framework import viewsets, generics, filters, permissions
-from .models import *
 from .custom_permissions import *
 from users.models import ClinicAdmin
 from .serializers import *
 import datetime
 from django.db.models import Avg
-import json
 
 class ClinicListView(generics.ListAPIView):
     serializer_class = ClinicSerializer
@@ -37,10 +35,6 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentSerializer
     queryset = Appointment.objects.all()
 
-    def create(self, request, *args, **kwargs):
-        response = super(AppointmentViewSet, self).create(request, *args, **kwargs)
-        send_email()  # sending mail
-        return response
 
 class AppointmentTypeListView(generics.ListAPIView):
     queryset = AppointmentType.objects.all()

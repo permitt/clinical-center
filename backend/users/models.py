@@ -52,7 +52,7 @@ class Doctor(models.Model):
     activated = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.email} {self.employedAt}'
+        return f'{self.firstName} {self.lastName}'
 
 
 class Schedule(models.Model):
