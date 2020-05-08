@@ -66,9 +66,9 @@ def appointmentCheck(request):
         schedule = Schedule.objects.filter(employee_id = OuterRef('email'), day=dateDay)
         doctors = Doctor.objects\
             .annotate(busyHours = Coalesce(Sum(Case(When(appointments__date=date, then='appointments__typeOf__duration'))), 0),
-                      start= Subquery(schedule.values('startTime')[:1]),
-                      end = Subquery(schedule.values('endTime')[:1])) \
-            .filter(specializations__typeOf__typeName=appointmentType, busyHours__lte=((F('end')-F('start'))/60000000)-duration).distinct()
+                      startTime= Subquery(schedule.values('startTime')[:1]),
+                      endTime = Subquery(schedule.values('endTime')[:1])) \
+            .filter(specializations__typeOf__typeName=appointmentType, busyHours__lte=((F('endTime')-F('startTime'))/60000000)-duration).distinct()
 
         priceList = PriceList.objects.filter(clinic=OuterRef('id'), appointmentType__typeName=appointmentType)
         clinics = Clinic.objects. \
@@ -77,7 +77,12 @@ def appointmentCheck(request):
 
         docSer = DoctorSerializer(doctors, many=True)
         clinicSer = ClinicSerializer(clinics, many=True)
+        appointments = [{'doctor':'da', 'time':[]}]
+        print(doctors.appointments, ' SU APPPSSSS')
+        for app in doctors.appointments:
+            appointments.append({''})
 
-        return Response(status=status.HTTP_200_OK, data={"doctors": docSer.data, "clinics": clinicSer.data})
+
+        return Response(status=status.HTTP_200_OK, data={"doctors": docSer.data, "clinics": clinicSer.data, "appointments":appointments})
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':'Cannot book an appointment.'})
