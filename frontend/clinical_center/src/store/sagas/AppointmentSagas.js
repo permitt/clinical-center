@@ -28,7 +28,6 @@ export function* appointmentChecking(action) {
 export function* appointmentPost(action) {
     try {
         const resp = yield call(() => appointmentService.postAppointment(action.payload));
-        console.log(resp);
     } catch (err) {
 
     }

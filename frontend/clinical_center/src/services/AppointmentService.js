@@ -15,15 +15,12 @@ class appointmentServiceApi extends ApiService {
     }
 
     getAppointmentCheck = async (payload) => {
-        console.log('STIGAO : ', payload);
         const { data } = await this.apiClient.post(ENDPOINTS.GET_APPOINTMENT_CHECK, payload);
-        console.log('NAZAAD : ', data);
         return data;
     }
 
     postAppointment = async (payload) => {
         const { data } = await this.apiClient.post(ENDPOINTS.POST_APPOINTMENT, payload);
-
         return data;
     }
 

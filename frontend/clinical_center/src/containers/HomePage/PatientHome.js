@@ -89,7 +89,7 @@ function PatientHome(props) {
             doctor: id,
             patient: props.email,
         }
-        console.log("DATA DOBIJENA : ", data);
+
         props.postAppointment(data);
 
     }
