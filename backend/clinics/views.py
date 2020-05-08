@@ -123,7 +123,7 @@ def appointmentCheck(request):
                 time = time_add(time, duration)
 
             appointments.append(doctorElement)
-        return Response(status=status.HTTP_200_OK, data={"doctors": docSer.data, "clinics": clinicSer.data, "availableTerms":appointments})
+        return Response(status=status.HTTP_200_OK, data={"doctors": docSer.data, "clinics": clinicSer.data, "availableTerms":appointments}, content_type='application/json')
     except Exception as inst:
         print(inst)
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':'Cannot book an appointment.'})

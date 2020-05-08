@@ -72,7 +72,7 @@ class Appointment(models.Model):
         ]
 
     def save(self, *args, **kwargs):
-        #super(Appointment, self).save(*args, **kwargs)
+        super(Appointment, self).save(*args, **kwargs)
 
         if self.operatingRoom is None:
             clinic_admins = ClinicAdmin.objects.filter(employedAt=self.clinic)
