@@ -1,7 +1,7 @@
 APPOINTMENT_REQUEST_TITLE = "New Appointment Request"
 APPOINTMENT_REQUEST_BODY = """
 
-Dear %s %s,
+Dear administrator,
 
 A new appointment request has been made in your clinic. You need to assign an operating room.
 Below are the details.

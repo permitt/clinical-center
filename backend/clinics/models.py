@@ -2,6 +2,7 @@ from django.db import models
 from .email import APPOINTMENT_REQUEST_BODY, APPOINTMENT_REQUEST_TITLE
 from django.core.mail import send_mail
 from users.models import ClinicAdmin
+from django.conf import settings
 
 class Clinic(models.Model):
     name = models.CharField(max_length=30)
@@ -74,19 +75,16 @@ class Appointment(models.Model):
         #super(Appointment, self).save(*args, **kwargs)
 
         if self.operatingRoom is None:
-
             clinic_admins = ClinicAdmin.objects.filter(employedAt=self.clinic)
             to_emails = [admin.email for admin in clinic_admins]
 
             send_mail(APPOINTMENT_REQUEST_TITLE,
                   APPOINTMENT_REQUEST_BODY % (
-                  'Mitar', 'Perovic', self.date, self.time, self.typeOf,
-                  self.patient, self.doctor),
-                  'djangojunglegroove@gmail.com',
+                   self.date, self.time, self.typeOf,self.patient, self.doctor),
+                  settings.EMAIL_HOST_USER,
                   to_emails,
                   fail_silently=True)
-            
-            print(" POSLAT MEJL WOOO ")
+
 
     def __str__(self):
         return f'{self.clinic.name} - {self.typeOf.typeName} - {self.date} : {self.time}'
