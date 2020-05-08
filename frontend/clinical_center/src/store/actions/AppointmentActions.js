@@ -2,7 +2,8 @@ import {
     GET_APPOINTMENT_TYPES,
     SET_APPOINTMENT_TYPES,
     GET_APPOINTMENT_CHECK,
-    SET_APPOINTMENT_TERMS
+    SET_APPOINTMENT_TERMS,
+    POST_APPOINTMENT
 } from './ActionTypes';
 
 export const getAppointmentTypes = () => {
@@ -23,6 +24,14 @@ export const setAppointmentTerms = payload => {
         payload
     }
 }
+
+export const postAppointment = payload => {
+    return {
+        type: POST_APPOINTMENT,
+        payload
+    }
+}
+
 export const checkAppointmentAvailable = (payload) => {
     return {
         type: GET_APPOINTMENT_CHECK,

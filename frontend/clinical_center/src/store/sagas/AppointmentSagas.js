@@ -24,3 +24,12 @@ export function* appointmentChecking(action) {
         console.log(err);
     }
 }
+
+export function* appointmentPost(action) {
+    try {
+        const resp = yield call(() => appointmentService.postAppointment(action.payload));
+        console.log(resp);
+    } catch (err) {
+
+    }
+}

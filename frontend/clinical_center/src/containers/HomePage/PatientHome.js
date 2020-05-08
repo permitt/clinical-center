@@ -19,7 +19,7 @@ import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
 import { getClinics } from '../../store/actions/ClinicActions';
-import { getAppointmentTypes, checkAppointmentAvailable, setAppointmentTerms } from '../../store/actions/AppointmentActions';
+import { getAppointmentTypes, checkAppointmentAvailable, setAppointmentTerms, postAppointment } from '../../store/actions/AppointmentActions';
 import { Typography } from '@material-ui/core';
 
 import CardList from '../../components/CardList/CardList';
@@ -90,6 +90,8 @@ function PatientHome(props) {
             patient: props.email,
         }
         console.log("DATA DOBIJENA : ", data);
+        props.postAppointment(data);
+
     }
 
 
@@ -248,7 +250,7 @@ const mapDispatchToProps = {
     getClinics,
     getAppointmentTypes,
     checkAppointmentAvailable,
-
+    postAppointment,
 };
 
 export default withRouter(
