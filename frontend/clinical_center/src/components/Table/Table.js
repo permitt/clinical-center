@@ -135,7 +135,7 @@ export default function SimpleTable(props) {
   const [filteredData, setFilteredData] = React.useState(rows)
   const columns = props.columns
 
-  useEffect(()=> {
+  useEffect(() => {
     setFilteredData(rows)
   }, [props])
 
@@ -152,25 +152,25 @@ export default function SimpleTable(props) {
     name = name.toLowerCase()
     const columnLabels = columns.map(column => column.id.toLowerCase())
     const data = rows.filter(row => {
-        for (const property in row) {
-          if (!(columnLabels.includes(property.toLowerCase())))
-            continue;
-          if (String(row[property]).toLowerCase().startsWith(name))
-            return true
-        }
-        return false
-       })
-       setFilteredData(data)
-    }
+      for (const property in row) {
+        if (!(columnLabels.includes(property.toLowerCase())))
+          continue;
+        if (String(row[property]).toLowerCase().startsWith(name))
+          return true
+      }
+      return false
+    })
+    setFilteredData(data)
+  }
 
   return (
     <Paper className={classes.root}>
-      <TableToolbar 
-        title={props.title} 
-        form={props.form} 
-        sortOptions={props.sortOptions} 
-        changeSortBy={props.changeSortBy} 
-        search={search}/>
+      <TableToolbar
+        title={props.title}
+        form={props.form}
+        sortOptions={props.sortOptions}
+        changeSortBy={props.changeSortBy}
+        search={search} />
       <TableContainer className={classes.container} >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -196,14 +196,14 @@ export default function SimpleTable(props) {
                       return (
                         <TableCell key={column.id} align={column.align}>
                           {column.id === 'firstName' ? value + ' ' + row.lastName : value}
-                        </TableCell> 
+                        </TableCell>
                       );
-                    else 
+                    else
                       return (
                         <TableCell key={column.label} align="left">
                           {column.icon === 'delete' &&
-                          <DeleteIcon onClick={() => column.action(row.email)} /> }
-                      </TableCell>
+                            <DeleteIcon onClick={() => column.action(row.email)} />}
+                        </TableCell>
                       )
                   })}
                 </TableRow>

@@ -13,7 +13,7 @@ class Patient(models.Model):
     city = models.CharField(max_length=30)
     country = models.CharField(max_length=30)
     phoneNumber = models.IntegerField()
-    activated = models.BooleanField(default=False)
+    activation_link = models.CharField(max_length=100, default='')
     approved = models.BooleanField(default=False)
 
     def __str__(self):
@@ -52,7 +52,7 @@ class Doctor(models.Model):
     activated = models.BooleanField(default=False)
 
     def __str__(self):
-        return f'{self.email} {self.employedAt}'
+        return f'{self.firstName} {self.lastName}'
 
 
 class Schedule(models.Model):

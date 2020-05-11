@@ -1,7 +1,7 @@
 import { call, put } from 'redux-saga/effects';
 import { push, go } from 'connected-react-router';
 
-import { authUser, loginError, registerError, setRole } from '../actions/AuthActions';
+import { authUser, loginError, registerError, setRole, setEmail } from '../actions/AuthActions';
 import AuthService from '../../services/AuthService'
 import { DASHBOARD, LOGIN } from '../../routes'
 import jwt_decode from 'jwt-decode'
@@ -11,7 +11,9 @@ export function* userLogin({ payload }) {
     const response = yield call(AuthService.login, payload)
     yield put(authUser(true))
     const decoded = jwt_decode(response.access)
+    console.log("DEKODIRANII : ", decoded)
     yield put(setRole(decoded.role))
+    yield put(setEmail(decoded.email));
     yield put(push(DASHBOARD))
   } catch (error) {
     yield put(loginError(true))
