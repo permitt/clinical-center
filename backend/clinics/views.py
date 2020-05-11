@@ -25,6 +25,8 @@ class OperatingRoomView(generics.ListAPIView):
     serializer_class = OperatingRoomSerializer
     permission_classes = [OperatingRoomPermissions]
     def get_queryset(self):
+        params = self.request
+        print(params.GET)
         user = self.request.user
         userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
         query = OperatingRoom.objects.filter(clinic=userLogged.values('employedAt')[:1])
