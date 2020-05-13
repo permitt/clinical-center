@@ -29,8 +29,8 @@ class OperatingRoomView(generics.ListAPIView):
         print(params.GET)
         user = self.request.user
         userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
-        query = OperatingRoom.objects.filter(clinic=userLogged.values('employedAt')[:1])
-        return query
+        #query = OperatingRoom.objects.filter(clinic=userLogged.values('employedAt')[:1])
+        return OperatingRoom.objects.appointments.all()
 
 
 class AppointmentViewSet(viewsets.ModelViewSet):
