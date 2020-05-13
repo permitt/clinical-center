@@ -12,19 +12,22 @@ import {
   WELCOME,
   LOGIN,
   REGISTER,
-  DASHBOARD
+  DASHBOARD,
+  USER_PROFILE
 } from '../../routes'
+import Profile from '../../containers/Profile';
 
 function Routes() {
   return (
     <BrowserRouter>
-        <Switch>
-          <PublicRoute restricted={true} component={WelcomePage} path={WELCOME} exact />
-          <PublicRoute restricted={true} component={Login} path={LOGIN} exact />
-          <PrivateRoute component={Dashboard} path={DASHBOARD} />
-          <PublicRoute restricted={true} component={Register} path={REGISTER} exact />
-        </Switch>
-      </BrowserRouter>
+      <Switch>
+        <PublicRoute restricted={true} component={WelcomePage} path={WELCOME} exact />
+        <PublicRoute restricted={true} component={Login} path={LOGIN} exact />
+        <PrivateRoute component={Dashboard} path={DASHBOARD} />
+        <PublicRoute restricted={true} component={Register} path={REGISTER} exact />
+        <PrivateRoute component={Profile} path={USER_PROFILE} />
+      </Switch>
+    </BrowserRouter>
   );
 }
 

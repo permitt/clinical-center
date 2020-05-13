@@ -1,6 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'
+import { push } from 'connected-react-router';
+import { USER_PROFILE } from '../../routes';
 import LocalHospital from '@material-ui/icons/LocalHospital';
 import Favorite from '@material-ui/icons/Favorite';
 import Healing from '@material-ui/icons/Healing';
@@ -143,7 +145,7 @@ function PatientHome(props) {
         },
         {
             name: 'Profile',
-            onClick: showClinicalCenters,
+            onClick: () => props.history.push(USER_PROFILE),
             icon: Person
         }
     ]
