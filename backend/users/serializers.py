@@ -7,7 +7,7 @@ from .models import *
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
-        exclude = ['user', 'activated']
+        exclude = ['user', 'approved', 'activation_link']
 
     def create(self, validated_data):
         email = validated_data.get("email", None)

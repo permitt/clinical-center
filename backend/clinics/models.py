@@ -18,6 +18,20 @@ class Clinic(models.Model):
     def __str__(self):
         return self.name
 
+class HealthCard(models.Model):
+    patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE, related_name="health_card")
+    # istorija bolesti
+    # recepte iz spiska koje na kraju pregleda med sestra mora da ovjeri???
+    # dijagnoze kao npr : dioptrija, alergija
+    # izvjestaj o pregledu
+    """
+    Izveštaje o pregledu može da unosi
+    samo lekar koji je izvršio taj pregled i medicinske sestre. Izmena izveštaja starih
+    pregleda je moguća isključivo od strane lekara koji je taj pregled izvršio
+    
+     WUT, posle koliko  
+    """
+
 class OperatingRoom(models.Model):
     clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='operating_rooms')
     name = models.CharField(max_length=20)
@@ -71,14 +85,14 @@ class Appointment(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['clinic','date','time', 'doctor'], name='unique doctor date time for a clinic')
+            models.UniqueConstraint(fields=['clinic', 'date', 'time', 'doctor'], name='unique doctor date time for a clinic')
         ]
 
     def save(self, *args, **kwargs):
         super(Appointment, self).save(*args, **kwargs)
 
         if self.operatingRoom is None:
-            clinic_admins = ClinicAdmin.objects.filter(employedAt=self.clinic)
+            clinic_admins = ClinicAdmin.objects.select_related('employedAt').filter(employedAt=self.clinic)
             to_emails = [admin.email for admin in clinic_admins]
 
             send_mail(APPOINTMENT_REQUEST_TITLE,
