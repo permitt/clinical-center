@@ -30,7 +30,7 @@ import Card from '@material-ui/core/Card';
 import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
-//import Rating from '@material-ui/lab/Rating';
+import Rating from '@material-ui/lab/Rating';
 
 
 
@@ -204,7 +204,7 @@ export default function SimpleTable(props) {
 
                         </Typography>
                         <Typography variant="body2" component="p"><br />
-                            {/* <Rating size="medium" value={cl.rating} name="half-rating-read" precision={0.5} readOnly />  <span style={{ fontSize: 16, fontVariant: "bold" }}>{cl.rating}</span> */}
+                            <Rating size="medium" value={cl.rating} name="half-rating-read" precision={0.5} readOnly />  <span style={{ fontSize: 16, fontVariant: "bold" }}>{cl.rating}</span>
                         </Typography>
                     </CardContent>
                     <CardActions>

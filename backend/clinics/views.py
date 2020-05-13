@@ -24,13 +24,26 @@ class ClinicListView(generics.ListAPIView):
 class OperatingRoomView(generics.ListAPIView):
     serializer_class = OperatingRoomSerializer
     permission_classes = [OperatingRoomPermissions]
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        serializer = OperatingRoomSerializer(queryset, many=True)
+        dates = {}
+
+        for hall in queryset :
+            dates[hall.name] = []
+            for app in hall.appointment_set.all() :
+                dates[hall.name].append({'date': app.date, 'time': app.time})
+
+        return Response(status=status.HTTP_200_OK, data={"halls": serializer.data , "reservedDates": dates}, content_type='application/json')
+
     def get_queryset(self):
         params = self.request
         print(params.GET)
         user = self.request.user
         userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
-        #query = OperatingRoom.objects.filter(clinic=userLogged.values('employedAt')[:1])
-        return OperatingRoom.objects.appointments.all()
+        query = OperatingRoom.objects.filter(clinic=userLogged.values('employedAt')[:1])
+        return query
 
 
 class AppointmentViewSet(viewsets.ModelViewSet):

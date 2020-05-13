@@ -187,9 +187,9 @@ export default function SimpleTable(props) {
             </TableRow>
           </TableHead>
           <TableBody>
-            {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row) => {
+            {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
               return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={row.email}>
+                <TableRow hover role="checkbox" tabIndex={-1} key={index}>
                   {columns.map((column) => {
                     const value = row[column.id]
                     if (column.id !== 'action')
