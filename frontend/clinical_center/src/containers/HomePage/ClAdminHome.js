@@ -49,6 +49,7 @@ function ClAdminHome(props) {
   const hallColumns = [
     { id: 'name', label: 'Name', minWidth: 60 },
     { id: 'number', label: 'Number', minWidth: 30 },
+    { id: 'available', label: 'First available date', minWidth: 30 },
     { id: 'action', label: 'Reserved dates', minWidth: 30, align: 'center', icon: 'Calendar', action: (data) => handleOpen(data) },
     { id: 'action', label: 'Delete', minWidth: 20, align: 'center', icon: DeleteIcon , action: () => handleOpen()}
   ];
