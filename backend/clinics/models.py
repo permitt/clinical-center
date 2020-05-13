@@ -39,6 +39,9 @@ class OperatingRoom(models.Model):
     def __str__(self):
         return f'{self.name} {self.number}'
 
+    class Meta:
+        unique_together = ['clinic', 'name']
+
 class AppointmentType(models.Model):
     typeName = models.CharField(max_length=30, unique=True)
     duration = models.IntegerField()
@@ -76,7 +79,7 @@ class Appointment(models.Model):
     discount = models.IntegerField(default=0)
     doctor = models.ForeignKey(to='users.Doctor', on_delete=models.CASCADE, related_name='appointments')
     # if the operatingRoom is Null => this is a request for the ClinicAdmin to approve
-    operatingRoom = models.ForeignKey(to=OperatingRoom, on_delete=models.CASCADE, related_name='appointments', null=True)
+    operatingRoom = models.ForeignKey(to=OperatingRoom, on_delete=models.CASCADE, null=True)
     # if the patient is null => the appointment was set inAdvance
     patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE, related_name='appointments', null=True)
 
@@ -101,7 +104,7 @@ class Appointment(models.Model):
 
 
     def __str__(self):
-        return f'{self.clinic.name} - {self.typeOf.typeName} - {self.date} : {self.time}'
+        return f'{self.clinic.name} - {self.typeOf.typeName} - {self.date} : {self.time}, {self.operatingRoom}'
 
 class Ratings(models.IntegerChoices):
     ONE = 1

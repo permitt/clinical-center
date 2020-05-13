@@ -7,7 +7,8 @@ import { DASHBOARD } from '../../routes';
 export function* hallsGet(action) {
   try {
     const response = yield call(() => hallService.getHalls())
-    yield put(setHalls(response));
+    console.log(response)
+    yield put(setHalls(response.halls));
   } catch (error) {
     console.log({ error });
   }
