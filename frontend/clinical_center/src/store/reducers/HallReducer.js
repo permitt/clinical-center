@@ -15,7 +15,7 @@ const hallReducer = (state = initialState, action) => {
       const arr = halls.map(el => {
         const reserved = reservedDates[el.name] || []
         const availableDate = reserved.length == 0 ? formatDate(new Date()) : findAvailable(reserved)
-        el['available'] = availableDate 
+        el['available'] = availableDate
         return el
       })
 
@@ -30,7 +30,7 @@ const formatDate = date =>  date.getFullYear() + '-' + ('0' + (date.getMonth()+1
 
 const findAvailable = reserved =>  {
   let found = false
-  let available = new Date("2020-05-19")
+  let available = new Date()
   let i = 0
   reserved.sort(function(a, b) {
     return new Date(a.date) - new Date(b.date);
