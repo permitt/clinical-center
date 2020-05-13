@@ -28,12 +28,13 @@ class OperatingRoomView(generics.ListAPIView):
     def list(self, request):
         queryset = self.get_queryset()
         serializer = OperatingRoomSerializer(queryset, many=True)
+        appTypeSerializer = AppointmentTypeSerializer
         dates = {}
 
         for hall in queryset :
             dates[hall.name] = []
             for app in hall.appointment_set.all() :
-                dates[hall.name].append({'date': app.date, 'time': app.time})
+                dates[hall.name].append({'date': app.date, 'time': app.time, 'type': appTypeSerializer(app.typeOf).data })
 
         return Response(status=status.HTTP_200_OK, data={"halls": serializer.data , "reservedDates": dates}, content_type='application/json')
 

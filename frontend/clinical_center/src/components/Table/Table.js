@@ -21,10 +21,11 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
+import Button from '@material-ui/core/Button';
 
 import styles from "../../assets/jss/material-dashboard-react/components/tableStyle.js";
 import toolbarStyles from "../../assets/jss/material-dashboard-react/components/tableToolbarStyle"
-import DeleteIcon from '@material-ui/icons/Delete';
+
 
 const useStyles = makeStyles(styles);
 const useToolbarStyles = makeStyles(toolbarStyles)
@@ -175,10 +176,10 @@ export default function SimpleTable(props) {
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
             <TableRow>
-              {columns.map((column) => (
+              {columns.map((column, index) => (
                 <TableCell
-                  key={column.id}
-                  align="left"
+                  key={index}
+                  align={column.align ? column.align : 'left'}
                   style={{ minWidth: column.minWidth }}
                 >
                   {column.label}
@@ -190,19 +191,22 @@ export default function SimpleTable(props) {
             {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
               return (
                 <TableRow hover role="checkbox" tabIndex={-1} key={index}>
-                  {columns.map((column) => {
+                  {columns.map((column, index) => {
                     const value = row[column.id]
                     if (column.id !== 'action')
                       return (
-                        <TableCell key={column.id} align={column.align}>
+                        <TableCell key={index} align={column.align}>
                           {column.id === 'firstName' ? value + ' ' + row.lastName : value}
                         </TableCell>
                       );
                     else
                       return (
-                        <TableCell key={column.label} align="left">
-                          {column.icon === 'delete' &&
-                            <DeleteIcon onClick={() => column.action(row.email)} />}
+                        <TableCell key={column.label} align="center">
+                          {typeof column.icon === "string" ? (
+                            <Button variant="contained" onClick={() => column.action(row)}>
+                              {column.icon}
+                            </Button>
+                          ):  <column.icon onClick={() => column.action(row.email)} />}
                         </TableCell>
                       )
                   })}
