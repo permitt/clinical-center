@@ -1,5 +1,4 @@
 import sys
-
 from rest_framework import viewsets, generics, filters, permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
@@ -21,9 +20,10 @@ class ClinicListView(generics.ListAPIView):
     ordering_fields = ['name', 'address', 'city', 'country']
     queryset = Clinic.objects.annotate(rating=Avg('ratings__rating')).all()
 
-class OperatingRoomView(generics.ListAPIView):
+class OperatingRoomView(viewsets.ModelViewSet):
     serializer_class = OperatingRoomSerializer
     permission_classes = [OperatingRoomPermissions]
+
 
     def list(self, request):
         queryset = self.get_queryset()
@@ -32,7 +32,7 @@ class OperatingRoomView(generics.ListAPIView):
         if 'number' in request.query_params:
             queryset = queryset.filter(number=request.query_params['number'])
         if 'date' in request.query_params :
-            queryset = queryset.exclude(appointment__date=request.query_params['date']).distinct()
+            queryset = queryset.exclude(appointment__date=request.query_params['date'])
         serializer = OperatingRoomSerializer(queryset, many=True)
         appTypeSerializer = AppointmentTypeSerializer
         dates = {}
@@ -44,12 +44,20 @@ class OperatingRoomView(generics.ListAPIView):
         return Response(status=status.HTTP_200_OK, data={"halls": serializer.data , "reservedDates": dates}, content_type='application/json')
 
     def get_queryset(self):
-        params = self.request
         user = self.request.user
         userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
         query = OperatingRoom.objects.filter(clinic=userLogged.values('employedAt')[:1])
 
         return query
+
+    def destroy(self, request,pk) :
+        instance = self.get_object()
+        if (len(instance.appointment_set.all()) > 0):
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Reserved hall can't be delete"})
+        else:
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 
 class AppointmentViewSet(viewsets.ModelViewSet):

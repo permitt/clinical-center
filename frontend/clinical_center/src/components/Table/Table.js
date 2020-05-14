@@ -202,7 +202,8 @@ export default function SimpleTable(props) {
                             <Button variant="contained" onClick={() => column.action(row)}>
                               {column.icon}
                             </Button>
-                          ):  <column.icon onClick={() => column.action(row.email)} />}
+                          ):  <column.icon onClick={() => {console.log(props.id);
+                            column.action(row[props.id])}} />}
                         </TableCell>
                       )
                   })}

@@ -1,8 +1,8 @@
 import ApiService from './ApiService';
 
 const ENDPOINTS = {
-  DOCTORS: '/api/users/doctor',
-  DELETE: '/api/users/doctor/:email',
+  DOCTORS: '/api/users/doctor/',
+  DELETE: '/api/users/doctor/:email/',
   ADD: '/api/users/doctor/'
 };
 

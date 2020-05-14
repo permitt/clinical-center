@@ -4,11 +4,11 @@ from . import views
 
 router = routers.SimpleRouter()
 router.register('appointment', views.AppointmentViewSet)
+router.register('operatingroom', views.OperatingRoomView, basename="operatingroom")
 
 urlpatterns = [
         path('clinic/', views.ClinicListView.as_view()),
         path('appointment-type/', views.AppointmentTypeListView.as_view()),
         path('appointment/check/', views.appointmentCheck),
-        path('operatingroom/', views.OperatingRoomView.as_view()),
         *router.urls
     ]

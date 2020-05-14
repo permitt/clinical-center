@@ -14,10 +14,12 @@ import Sidebar from "../../components/Sidebar/Sidebar"
 import Table from "../../components/Table/Table"
 import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
 import { getDoctors, deleteDoctor } from '../../store/actions/DoctorActions'
-import { getHalls } from '../../store/actions/HallActions'
+import { resetError } from '../../store/actions/ErrorActions'
+import { getHalls, deleteHall } from '../../store/actions/HallActions'
 import DoctorForm from '../Forms/DoctorForm'
 import FormContainer from '../../components/FormContainer/FormContainer'
 import Calendar from '../../components/Calendar/Calendar'
+import ErrorDialog from './ErrorDialog'
 
 
 const useStyles = makeStyles(styles);
@@ -30,6 +32,11 @@ function ClAdminHome(props) {
   const [modal, setModal] = React.useState({open: false, data: {}});
   const [table, setTable] = React.useState({render: false, type: ''})
   const [tableData, setTableData] = React.useState({ data: [], title:'', columns:[], form:null})
+  const [errorDialogOpen, setErrorDialogOpen] = React.useState(props.error)
+
+  useEffect(()=> {
+    setErrorDialogOpen(props.error)
+  },[props.error])
 
   const handleOpen = (data) => {
     setModal({open: true, data});
@@ -53,7 +60,7 @@ function ClAdminHome(props) {
     { id: 'number', label: 'Number', minWidth: 30 },
     { id: 'available', label: 'First available date', minWidth: 30 },
     { id: 'action', label: 'Reserved dates', minWidth: 30, align: 'center', icon: 'Calendar', action: (data) => handleOpen(data) },
-    { id: 'action', label: 'Delete', minWidth: 20, align: 'center', icon: DeleteIcon , action: () => handleOpen()}
+    { id: 'action', label: 'Delete', minWidth: 20, align: 'center', icon: DeleteIcon , action: props.deleteHall}
   ];
   
   const showList = type => {
@@ -77,6 +84,7 @@ function ClAdminHome(props) {
           data: props.doctors, 
           columns: doctorColumns, 
           title: "Doctors in clinic", 
+          id: 'email',
           form: <FormContainer form={<DoctorForm />} title="Add new doctor" />}
         ) }
         break;
@@ -85,11 +93,12 @@ function ClAdminHome(props) {
           data: props.halls, 
           columns: hallColumns, 
           title: "Operating rooms in clinic", 
+          id: 'id',
           form: <FormContainer form={<DoctorForm />} title="Add new operationg room" />}
         ) }
         break;
     }
-  },[props])
+  },[props.halls, props.doctors])
 
 
   const sidebarOptions = [
@@ -107,9 +116,18 @@ function ClAdminHome(props) {
 
   return (
     <>
+    
       <div className={classes.wrapper}>
         <Sidebar options={sidebarOptions} />
         <div className={classes.mainPanel}>
+        <ErrorDialog 
+          open={errorDialogOpen} 
+          msg={props.msg} 
+          handleClose={() => {
+            setErrorDialogOpen(false)
+            props.resetError()}
+            }
+        />
           <div >
            {table.type === HALL_TABLE && <HallSearchBar />}
           </div>
@@ -121,10 +139,11 @@ function ClAdminHome(props) {
               sortOptions={[]}  
               changeSortBy={() => {}}  
               form={tableData.form}
-              
+              id={tableData.id}
             />}
           </div>
         </div>
+           
         <Modal
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"
@@ -151,14 +170,18 @@ function ClAdminHome(props) {
 const mapStateToProps = state => {
   return {
     doctors: state.doctor.all,
-    halls: state.hall.all
+    halls: state.hall.all,
+    error: state.error.deleteError,
+    msg: state.error.errorMsg
   };
 };
 
 const mapDispatchToProps = {
   getDoctors,
   deleteDoctor,
-  getHalls
+  getHalls,
+  deleteHall,
+  resetError
 };
 
 export default withRouter(

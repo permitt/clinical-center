@@ -1,7 +1,9 @@
 import ApiService from './ApiService';
 
 const ENDPOINTS = {
-  HALLS: '/api/clinics/operatingroom/'
+  HALLS: '/api/clinics/operatingroom/',
+  DELETE: '/api/clinics/operatingroom/:id/',
+  ADD: '/api/clinics/operatingroom/'
 };
 
 class HallService extends ApiService {
@@ -21,6 +23,23 @@ class HallService extends ApiService {
     const { data } = await this.apiClient.get(ENDPOINTS.HALLS + `?${queryString}`)
 
     return data;
+  }
+
+  deleteHall = id => {
+
+    return this.apiClient.delete(ENDPOINTS.DELETE.replace(":id", id));
+  }
+
+  addHall = async info => {
+    const { data } = await this.apiClient.post(ENDPOINTS.ADD, info)
+
+    return data
+  }
+
+  editHall = async info => {
+    const { data } = await this.apiClient.put(ENDPOINTS.ADD, info)
+
+    return data
   }
 }
 

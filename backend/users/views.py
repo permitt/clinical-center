@@ -1,7 +1,8 @@
 from django.contrib.auth.models import User
 from django.shortcuts import render
-from rest_framework import generics, viewsets, permissions
+from rest_framework import generics, viewsets, permissions, status
 from .serializers import *
+from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import *
 from . import custom_permissions
@@ -47,6 +48,14 @@ class DoctorViewset(viewsets.ModelViewSet):
 
         return query
 
+    def destroy(self, request, email):
+        instance = self.get_object()
+
+        if (len(instance.appointment_set.all()) > 0):
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Doctor with appointments can't be deleted"})
+        else:
+            #self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
 
     def perform_destroy(self, instance):
         # Delete the user as well

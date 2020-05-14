@@ -1,4 +1,4 @@
-import { SET_DOCTORS, DELETE_DOCTOR, SET_DOCTOR } from '../actions/ActionTypes';
+import { SET_DOCTORS, SET_DOCTOR, SET_DELETED_DOCTOR } from '../actions/ActionTypes';
 
 const initialState = {
   all: []
@@ -9,7 +9,7 @@ const doctorReducer = (state = initialState, action) => {
     case SET_DOCTORS:
 
       return { ...state, all: action.payload }
-    case DELETE_DOCTOR: 
+    case SET_DELETED_DOCTOR: 
       changedArr  = state.all.filter(doctor => doctor.email !== action.payload);
 
       return {...state, all: changedArr}

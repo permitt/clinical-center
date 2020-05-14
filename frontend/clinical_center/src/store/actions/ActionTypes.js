@@ -8,14 +8,16 @@ export const LOGOUT = 'LOGOUT'
 
 export const LOGIN_ERROR = 'LOGIN_ERROR'
 export const REGISTER_ERROR = 'REGISTER_ERROR'
+export const DELETE_ERROR = 'DELETE_ERROR'
+export const RESET_ERROR = 'RESET_ERROR'
 
 export const GET_DOCTORS = 'GET_DOCTORS'
 export const SET_DOCTORS = 'SET_DOCTORS'
 
 export const ADD_DOCTOR = 'ADD_DOCTOR'
 export const SET_DOCTOR = 'SET_DOCTOR'
-
 export const DELETE_DOCTOR = 'DELETE_DOCTOR'
+export const SET_DELETED_DOCTOR = 'SET_DELETED_DOCTOR'
 
 export const GET_CLINICS = 'GET_CLINICS'
 export const SET_CLINICS = 'SET_CLINICS'
@@ -37,3 +39,9 @@ export const PUT_APPOINTMENT = "PUT_APPOINTMENT";
 export const GET_HALLS = 'GET_HALLS'
 export const SET_HALLS = 'SET_HALLS'
 export const SEARCH_HALLS = 'SEARCH_HALLS'
+export const ADD_HALL = 'ADD_HALL'
+export const SET_HALL = 'SET_HALL'
+export const DELETE_HALL = 'DELETE_HALL'
+export const SET_DELETED_HALL = 'SET_DELETED_HALL'
+export const EDIT_HALL = 'EDIT_HALL'
+

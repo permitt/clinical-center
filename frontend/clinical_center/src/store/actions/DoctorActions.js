@@ -3,7 +3,8 @@ import {
     SET_DOCTORS, 
     DELETE_DOCTOR, 
     SET_DOCTOR,
-    ADD_DOCTOR
+    ADD_DOCTOR,
+    SET_DELETED_DOCTOR
    } from './ActionTypes';
   
   export const getDoctors = () => {
@@ -30,6 +31,14 @@ import {
 
     return {
       type: DELETE_DOCTOR,
+      payload
+    };
+  };
+
+  export const setDeletedDoctor = payload => {
+
+    return {
+      type: SET_DELETED_DOCTOR,
       payload
     };
   };
