@@ -86,6 +86,7 @@ function ClAdminHome(props) {
           columns: doctorColumns, 
           title: "Doctors in clinic", 
           id: 'email',
+          allowEdit: false,
           form: <FormContainer form={<DoctorForm />} title="Add new doctor" />}
         ) }
         break;
@@ -95,6 +96,7 @@ function ClAdminHome(props) {
           columns: hallColumns, 
           title: "Operating rooms in clinic", 
           id: 'id',
+          allowEdit: true,
           form: <FormContainer form={<HallForm />} title="Add new operationg room" />}
         ) }
         break;
@@ -141,6 +143,7 @@ function ClAdminHome(props) {
               changeSortBy={() => {}}  
               form={tableData.form}
               id={tableData.id}
+              edit={tableData.allowEdit}
             />}
           </div>
         </div>

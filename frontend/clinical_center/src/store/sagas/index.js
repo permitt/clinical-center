@@ -1,10 +1,10 @@
 import { all, takeLatest } from 'redux-saga/effects';
-import { LOGIN, LOGOUT, REGISTER, GET_DOCTORS, DELETE_DOCTOR, ADD_DOCTOR, GET_CLINICS, GET_APPOINTMENT_TYPES, GET_APPOINTMENT_CHECK, GET_HALLS, POST_APPOINTMENT, SEARCH_HALLS, DELETE_HALL, ADD_HALL } from '../actions/ActionTypes';
+import { LOGIN, LOGOUT, REGISTER, GET_DOCTORS, DELETE_DOCTOR, ADD_DOCTOR, GET_CLINICS, GET_APPOINTMENT_TYPES, GET_APPOINTMENT_CHECK, GET_HALLS, POST_APPOINTMENT, SEARCH_HALLS, DELETE_HALL, ADD_HALL, EDIT_HALL } from '../actions/ActionTypes';
 import { userLogin, userRegister, userLogout } from './AuthSagas';
 import { doctorsGet, doctorDelete, doctorAdd } from './DoctorSagas';
 import { clinicsGet } from './ClinicSagas';
 import { appointmentTypesGet, appointmentChecking, appointmentPost } from './AppointmentSagas';
-import { hallsGet, hallsSearch, hallDelete, hallAdd } from './HallSaga'
+import { hallsGet, hallsSearch, hallDelete, hallAdd, hallEdit } from './HallSaga'
 
 export default function* rootSaga() {
   yield all([
@@ -21,6 +21,7 @@ export default function* rootSaga() {
     takeLatest(GET_HALLS, hallsGet),
     takeLatest(SEARCH_HALLS, hallsSearch),
     takeLatest(DELETE_HALL, hallDelete),
-    takeLatest(ADD_HALL, hallAdd)
+    takeLatest(ADD_HALL, hallAdd),
+    takeLatest(EDIT_HALL, hallEdit)
   ]);
 }

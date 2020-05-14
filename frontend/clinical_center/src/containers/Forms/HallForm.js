@@ -6,19 +6,10 @@ import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
 import Button from '@material-ui/core/Button';
 import Alert from '@material-ui/lab/Alert';
-import DateFnsUtils from '@date-io/date-fns';
-import { MuiPickersUtilsProvider,KeyboardTimePicker } from '@material-ui/pickers';
-import InputLabel from '@material-ui/core/InputLabel';
-import FormControl from '@material-ui/core/FormControl';
-import Select from '@material-ui/core/Select';
-import Input from '@material-ui/core/Input';
-import MenuItem from '@material-ui/core/MenuItem';
-import ListItemText from '@material-ui/core/ListItemText';
-import Checkbox from '@material-ui/core/Checkbox';
 
 import { withFormikField } from '../../utils/withFormikField'
 import { formStyle, submitButton } from '../../assets/jss/material-dashboard-react/components/FormStyle';
-import { addHall } from '../../store/actions/HallActions';
+import { addHall, editHall } from '../../store/actions/HallActions';
 import { addHallSchema } from './validations'
 
 const FormikTextField = withFormikField(TextField);
@@ -36,15 +27,22 @@ const MenuProps = {
 
 
 function HallForm (props) {
-
+  console.log(props)
+  const { selected } = props
+  const name = selected ? selected.name : ''
+  const number = selected ? selected.number : ''
   const submit = values => {
-    props.addHall(values)
+    if (selected) {
+      values['id'] = selected.id
+      props.editHall(values)
+    } else
+      props.addHall(values)
   };
   return (
     <Formik
       initialValues={{
-        name: '',
-        number: ''
+        name: name,
+        number: number
       }}
       validationSchema={addHallSchema}
       onSubmit={submit}
@@ -93,7 +91,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = { addHall };
+const mapDispatchToProps = { addHall, editHall };
 
 export default withRouter(
   connect(

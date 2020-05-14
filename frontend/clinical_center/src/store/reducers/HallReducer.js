@@ -1,4 +1,4 @@
-import { SET_HALLS, SET_DELETED_HALL, SET_HALL } from '../actions/ActionTypes';
+import { SET_HALLS, SET_DELETED_HALL, SET_HALL, SET_EDITED_HALL} from '../actions/ActionTypes';
 
 const initialState = {
   all: [],
@@ -6,6 +6,7 @@ const initialState = {
 };
 const hallReducer = (state = initialState, action) => {
   let changedArr;
+  let hall;
   
   switch (action.type) {
     case SET_HALLS:
@@ -25,12 +26,24 @@ const hallReducer = (state = initialState, action) => {
         return {...state, all: changedArr}
       case SET_HALL:
         changedArr  = state.all.slice()
-        let hall = action.payload
+        hall = action.payload
         hall['available'] = formatDate(new Date())
         changedArr.push(hall)
   
         return {...state, all: changedArr }
-    
+
+      case SET_EDITED_HALL:
+        const { name, number ,id } = action.payload
+        const index = state.all.findIndex(hall => {console.log(hall.id, id) ;return hall.id == id});
+        changedArr = state.all.slice();
+        if (index) {
+          hall = {...state.all[index]}
+          hall['name'] = name
+          hall['number'] = number
+          changedArr[index] = hall;
+        }
+        
+        return {...state, all : changedArr};
     default:
       return state;
   }

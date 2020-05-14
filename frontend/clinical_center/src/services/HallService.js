@@ -3,6 +3,7 @@ import ApiService from './ApiService';
 const ENDPOINTS = {
   HALLS: '/api/clinics/operatingroom/',
   DELETE: '/api/clinics/operatingroom/:id/',
+  EDIT: '/api/clinics/operatingroom/:id/',
   ADD: '/api/clinics/operatingroom/'
 };
 
@@ -37,7 +38,7 @@ class HallService extends ApiService {
   }
 
   editHall = async info => {
-    const { data } = await this.apiClient.put(ENDPOINTS.ADD, info)
+    const { data } = await this.apiClient.put(ENDPOINTS.EDIT.replace(":id", info.id), info)
 
     return data
   }

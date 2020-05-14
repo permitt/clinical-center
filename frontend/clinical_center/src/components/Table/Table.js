@@ -25,7 +25,8 @@ import Button from '@material-ui/core/Button';
 
 import styles from "../../assets/jss/material-dashboard-react/components/tableStyle.js";
 import toolbarStyles from "../../assets/jss/material-dashboard-react/components/tableToolbarStyle"
-
+import HallForm from '../../containers/Forms/HallForm'
+import FormContainer from '../FormContainer/FormContainer'
 
 const useStyles = makeStyles(styles);
 const useToolbarStyles = makeStyles(toolbarStyles)
@@ -63,6 +64,7 @@ const TableToolbar = props => {
     setSortByOpen(false);
   }, [props])
 
+
   return (
     <Toolbar className={classes.root}>
       <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
@@ -97,10 +99,7 @@ const TableToolbar = props => {
             <MenuItem key={sortBy + 'desc'} onClick={() => handleSortClick('-' + sortBy)}>{sortBy} descending</MenuItem>
           </div>
         ))}
-
-
       </Menu>
-
       <IconButton aria-label="filter list" onClick={handleOpen}>
         <AddBoxIcon />
       </IconButton>
@@ -129,11 +128,23 @@ export default function SimpleTable(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const rows = props.data
+  const [edit, setEdit] = React.useState({openModal:false, selected: {}});
   const [filteredData, setFilteredData] = React.useState(rows)
   const columns = props.columns
 
+  const handleOpen = row => {
+    console.log(row)
+    setEdit({openModal:true, selected: row});
+  };
+
+  const handleClose = () => {
+    setEdit({openModal:false, selected: {}});
+  };
+
   useEffect(() => {
     setFilteredData(rows)
+    setEdit({openModal:false, selected: {}})
+    
   }, [props])
 
   const handleChangePage = (event, newPage) => {
@@ -186,12 +197,16 @@ export default function SimpleTable(props) {
           <TableBody>
             {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
               return (
-                <TableRow hover role="checkbox" tabIndex={-1} key={index}>
+                <TableRow 
+                  hover role="checkbox" 
+                  tabIndex={-1} 
+                  key={index} 
+                 >
                   {columns.map((column, index) => {
                     const value = row[column.id]
                     if (column.id !== 'action')
                       return (
-                        <TableCell key={index} align={column.align}>
+                        <TableCell key={index} align={column.align}  onClick={() => { if(props.edit) handleOpen(row)}}>
                           {column.id === 'firstName' ? value + ' ' + row.lastName : value}
                         </TableCell>
                       );
@@ -202,7 +217,7 @@ export default function SimpleTable(props) {
                             <Button variant="contained" onClick={() => column.action(row)}>
                               {column.icon}
                             </Button>
-                          ):  <column.icon onClick={() => {console.log(props.id);
+                          ):  <column.icon onClick={() => {console.log(row);
                             column.action(row[props.id])}} />}
                         </TableCell>
                       )
@@ -222,6 +237,22 @@ export default function SimpleTable(props) {
         onChangePage={handleChangePage}
         onChangeRowsPerPage={handleChangeRowsPerPage}
       />
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={edit.openModal}
+        onClose={handleClose}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={edit.openModal}>
+          <FormContainer form={<HallForm selected={edit.selected}/>} title="Edit operationg room" />
+        </Fade>
+        </Modal>
     </Paper>
   );
 }

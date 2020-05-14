@@ -28,7 +28,7 @@ class AppointmentTypeSerializer(serializers.ModelSerializer):
 class OperatingRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = OperatingRoom
-        fields = ['name', 'number']
+        exclude = ['clinic']
 
     def create(self, validated_data):
         requestBody = self.context['request'].data
