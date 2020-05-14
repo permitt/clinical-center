@@ -1,4 +1,4 @@
-import { SET_HALLS, SET_DELETED_HALL } from '../actions/ActionTypes';
+import { SET_HALLS, SET_DELETED_HALL, SET_HALL } from '../actions/ActionTypes';
 
 const initialState = {
   all: [],
@@ -20,9 +20,16 @@ const hallReducer = (state = initialState, action) => {
       return { ...state, all: arr, reservedDates }
 
       case SET_DELETED_HALL: 
-      changedArr  = state.all.filter(hall => hall.id !== action.payload);
+        changedArr  = state.all.filter(hall => hall.id !== action.payload);
 
-      return {...state, all: changedArr}
+        return {...state, all: changedArr}
+      case SET_HALL:
+        changedArr  = state.all.slice()
+        let hall = action.payload
+        hall['available'] = formatDate(new Date())
+        changedArr.push(hall)
+  
+        return {...state, all: changedArr }
     
     default:
       return state;

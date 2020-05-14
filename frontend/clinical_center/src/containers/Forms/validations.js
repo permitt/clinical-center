@@ -27,3 +27,8 @@ export const editPatientSchema = Yup.object().shape({
     .required('Password confirmation is required')
 
 });
+
+export const addHallSchema = Yup.object().shape({
+  name: Yup.string().required('Name is required'),
+  number: Yup.number().required('Number name is required').typeError('Operating room number must be a number')
+});

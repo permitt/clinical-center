@@ -53,7 +53,7 @@ class OperatingRoomView(viewsets.ModelViewSet):
     def destroy(self, request,pk) :
         instance = self.get_object()
         if (len(instance.appointment_set.all()) > 0):
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Reserved hall can't be delete"})
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Reserved hall can't be deleted"})
         else:
             self.perform_destroy(instance)
             return Response(status=status.HTTP_204_NO_CONTENT)

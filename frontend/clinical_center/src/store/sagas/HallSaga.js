@@ -3,6 +3,7 @@ import { push, go } from 'connected-react-router'
 import { hallService } from '../../services/HallService';
 import { setHalls, setDeletedHall, setHall } from '../actions/HallActions';
 import { deleteError } from '../actions/ErrorActions';
+import { registerError } from '../actions/AuthActions';
 
 export function* hallsGet(action) {
   try {
@@ -36,6 +37,6 @@ export function* hallAdd(action) {
     const response = yield call(() => hallService.addHall(action.payload))
     yield put(setHall(action.payload))
   } catch (error) {
-    console.log(error)
+    yield put(registerError(true))
   }
 }

@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from users.models import ClinicAdmin
 
 
 class ClinicSerializer(serializers.ModelSerializer):
@@ -27,7 +28,20 @@ class AppointmentTypeSerializer(serializers.ModelSerializer):
 class OperatingRoomSerializer(serializers.ModelSerializer):
     class Meta:
         model = OperatingRoom
-        fields = '__all__'
+        fields = ['name', 'number']
+
+    def create(self, validated_data):
+        requestBody = self.context['request'].data
+
+        name = validated_data.get("name", None)
+        number = validated_data.get("password", None)
+        userLogged = ClinicAdmin.objects.filter(email=self.context['request'].user.username).get()
+        clinicId = userLogged.employedAt
+        operatingRoom = OperatingRoom(**validated_data, clinic=clinicId)
+        # operatingRoom.clinic = clinicId
+        operatingRoom.save()
+
+        return operatingRoom
 
 class PriceListSerializer(serializers.ModelSerializer):
     class Meta:

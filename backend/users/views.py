@@ -63,5 +63,6 @@ class DoctorViewset(viewsets.ModelViewSet):
         user.delete()
         instance.delete()
 
+
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer

@@ -1,0 +1,103 @@
+import React from 'react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+import { Formik, Form, Field } from 'formik';
+import Grid from '@material-ui/core/Grid';
+import TextField from '@material-ui/core/TextField';
+import Button from '@material-ui/core/Button';
+import Alert from '@material-ui/lab/Alert';
+import DateFnsUtils from '@date-io/date-fns';
+import { MuiPickersUtilsProvider,KeyboardTimePicker } from '@material-ui/pickers';
+import InputLabel from '@material-ui/core/InputLabel';
+import FormControl from '@material-ui/core/FormControl';
+import Select from '@material-ui/core/Select';
+import Input from '@material-ui/core/Input';
+import MenuItem from '@material-ui/core/MenuItem';
+import ListItemText from '@material-ui/core/ListItemText';
+import Checkbox from '@material-ui/core/Checkbox';
+
+import { withFormikField } from '../../utils/withFormikField'
+import { formStyle, submitButton } from '../../assets/jss/material-dashboard-react/components/FormStyle';
+import { addHall } from '../../store/actions/HallActions';
+import { addHallSchema } from './validations'
+
+const FormikTextField = withFormikField(TextField);
+const ITEM_HEIGHT = 48;
+const ITEM_PADDING_TOP = 8;
+const MenuProps = {
+  PaperProps: {
+    style: {
+      maxHeight: ITEM_HEIGHT * 4.5 + ITEM_PADDING_TOP,
+      width: 250,
+    },
+  },
+};
+
+
+
+function HallForm (props) {
+
+  const submit = values => {
+    props.addHall(values)
+  };
+  return (
+    <Formik
+      initialValues={{
+        name: '',
+        number: ''
+      }}
+      validationSchema={addHallSchema}
+      onSubmit={submit}
+      style={formStyle}>
+      <Form  style={{marginTop:'20px'}}>
+        <Grid container spacing={2}>
+          <Grid item xs={6}>
+            <Field
+              component={FormikTextField}
+              type="text"
+              name="name"
+              variant="outlined"
+              fullWidth
+              label="Name"
+            />
+          </Grid>
+          <Grid item xs={6}>
+            <Field
+              component={FormikTextField}
+              type="text"
+              name="number"
+              variant="outlined"
+              fullWidth
+              label="Number"
+            />
+          </Grid>
+        </Grid>
+        { props.registerError && <Alert severity="error" style={{marginTop:'10px'}}>Operating room with this name already exists</Alert>}
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          style={submitButton}
+        >
+          Save
+      </Button>
+      </Form>
+    </Formik>
+  );
+}
+
+const mapStateToProps = state => {
+  return {
+    registerError: state.error.registerError
+  };
+};
+
+const mapDispatchToProps = { addHall };
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps,
+  )(HallForm)
+);

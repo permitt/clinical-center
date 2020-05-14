@@ -8,11 +8,12 @@ class OperatingRoomPermissions(permissions.BasePermission):
 
     def has_permission(self, request, view):
 
-        if request.method == 'PUT' or request.method == 'PATCH':
-            return hasattr(request.user, 'adminAccount')
-        elif request.method == "DELETE":
-            return hasattr(request.user, 'adminAccount')
-        elif request.method == "GET":
-            return hasattr(request.user, 'adminAccount')
-        else:
-            return False
+        return hasattr(request.user, 'adminAccount')
+        # if request.method == 'PUT' or request.method == 'PATCH':
+        #     return hasattr(request.user, 'adminAccount')
+        # elif request.method == "DELETE":
+        #     return hasattr(request.user, 'adminAccount')
+        # elif request.method == "GET":
+        #     return hasattr(request.user, 'adminAccount')
+        # else:
+        #     return False

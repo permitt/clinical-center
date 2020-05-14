@@ -17,6 +17,7 @@ import { getDoctors, deleteDoctor } from '../../store/actions/DoctorActions'
 import { resetError } from '../../store/actions/ErrorActions'
 import { getHalls, deleteHall } from '../../store/actions/HallActions'
 import DoctorForm from '../Forms/DoctorForm'
+import HallForm from '../Forms/HallForm'
 import FormContainer from '../../components/FormContainer/FormContainer'
 import Calendar from '../../components/Calendar/Calendar'
 import ErrorDialog from './ErrorDialog'
@@ -94,7 +95,7 @@ function ClAdminHome(props) {
           columns: hallColumns, 
           title: "Operating rooms in clinic", 
           id: 'id',
-          form: <FormContainer form={<DoctorForm />} title="Add new operationg room" />}
+          form: <FormContainer form={<HallForm />} title="Add new operationg room" />}
         ) }
         break;
     }
