@@ -10,8 +10,6 @@ const hallReducer = (state = initialState, action) => {
   switch (action.type) {
     case SET_HALLS:
       const { halls, reservedDates } = action.payload
-      console.log('date',reservedDates)
-      console.log('halls', halls)
       const arr = halls.map(el => {
         const reserved = reservedDates[el.name] || []
         const availableDate = reserved.length === 0 ? formatDate(new Date()) : findAvailable(reserved)

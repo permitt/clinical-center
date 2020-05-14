@@ -12,3 +12,12 @@ export function* hallsGet(action) {
     console.log({ error });
   }
 }
+
+export function* hallsSearch(action) {
+  try {
+    const response = yield call(() => hallService.searchHalls(action.payload))
+    yield put(setHalls(response))
+  } catch (error) {
+    console.log({ error });
+  }
+}

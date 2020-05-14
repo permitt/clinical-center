@@ -36,3 +36,4 @@ export const PUT_APPOINTMENT = "PUT_APPOINTMENT";
 
 export const GET_HALLS = 'GET_HALLS'
 export const SET_HALLS = 'SET_HALLS'
+export const SEARCH_HALLS = 'SEARCH_HALLS'

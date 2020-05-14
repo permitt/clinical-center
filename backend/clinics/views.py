@@ -27,10 +27,15 @@ class OperatingRoomView(generics.ListAPIView):
 
     def list(self, request):
         queryset = self.get_queryset()
+        if 'name' in request.query_params:
+            queryset = queryset.filter(name__startswith=request.query_params['name'])
+        if 'number' in request.query_params:
+            queryset = queryset.filter(number=request.query_params['number'])
+        if 'date' in request.query_params :
+            queryset = queryset.exclude(appointment__date=request.query_params['date']).distinct()
         serializer = OperatingRoomSerializer(queryset, many=True)
         appTypeSerializer = AppointmentTypeSerializer
         dates = {}
-
         for hall in queryset :
             dates[hall.name] = []
             for app in hall.appointment_set.all() :
@@ -40,10 +45,10 @@ class OperatingRoomView(generics.ListAPIView):
 
     def get_queryset(self):
         params = self.request
-        print(params.GET)
         user = self.request.user
         userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
         query = OperatingRoom.objects.filter(clinic=userLogged.values('employedAt')[:1])
+
         return query
 
 

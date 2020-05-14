@@ -1,13 +1,24 @@
 import ApiService from './ApiService';
 
 const ENDPOINTS = {
-  HALLS: '/api/clinics/operatingroom'
+  HALLS: '/api/clinics/operatingroom/'
 };
 
 class HallService extends ApiService {
 
   getHalls = async () => {
     const { data } = await this.apiClient.get(ENDPOINTS.HALLS)
+
+    return data;
+  }
+
+  searchHalls = async (query) => {
+    let queryString = ''
+    for (let [key, value] of Object.entries(query)) {
+      queryString += `${key}=${value}&`
+    }
+    queryString = queryString.slice(0,-1)
+    const { data } = await this.apiClient.get(ENDPOINTS.HALLS + `?${queryString}`)
 
     return data;
   }

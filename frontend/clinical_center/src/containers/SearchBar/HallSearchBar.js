@@ -13,13 +13,29 @@ import {
 } from '@material-ui/pickers';
 import TextField from '@material-ui/core/TextField';
 
-export default function HallSearchBar(props) {
+import { searchHalls } from '../../store/actions/HallActions'
 
+function HallSearchBar(props) {
  const [selectedDate, setSelectedDate] = React.useState(new Date());
+ const [name, setName] = React.useState('')
+ const [number, setNumber] = React.useState('')
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+
+  const formatDate = date =>  date.getFullYear() + '-' + ('0' + (date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
+
+
+  const handleClick = () => {
+      let query = {}
+      if (name)
+        query['name'] = name 
+      if(number) 
+        query['number'] = number
+      query['date'] = formatDate(selectedDate)
+      props.searchHalls(query)
+  }
 
 return (
     <Grid container justify="center">
@@ -29,10 +45,23 @@ return (
                 spacing={5}
                 justify="center"
             >
-                <Grid item xs={6}   align="right" style={{marginTop:'20px'}}> 
-                    <TextField id="outlined-basic" label="Insert name or number" variant="outlined" />
+                <Grid item xs={6} align='right' style={{marginTop:'20px'}}> 
+                    <TextField 
+                        id="outlined-basic"
+                        label="Insert name" 
+                        variant="outlined" 
+                        onChange={e => setName(e.target.value)}
+                        />
                 </Grid>
-                <Grid item xs={6}  align="left"  style={{marginTop:'20px'}}>
+                <Grid item xs={6} style={{marginTop:'20px'}}> 
+                    <TextField 
+                        id="outlined-basic"
+                        label="Insert number" 
+                        variant="outlined" 
+                        onChange={e => setNumber(e.target.value)}
+                    />
+                </Grid>
+                <Grid item xs={6}  align="center"  style={{marginBottom:'20px'}}>
                     <MuiPickersUtilsProvider utils={DateFnsUtils}>
                         <KeyboardDatePicker
                             disableToolbar
@@ -48,8 +77,14 @@ return (
                         />
                     </MuiPickersUtilsProvider>
                 </Grid>
-                <Grid item  align="center">
-                <Button variant="contained" color="primary"  justify="center" style={{marginBottom: '20px'}}>
+                <Grid item align="center">
+                <Button 
+                    variant="contained" 
+                    onClick={handleClick}
+                    color="primary"  
+                    justify="center" 
+                    style={{marginBottom: '20px'}}
+                >
                     Search
                 </Button>
                 </Grid>
@@ -58,3 +93,19 @@ return (
     </Grid>
     )
 }
+
+
+const mapStateToProps = state => {
+    return {
+      
+    };
+  };
+  
+  const mapDispatchToProps = { searchHalls };
+  
+  export default withRouter(
+    connect(
+      mapStateToProps,
+      mapDispatchToProps,
+    )(HallSearchBar)
+  );
