@@ -9,6 +9,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import DeleteIcon from '@material-ui/icons/Delete';
 
+import HallSearchBar from '../../containers/SearchBar/HallSearchBar'
 import Sidebar from "../../components/Sidebar/Sidebar"
 import Table from "../../components/Table/Table"
 import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
@@ -17,6 +18,7 @@ import { getHalls } from '../../store/actions/HallActions'
 import DoctorForm from '../Forms/DoctorForm'
 import FormContainer from '../../components/FormContainer/FormContainer'
 import Calendar from '../../components/Calendar/Calendar'
+
 
 const useStyles = makeStyles(styles);
 
@@ -108,6 +110,9 @@ function ClAdminHome(props) {
       <div className={classes.wrapper}>
         <Sidebar options={sidebarOptions} />
         <div className={classes.mainPanel}>
+          <div >
+           {table.type === HALL_TABLE && <HallSearchBar />}
+          </div>
           <div className={classes.table}>
             {table.render && <Table
               data={tableData.data}
@@ -116,6 +121,7 @@ function ClAdminHome(props) {
               sortOptions={[]}  
               changeSortBy={() => {}}  
               form={tableData.form}
+              
             />}
           </div>
         </div>

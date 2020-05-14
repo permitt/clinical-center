@@ -1,11 +1,10 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'
 import DayPicker from 'react-day-picker';
 import 'react-day-picker/lib/style.css';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
-import Divider from '@material-ui/core/Divider';
 
 function Calendar(props) {
   const { data } = props

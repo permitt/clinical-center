@@ -1,4 +1,4 @@
-import { SET_HALLS, SET_DATES } from '../actions/ActionTypes';
+import { SET_HALLS } from '../actions/ActionTypes';
 
 const initialState = {
   all: [],
@@ -14,7 +14,7 @@ const hallReducer = (state = initialState, action) => {
       console.log('halls', halls)
       const arr = halls.map(el => {
         const reserved = reservedDates[el.name] || []
-        const availableDate = reserved.length == 0 ? formatDate(new Date()) : findAvailable(reserved)
+        const availableDate = reserved.length === 0 ? formatDate(new Date()) : findAvailable(reserved)
         el['available'] = availableDate
         return el
       })

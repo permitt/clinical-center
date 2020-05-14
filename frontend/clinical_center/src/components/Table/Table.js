@@ -43,10 +43,6 @@ const TableToolbar = props => {
     props.search(event.target.value)
   }
 
-  // const search = name => {
-  //   const searchData = 
-  // }
-
   const handleOpen = () => {
     setOpen(true);
   };

@@ -1,9 +1,7 @@
-import { call, put, select } from 'redux-saga/effects';
-import { push, go } from 'connected-react-router'
+import { call, put } from 'redux-saga/effects';
 import { doctorService } from '../../services/DoctorService';
 import { setDoctors, setDoctor } from '../actions/DoctorActions';
 import { registerError } from '../actions/AuthActions';
-import { DASHBOARD } from '../../routes';
 
 export function* doctorsGet(action) {
   try {
