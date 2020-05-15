@@ -11,7 +11,7 @@ import MaskedInput from 'react-text-mask';
 
 import { withFormikField } from '../../utils/withFormikField'
 import { formStyle, submitButton } from '../../assets/jss/material-dashboard-react/components/FormStyle';
-import { addHall, editHall } from '../../store/actions/HallActions';
+import { addType, editType } from '../../store/actions/AppointmentTypeActions';
 import { addTypeSchema } from './validations'
 
 const FormikTextField = withFormikField(TextField);
@@ -64,23 +64,30 @@ function TextMaskCustom(props) {
   );
 }
 
+const formatHours = mins => {
+  const hours = Math.floor(mins / 60);  
+  const minutes = mins % 60;
+  return ('0' + hours).slice(-2) + ":" + ('0' + minutes).slice(-2);    
+}
 
 
 function AppointmentTypeForm(props) {
   const { selected } = props
-  console.log(selected)
-  const name = selected ? selected.name : ''
-  const duration = selected ? selected.duration : ''
+  console.log('selektovaaan', selected)
+  const name = selected ? selected.typeName : ''
+  const duration = selected ? formatHours(selected.duration) : ''
   const price = selected ? selected.price : ''
 
   const submit = values => {
     console.log(values)
-    // if (selected) {
-    //   values['id'] = selected.id
-    //   props.editHall(values)
-    // } else
-    //   props.addHall(values)
+    if (selected) {
+      values['id'] = selected.id
+      props.editType(values)
+    } else
+      props.addType(values)
   };
+
+
   return (
     <Formik
       initialValues={{
@@ -151,7 +158,7 @@ const mapStateToProps = state => {
   };
 };
 
-const mapDispatchToProps = { addHall, editHall };
+const mapDispatchToProps = { addType, editType };
 
 export default withRouter(
   connect(

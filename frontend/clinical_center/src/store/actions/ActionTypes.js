@@ -49,3 +49,13 @@ export const SET_EDITED_HALL = 'SET_EDITED_HALL'
 export const GET_PATIENTS = 'GET_PATIENTS'
 export const SET_PATIENTS = 'SET_PATIENTS'
 
+export const GET_TYPES = 'GET_TYPES'
+export const SET_TYPES = 'SET_TYPES'
+export const SEARCH_TYPES = 'SEARCH_TYPES'
+export const ADD_TYPE = 'ADD_TYPE'
+export const SET_TYPE = 'SET_TYPE'
+export const DELETE_TYPE = 'DELETE_TYPE'
+export const SET_DELETED_TYPE = 'SET_DELETED_TYPE'
+export const EDIT_TYPE = 'EDIT_TYPE'
+export const SET_EDITED_TYPE = 'SET_EDITED_TYPE'
+

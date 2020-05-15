@@ -1,5 +1,7 @@
 import React from 'react';
 import { makeStyles } from '@material-ui/core/styles';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom'
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -25,6 +27,8 @@ import styles from "../../assets/jss/material-dashboard-react/components/tableSt
 import toolbarStyles from "../../assets/jss/material-dashboard-react/components/tableToolbarStyle"
 import AppointmentTypeForm from "../Forms/AppointmentTypeForm"
 import FormContainer from "../../components/FormContainer/FormContainer"
+import { deleteType } from '../../store/actions/AppointmentTypeActions'
+import { getTypes } from '../../store/actions/AppointmentTypeActions'
 
 const useStyles = makeStyles(styles);
 const useToolbarStyles = makeStyles(toolbarStyles)
@@ -42,7 +46,9 @@ const rows = [
   createData('Gingerbread', 356, 16.0, 49, 3.9),
 ];
 
-export default function AppointmentTypeList() {
+export default function AppointmentTypeList(props) {
+  const  { data } = props
+  console.log(data)
   const classes = useStyles();
   const toolBarclasses = useToolbarStyles();
   const [open, setOpen] = React.useState(false);
@@ -55,6 +61,7 @@ export default function AppointmentTypeList() {
   }
 
   const handleOpen = () => {
+    setSelected({})
     setOpen(true);
   };
 
@@ -65,6 +72,12 @@ export default function AppointmentTypeList() {
   const handleEdit = row => {
     setSelected(row)
     setOpen(true)
+  }
+
+  const formatHours = mins => {
+    const hours = Math.floor(mins / 60);  
+    const minutes = mins % 60;
+    return ('0' + hours).slice(-2) + ":" + ('0' + minutes).slice(-2);  
   }
 
   return (
@@ -117,13 +130,13 @@ export default function AppointmentTypeList() {
           </TableRow>
         </TableHead>
         <TableBody>
-          {rows.map((row) => (
-            <TableRow key={row.name}>
-              <TableCell align="left">{row.calories}</TableCell>
-              <TableCell align="left" >{row.fat}</TableCell>
-              <TableCell align="left" >{row.fat}</TableCell>
+          {data.map((row) => (
+            <TableRow key={row.id}>
+              <TableCell align="left">{row.typeName}</TableCell>
+              <TableCell align="left" >{formatHours(row.duration)}</TableCell>
+              <TableCell align="left" >{row.price}</TableCell>
               <TableCell align="left" width={20}>
-                <IconButton aria-label="filter list" onClick={() => console.log('da')}>
+                <IconButton aria-label="filter list" onClick={() => props.delete(row.id)}>
                   <DeleteIcon />
                 </IconButton>
               </TableCell>
@@ -140,3 +153,27 @@ export default function AppointmentTypeList() {
     </>
   );
 }
+
+
+// const mapStateToProps = state => {
+//   return {
+//     doctors: state.doctor.all,
+//     halls: state.hall.all,
+//     error: state.error.deleteError,
+//     msg: state.error.errorMsg,
+//     types: state.type.all
+//   };
+// };
+
+// const mapDispatchToProps = {
+//   editType,
+//   deleteType,
+//   resetError,
+// };
+
+// export default withRouter(
+//   connect(
+//     mapStateToProps,
+//     mapDispatchToProps
+//   )(ClAdminHome)
+// );

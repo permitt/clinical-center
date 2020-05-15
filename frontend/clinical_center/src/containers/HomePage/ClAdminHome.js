@@ -17,6 +17,7 @@ import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.
 import { getDoctors, deleteDoctor } from '../../store/actions/DoctorActions'
 import { resetError } from '../../store/actions/ErrorActions'
 import { getHalls, deleteHall } from '../../store/actions/HallActions'
+import { getTypes, deleteType } from '../../store/actions/AppointmentTypeActions'
 import DoctorForm from '../Forms/DoctorForm'
 import HallForm from '../Forms/HallForm'
 import FormContainer from '../../components/FormContainer/FormContainer'
@@ -53,7 +54,7 @@ function ClAdminHome(props) {
   const showAppTypes = () => {
     setTable({render: false, type: ''})
     setRenderTypeTable(true)
-    //props.getTypes()
+    props.getTypes()
   }
   
   const doctorColumns = [
@@ -160,7 +161,7 @@ function ClAdminHome(props) {
               id={tableData.id}
               edit={tableData.allowEdit}
             />}
-            {renderTypeTable && <AppointmentTypeList />}
+            {renderTypeTable && <AppointmentTypeList data={props.types} delete={props.deleteType}/>}
           </div>
         </div>
         <Modal
@@ -191,7 +192,8 @@ const mapStateToProps = state => {
     doctors: state.doctor.all,
     halls: state.hall.all,
     error: state.error.deleteError,
-    msg: state.error.errorMsg
+    msg: state.error.errorMsg,
+    types: state.type.all
   };
 };
 
@@ -200,7 +202,9 @@ const mapDispatchToProps = {
   deleteDoctor,
   getHalls,
   deleteHall,
-  resetError
+  resetError,
+  getTypes,
+  deleteType
 };
 
 export default withRouter(
