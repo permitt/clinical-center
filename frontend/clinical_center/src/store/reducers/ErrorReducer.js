@@ -17,10 +17,10 @@ const errorReducer = (state = initialState, action) => {
 
       return { ...state, registerError: action.payload };
     case DELETE_ERROR:
-      console.log(state)
+  
       return { ...state, deleteError: true, errorMsg : action.payload};
     case RESET_ERROR:
-      console.log('hre')
+
       return { ...initialState};
     default:
       return state;

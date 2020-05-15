@@ -133,7 +133,6 @@ export default function SimpleTable(props) {
   const columns = props.columns
 
   const handleOpen = row => {
-    console.log(row)
     setEdit({openModal:true, selected: row});
   };
 

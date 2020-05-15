@@ -11,7 +11,6 @@ export function* userLogin({ payload }) {
     const response = yield call(AuthService.login, payload)
     yield put(authUser(true))
     const decoded = jwt_decode(response.access)
-    console.log("DEKODIRANII : ", decoded)
     yield put(setRole(decoded.role))
     yield put(setEmail(decoded.email));
     yield put(push(DASHBOARD))

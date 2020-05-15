@@ -13,13 +13,11 @@ function Calendar(props) {
 
 
   const handleDayClick = (day, modifiers={}) => { 
-    console.log(hallData)
     if (hours.show)
       showHours({show: false, time: ''})
     if (modifiers.selected) {
       const dateString = day.getFullYear() + '-' + ('0' + (day.getMonth()+1)).slice(-2) + '-' + ('0' + day.getDate()).slice(-2)
       const time = hallData.filter(day => day.date === dateString)
-      console.log('t', time)
       showHours({show: true, time})
     }
 

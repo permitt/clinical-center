@@ -119,7 +119,6 @@ function ClAdminHome(props) {
 
   return (
     <>
-    
       <div className={classes.wrapper}>
         <Sidebar options={sidebarOptions} />
         <div className={classes.mainPanel}>

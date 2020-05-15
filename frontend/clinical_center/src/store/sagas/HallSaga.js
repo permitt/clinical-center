@@ -44,7 +44,6 @@ export function* hallAdd(action) {
 
 export function* hallEdit(action) {
   try {
-    console.log('u sagi za edti akcija: ', action)
     const response = yield call(() => hallService.editHall(action.payload))
     yield put(setEditedHall(action.payload))
   } catch (error) {

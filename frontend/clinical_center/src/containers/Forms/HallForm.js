@@ -27,7 +27,6 @@ const MenuProps = {
 
 
 function HallForm (props) {
-  console.log(props)
   const { selected } = props
   const name = selected ? selected.name : ''
   const number = selected ? selected.number : ''

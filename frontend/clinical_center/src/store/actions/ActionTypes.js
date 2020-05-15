@@ -46,3 +46,6 @@ export const SET_DELETED_HALL = 'SET_DELETED_HALL'
 export const EDIT_HALL = 'EDIT_HALL'
 export const SET_EDITED_HALL = 'SET_EDITED_HALL'
 
+export const GET_PATIENTS = 'GET_PATIENTS'
+export const SET_PATIENTS = 'SET_PATIENTS'
+

@@ -34,7 +34,7 @@ class ClinicAdminSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         email = validated_data.get("email", None)
         password = validated_data.get("password", None)
-        user = User.objects.create(username=email,email=email, is_active=False)
+        user = User.objects.create(username=email,email=email, is_active=True)
         user.set_password(password)
         user.save()
         clinicAdmin = ClinicAdmin(**validated_data)
@@ -67,7 +67,7 @@ class DoctorSerializer(serializers.ModelSerializer):
 
         email = validated_data.get("email", None)
         password = validated_data.get("password", None)
-        user = User.objects.create(username=email,email=email, is_active=False)
+        user = User.objects.create(username=email,email=email, is_active=True)
         user.set_password(password)
         user.save()
         doctor = Doctor(**validated_data)
