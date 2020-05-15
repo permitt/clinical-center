@@ -13,7 +13,8 @@ class PatientViewset(viewsets.ModelViewSet):
     serializer_class = PatientSerializer
     permission_classes = [custom_permissions.CustomPatientPermissions]
     filter_backends = [filters.OrderingFilter]
-    ordering_fields = ['firstName', 'personalID', 'city']
+    ordering_fields = ['firstName', 'policyNumber', 'city']
+    ordering = ['firstName']
     lookup_field = 'email'
     lookup_value_regex = '[\w@.]+'
 
@@ -22,6 +23,8 @@ class PatientViewset(viewsets.ModelViewSet):
         user = instance.user
         user.delete()
         instance.delete()
+
+
 
 class ClinicAdminViewset(viewsets.ModelViewSet):
     queryset = ClinicAdmin.objects.all()

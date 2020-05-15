@@ -25,8 +25,8 @@ const headCells = [
   { id: 'name', numeric: false, label: 'Name' },
   { id: 'policyNumber', numeric: true,  label: 'Policy number' },
   { id: 'city', numeric: false, label: 'City' },
-  { id: 'email', numeric: false, label: 'Email' },
-  { id: 'personalID', numeric: true, label: 'Personal id' },
+  { id: 'country', numeric: false, label: 'Country' },
+  { id: 'email', numeric: false, label: 'Email' }
 ];
 
 function EnhancedTableHead(props) {
@@ -56,7 +56,7 @@ const EnhancedTableToolbar =  (props) => {
   const classes = useToolbarStyles();
   const [state, setState] = React.useState({
     firstName: true,
-    personalID: false,
+    policyNumber: false,
     city: false
   });
 
@@ -100,13 +100,13 @@ const EnhancedTableToolbar =  (props) => {
         <FormControlLabel
         control={
             <Checkbox
-            checked={state.personalID}
+            checked={state.policyNumber}
             onChange={handleChange}
-            name="personalID"
+            name="policyNumber"
             color="primary"
             />
         }
-        label="Personal ID"
+        label="Policy number"
         />
         <FormControlLabel
         control={
@@ -179,8 +179,8 @@ export default function PatientList(props) {
                       </TableCell>
                       <TableCell align="left">{row.policyNumber}</TableCell>
                       <TableCell align="left">{row.city}</TableCell>
+                      <TableCell align="left">{row.country}</TableCell>
                       <TableCell align="left">{row.email}</TableCell>
-                      <TableCell align="left">{row.personalID}</TableCell>
                     </TableRow>
                   );
                 })}
