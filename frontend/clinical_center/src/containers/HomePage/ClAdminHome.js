@@ -8,6 +8,7 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import DeleteIcon from '@material-ui/icons/Delete';
+import ListAltIcon from '@material-ui/icons/ListAlt';
 
 import HallSearchBar from '../../containers/SearchBar/HallSearchBar'
 import Sidebar from "../../components/Sidebar/Sidebar"
@@ -21,6 +22,7 @@ import HallForm from '../Forms/HallForm'
 import FormContainer from '../../components/FormContainer/FormContainer'
 import Calendar from '../../components/Calendar/Calendar'
 import ErrorDialog from './ErrorDialog'
+import AppointmentTypeList from '../AppointmentTypeList/AppointmentTypeList'
 
 
 const useStyles = makeStyles(styles);
@@ -32,6 +34,7 @@ function ClAdminHome(props) {
   const classes = useStyles();
   const [modal, setModal] = React.useState({open: false, data: {}});
   const [table, setTable] = React.useState({render: false, type: ''})
+  const [ renderTypeTable, setRenderTypeTable] = React.useState(false)
   const [tableData, setTableData] = React.useState({ data: [], title:'', columns:[], form:null})
   const [errorDialogOpen, setErrorDialogOpen] = React.useState(props.error)
 
@@ -46,6 +49,12 @@ function ClAdminHome(props) {
   const handleClose = () => {
     setModal({open: false, data: {}});
   };
+
+  const showAppTypes = () => {
+    setTable({render: false, type: ''})
+    setRenderTypeTable(true)
+    //props.getTypes()
+  }
   
   const doctorColumns = [
     { id: 'firstName', label: 'Name', minWidth: 100 },
@@ -69,10 +78,12 @@ function ClAdminHome(props) {
       case DOCTOR_TABLE: {
         props.getDoctors()
         setTable({render: true, type: type})
+        setRenderTypeTable(false)
         break;
       }
       case HALL_TABLE: {
         props.getHalls()
+        setRenderTypeTable(false)
         setTable({render: true, type: type})
       }
     }
@@ -114,6 +125,11 @@ function ClAdminHome(props) {
       name: 'Operating halls',
       onClick: () => showList(HALL_TABLE),
       icon: MeetingRoomIcon
+    },
+    {
+      name: 'Appointment types',
+      onClick: showAppTypes,
+      icon: ListAltIcon
     }
   ]
 
@@ -144,9 +160,9 @@ function ClAdminHome(props) {
               id={tableData.id}
               edit={tableData.allowEdit}
             />}
+            {renderTypeTable && <AppointmentTypeList />}
           </div>
         </div>
-           
         <Modal
           aria-labelledby="transition-modal-title"
           aria-describedby="transition-modal-description"

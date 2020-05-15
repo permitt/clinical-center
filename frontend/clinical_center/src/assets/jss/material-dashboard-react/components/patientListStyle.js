@@ -17,6 +17,7 @@ export const toolBarstyle = (theme) => ({
           },
     title: {
       flex: '1 1 100%',
+      fontWeight: '550'
     },
   })
 

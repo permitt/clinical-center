@@ -30,5 +30,11 @@ export const editPatientSchema = Yup.object().shape({
 
 export const addHallSchema = Yup.object().shape({
   name: Yup.string().required('Name is required'),
-  number: Yup.number().required('Number name is required').typeError('Operating room number must be a number')
+  number: Yup.number().required('Number is required').typeError('Operating room number must be a number')
+});
+
+export const addTypeSchema = Yup.object().shape({
+  name: Yup.string().required('Name is required'),
+  duration: Yup.string().required('Duration is required'),
+  price: Yup.number().required('Price is required')
 });
