@@ -3,7 +3,7 @@ import { lighten } from '@material-ui/core/styles';
 export const toolBarstyle = (theme) => ({
     root: {
       paddingLeft: theme.spacing(2),
-      paddingRight: theme.spacing(1),
+      paddingRight: theme.spacing(1)
     },
     highlight:
       theme.palette.type === 'light'

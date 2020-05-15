@@ -13,6 +13,7 @@ class Patient(models.Model):
     city = models.CharField(max_length=30)
     country = models.CharField(max_length=30)
     phoneNumber = models.IntegerField()
+    personalID = models.IntegerField(null=False, unique=True)
     activation_link = models.CharField(max_length=100, default='')
     approved = models.BooleanField(default=False)
 

@@ -41,13 +41,4 @@ class CustomDoctorPermissions(permissions.BasePermission):
 
     def has_permission(self, request, view):
 
-        # if request.method == 'PUT' or request.method == 'PATCH':
-#         #     return hasattr(request.user, 'adminAccount')
-#         # elif request.method == "DELETE":
-#         #     return hasattr(request.user, 'adminAccount')
-#         # elif request.method == "GET":
-#         #     return request.user and hasattr(request.user, 'adminAccount') and request.user.is_authenticated
-#         # else:
-#         #     return False
-
         return hasattr(request.user, 'adminAccount') and request.user.is_authenticated

@@ -124,8 +124,8 @@ const useToolbarStyles = makeStyles(toolBarstyle);
 const EnhancedTableToolbar =  (props) => {
   const classes = useToolbarStyles();
   const [state, setState] = React.useState({
-    name: true,
-    id: false,
+    firstName: true,
+    personalID: false,
     city: false
   });
 
@@ -158,9 +158,9 @@ const EnhancedTableToolbar =  (props) => {
         <FormControlLabel
         control={
             <Checkbox
-            checked={state.name}
+            checked={state.firstName}
             onChange={handleChange}
-            name="name"
+            name="firstName"
             color="primary"
             />
         }
@@ -169,9 +169,9 @@ const EnhancedTableToolbar =  (props) => {
         <FormControlLabel
         control={
             <Checkbox
-            checked={state.id}
+            checked={state.personalID}
             onChange={handleChange}
-            name="id"
+            name="personalID"
             color="primary"
             />
         }
