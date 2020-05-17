@@ -10,6 +10,8 @@ import {
     SET_EDITED_TYPE
    } from './ActionTypes';
   
+import { formatValues } from '../../utils/utils'
+
   export const getTypes = () => {
     return {
       type: GET_TYPES,
@@ -48,7 +50,8 @@ import {
   };
 
   export const addType = payload => {
-
+    payload = formatValues(payload)
+    
     return {
       type: ADD_TYPE,
       payload
@@ -63,6 +66,7 @@ import {
   };
 
   export const editType = payload => {
+    payload = formatValues(payload)
 
     return {
       type: EDIT_TYPE,

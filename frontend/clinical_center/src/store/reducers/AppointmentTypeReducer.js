@@ -6,7 +6,6 @@ const initialState = {
 const typeReducer = (state = initialState, action) => {
   let changedArr;
   let type;
-  console.log('u reduceru')
   switch (action.type) {
 
     case SET_TYPES:
@@ -26,9 +25,7 @@ const typeReducer = (state = initialState, action) => {
 
       case SET_EDITED_TYPE:
         const { typeName, duration , price, id } = action.payload
-        console.log(price)
-
-        const index = state.all.findIndex(type => {console.log(type.id, id) ;return type.id == id});
+        const index = state.all.findIndex(type => type.id == id);
         changedArr = state.all.slice();
         if (index) {
           type = {...state.all[index]}

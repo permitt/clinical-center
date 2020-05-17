@@ -13,6 +13,7 @@ import { withFormikField } from '../../utils/withFormikField'
 import { formStyle, submitButton } from '../../assets/jss/material-dashboard-react/components/FormStyle';
 import { addType, editType } from '../../store/actions/AppointmentTypeActions';
 import { addTypeSchema } from './validations'
+import { formatHours } from '../../utils/utils'
 
 const FormikTextField = withFormikField(TextField);
 const ITEM_HEIGHT = 48;
@@ -64,46 +65,26 @@ function TextMaskCustom(props) {
   );
 }
 
-const formatHours = mins => {
-  console.log('ovdeeeeeeeeee jbet')
-  const hours = Math.floor(mins / 60);  
-  const minutes = mins % 60;
-  return ('0' + hours).slice(-2) + " : " + ('0' + minutes).slice(-2) + " h";    
-}
 
-const formatValues = values => {
-  const { duration } = values
-  let minutes = 0
-  try{
-     minutes = parseInt(duration.split(":")[0]) * 60 + parseInt(duration.split(":")[1].split(" ")[1])
-  } catch{
-    values['duration'] = minutes
-    return values
-  }
-  values['duration'] = minutes
 
-  return values
-}
 
 
 function AppointmentTypeForm(props) {
   const { selected } = props
   const [state, setState] = React.useState(
     {name: selected ? selected.typeName :'', 
-    duration: selected ? formatHours(selected.duration):'',
+    duration: selected ? formatHours(selected.duration): '',
     price: selected ? selected.price : '' })
-  console.log('selektovan lolol', selected)
 
   const submit = values => {
-    console.log(values)
     if (selected) {
       values['id'] = selected.id
-      props.editType(formatValues(values))
+      props.editType(values)
     } else {
-      props.addType(formatValues(values))
+      props.addType(values)
     }
-
   };
+
   return (
     <Formik
       initialValues={{
@@ -111,7 +92,7 @@ function AppointmentTypeForm(props) {
         duration: state.duration,
         price: state.price
       }}
-      validationSchema={addTypeSchema}
+     //validationSchema={addTypeSchema}
       onSubmit={submit}
       style={formStyle}>
       <Form  style={{marginTop:'20px'}}>

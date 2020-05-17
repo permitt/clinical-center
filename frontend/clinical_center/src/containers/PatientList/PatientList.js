@@ -60,7 +60,6 @@ const EnhancedTableToolbar =  (props) => {
     city: false
   });
 
-  console.log('RENDERUJE SE')
   const handleChange = (event) => {
     let newState = {...state}
     const name = event.target.name

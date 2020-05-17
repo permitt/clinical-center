@@ -34,7 +34,7 @@ const hallReducer = (state = initialState, action) => {
 
       case SET_EDITED_HALL:
         const { name, number ,id } = action.payload
-        const index = state.all.findIndex(hall => {console.log(hall.id, id) ;return hall.id == id});
+        const index = state.all.findIndex(hall => hall.id == id);
         changedArr = state.all.slice();
         if (index) {
           hall = {...state.all[index]}

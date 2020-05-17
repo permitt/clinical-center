@@ -49,7 +49,6 @@ const TableToolbar = props => {
   };
 
   const handleClose = () => {
-    console.log('evo ovde za add formu')
     setOpen(false);
     props.resetError()
   };
@@ -62,7 +61,7 @@ const TableToolbar = props => {
   }
 
   // useEffect(() => {
-  //   console.log('DADADA')
+  //  
   //   if ()
   //   setOpen(false);
   //   setSortByOpen(false);
@@ -142,7 +141,6 @@ export default function SimpleTable(props) {
 
   const handleClose = () => {
     setEdit({openModal:false, selected: {}});
-    console.log('resetujee ')
     props.resetError()
   };
 
@@ -224,8 +222,7 @@ export default function SimpleTable(props) {
                             <Button variant="contained" onClick={() => column.action(row)}>
                               {column.icon}
                             </Button>
-                          ):  <column.icon onClick={() => {console.log(row);
-                            column.action(row[props.id])}} />}
+                          ):  <column.icon onClick={() => column.action(row[props.id])} />}
                         </TableCell>
                       )
                   })}

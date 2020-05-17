@@ -21,13 +21,13 @@ const errorReducer = (state = initialState, action) => {
   
       return { ...state, deleteError: true, errorMsg : action.payload};
     case EDIT_ERROR:
-      console.log('u edit error reducer')
+
       return { ...state, editError: true, errorMsg : action.payload};
     case ADD_ERROR:
 
       return { ...state, addError: true, errorMsg : action.payload};
     case RESET_ERROR:
-      console.log('u reset error reducer')
+ 
       return { ...initialState};
     default:
       return state;
