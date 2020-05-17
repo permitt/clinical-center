@@ -1,9 +1,10 @@
 const tableStyle = theme => ({
   root: {
     width: '100%',
+    overflow: 'auto'
   },
   container: {
-    maxHeight: 440,
+    maxHeight: 540,
   },
 });
 

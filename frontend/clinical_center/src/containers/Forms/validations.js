@@ -34,7 +34,10 @@ export const addHallSchema = Yup.object().shape({
 });
 
 export const addTypeSchema = Yup.object().shape({
-  name: Yup.string().required('Name is required'),
-  duration: Yup.string().required('Duration is required'),
-  price: Yup.number().required('Price is required')
+  typeName: Yup.string().required('Name is required'),
+  duration: Yup.string().required('Duration is required')
+  .test('format',"Not correct format! Insert hh:MM",function(value) {
+    return /[0-9][0-9] : [0-9][0-9] h/.test(value)
+  })
+,  price: Yup.number().required('Price is required')
 });

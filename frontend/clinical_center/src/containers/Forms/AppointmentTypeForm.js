@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
@@ -65,35 +65,51 @@ function TextMaskCustom(props) {
 }
 
 const formatHours = mins => {
+  console.log('ovdeeeeeeeeee jbet')
   const hours = Math.floor(mins / 60);  
   const minutes = mins % 60;
-  return ('0' + hours).slice(-2) + ":" + ('0' + minutes).slice(-2);    
+  return ('0' + hours).slice(-2) + " : " + ('0' + minutes).slice(-2) + " h";    
+}
+
+const formatValues = values => {
+  const { duration } = values
+  let minutes = 0
+  try{
+     minutes = parseInt(duration.split(":")[0]) * 60 + parseInt(duration.split(":")[1].split(" ")[1])
+  } catch{
+    values['duration'] = minutes
+    return values
+  }
+  values['duration'] = minutes
+
+  return values
 }
 
 
 function AppointmentTypeForm(props) {
   const { selected } = props
-  console.log('selektovaaan', selected)
-  const name = selected ? selected.typeName : ''
-  const duration = selected ? formatHours(selected.duration) : ''
-  const price = selected ? selected.price : ''
+  const [state, setState] = React.useState(
+    {name: selected.typeName || '', 
+    duration: formatHours(selected.duration) || '',
+    price: selected.price || '' })
+  console.log('selektovan lolol', selected)
 
   const submit = values => {
     console.log(values)
     if (selected) {
       values['id'] = selected.id
-      props.editType(values)
-    } else
-      props.addType(values)
+      props.editType(formatValues(values))
+    } else {
+      props.addType(formatValues(values))
+    }
+
   };
-
-
   return (
     <Formik
       initialValues={{
-        name: name,
-        duration: duration,
-        price: price
+        typeName: state.name,
+        duration: state.duration,
+        price: state.price
       }}
       validationSchema={addTypeSchema}
       onSubmit={submit}
@@ -104,7 +120,7 @@ function AppointmentTypeForm(props) {
             <Field
               component={FormikTextField}
               type="text"
-              name="name"
+              name="typeName"
               variant="outlined"
               fullWidth
               label="Name"
@@ -137,7 +153,7 @@ function AppointmentTypeForm(props) {
             />
           </Grid>
         </Grid>
-        { props.registerError && <Alert severity="error" style={{marginTop:'10px'}}>Operating room with this name already exists</Alert>}
+        { props.registerError && <Alert severity="error" style={{marginTop:'10px'}}>Appointment type with this name already exists</Alert>}
         <Button
           type="submit"
           fullWidth

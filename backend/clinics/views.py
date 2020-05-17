@@ -65,10 +65,30 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()
 
 
-class AppointmentTypeListView(generics.ListAPIView):
+class AppointmentTypeView(viewsets.ModelViewSet):
     queryset = AppointmentType.objects.all()
-    #permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [AppointmentTypePermissions]
     serializer_class = AppointmentTypeSerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
+        query = AppointmentType.objects.filter(clinic=userLogged.values('employedAt')[:1]).select_related()
+
+        return query
+
+    def destroy(self, request,pk) :
+        instance = self.get_object()
+        now = datetime.datetime.now().date()
+        for app in instance.appointment_set.all():
+            if (now < app.date):
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "This type has following appointments and can't be deleted"})
+        else:
+            self.perform_destroy(instance)
+            return Response(status=status.HTTP_204_NO_CONTENT)
+
+
+
 #     def get_queryset(self):
 #         queryset = Clinic.objects.all()
 #         #obavezni parametri za zakazivanje

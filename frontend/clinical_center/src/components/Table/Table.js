@@ -138,6 +138,7 @@ export default function SimpleTable(props) {
 
   const handleClose = () => {
     setEdit({openModal:false, selected: {}});
+    props.resetError()
   };
 
   useEffect(() => {

@@ -10,8 +10,7 @@ const typeReducer = (state = initialState, action) => {
   switch (action.type) {
 
     case SET_TYPES:
-      const { types } = action.payload
-      console.log('heree')
+
       return { ...state, all: action.payload }
 
       case SET_DELETED_TYPE: 
@@ -26,12 +25,14 @@ const typeReducer = (state = initialState, action) => {
         return {...state, all: changedArr }
 
       case SET_EDITED_TYPE:
-        const { name, duration , price, id } = action.payload
+        const { typeName, duration , price, id } = action.payload
+        console.log(price)
+
         const index = state.all.findIndex(type => {console.log(type.id, id) ;return type.id == id});
         changedArr = state.all.slice();
         if (index) {
           type = {...state.all[index]}
-          type['name'] = name
+          type['typeName'] = typeName
           type['duration'] = duration
           type['price'] = price
           changedArr[index] = type;

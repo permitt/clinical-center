@@ -36,7 +36,7 @@ export function* typeDelete(action) {
 export function* typeAdd(action) {
   try {
     const response = yield call(() => typeService.addType(action.payload))
-    yield put(setType(action.payload))
+    yield put(setType(response))
   } catch (error) {
     console.log(error)
     yield put(registerError(true))
@@ -46,7 +46,7 @@ export function* typeAdd(action) {
 export function* typeEdit(action) {
   try {
     const response = yield call(() => typeService.editType(action.payload))
-    yield put(setEditedType(action.payload))
+    yield put(setEditedType(response))
   } catch (error) {
     yield put(registerError(true))
   }

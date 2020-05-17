@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect }from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'
@@ -28,7 +28,7 @@ import toolbarStyles from "../../assets/jss/material-dashboard-react/components/
 import AppointmentTypeForm from "../Forms/AppointmentTypeForm"
 import FormContainer from "../../components/FormContainer/FormContainer"
 import { deleteType } from '../../store/actions/AppointmentTypeActions'
-import { getTypes } from '../../store/actions/AppointmentTypeActions'
+import { resetError } from '../../store/actions/ErrorActions'
 
 const useStyles = makeStyles(styles);
 const useToolbarStyles = makeStyles(toolbarStyles)
@@ -46,13 +46,13 @@ const rows = [
   createData('Gingerbread', 356, 16.0, 49, 3.9),
 ];
 
-export default function AppointmentTypeList(props) {
+function PriceList(props) {
   const  { data } = props
   console.log(data)
   const classes = useStyles();
   const toolBarclasses = useToolbarStyles();
   const [open, setOpen] = React.useState(false);
-  const [selected, setSelected] = React.useState()
+  const [selected, setSelected] = React.useState(null)
   const [searchInput, setSearchInput] = React.useState('')
 
   const handleChange = event => {
@@ -61,11 +61,12 @@ export default function AppointmentTypeList(props) {
   }
 
   const handleOpen = () => {
-    setSelected({})
+    setSelected(null)
     setOpen(true);
   };
 
   const handleClose = () => {
+    props.resetError()
     setOpen(false);
   };
 
@@ -74,6 +75,11 @@ export default function AppointmentTypeList(props) {
     setOpen(true)
   }
 
+  useEffect(() => {
+    setOpen(false)
+    
+  }, [props])
+
   const formatHours = mins => {
     const hours = Math.floor(mins / 60);  
     const minutes = mins % 60;
@@ -81,10 +87,11 @@ export default function AppointmentTypeList(props) {
   }
 
   return (
-  <>
+  <div className={classes.root}>
+    <div className={classes.container}>
     <Toolbar className={classes.highlight}>
       <Typography className={toolBarclasses.title} variant="h6" id="tableTitle" component="div">
-          Appointment types
+          Price list
       </Typography>
       <TextField
         id="standard-search"
@@ -114,7 +121,9 @@ export default function AppointmentTypeList(props) {
         }}
       >
         <Fade in={open}>
-        <FormContainer form={<AppointmentTypeForm selected={selected}/>} title="Add new appointment type"/>
+        <FormContainer 
+          form={<AppointmentTypeForm selected={selected}/>} 
+          title={selected ? "Edid appointment type":"Add new appointment type"}/>
         </Fade>
       </Modal>
     </Toolbar >
@@ -122,9 +131,9 @@ export default function AppointmentTypeList(props) {
       <Table className={classes.table} aria-label="simple table">
         <TableHead>
           <TableRow>
-            <TableCell align="left">Name</TableCell>
-            <TableCell align="left">Duration</TableCell>
-            <TableCell align="left">Price</TableCell>
+            <TableCell align="left">Appointment type name</TableCell>
+            <TableCell align="left">Duration (hours)</TableCell>
+            <TableCell align="left">Price ($)</TableCell>
             <TableCell align="left">Delete</TableCell>
             <TableCell align="left">Edit</TableCell>
           </TableRow>
@@ -150,30 +159,24 @@ export default function AppointmentTypeList(props) {
         </TableBody>
       </Table>
     </TableContainer>
-    </>
+    </div>
+    </div>
   );
 }
 
 
-// const mapStateToProps = state => {
-//   return {
-//     doctors: state.doctor.all,
-//     halls: state.hall.all,
-//     error: state.error.deleteError,
-//     msg: state.error.errorMsg,
-//     types: state.type.all
-//   };
-// };
+const mapStateToProps = state => {
+  return {
+  };
+};
 
-// const mapDispatchToProps = {
-//   editType,
-//   deleteType,
-//   resetError,
-// };
+const mapDispatchToProps = {
+  resetError,
+};
 
-// export default withRouter(
-//   connect(
-//     mapStateToProps,
-//     mapDispatchToProps
-//   )(ClAdminHome)
-// );
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(PriceList)
+);

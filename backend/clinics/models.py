@@ -43,8 +43,12 @@ class OperatingRoom(models.Model):
         unique_together = ['clinic', 'name']
 
 class AppointmentType(models.Model):
-    typeName = models.CharField(max_length=30, unique=True)
+    typeName = models.CharField(max_length=30)
     duration = models.IntegerField()
+    clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='types')
+
+    class Meta:
+        unique_together = ['typeName', 'clinic']
 
     def __str__(self):
         return self.typeName
@@ -68,7 +72,7 @@ class PriceList(models.Model):
 
 
     def __str__(self):
-        return f'{self.clinic.name} {self.appointmentType.typeName}'
+        return f'{self.price}'
 
 class Appointment(models.Model):
     clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='appointments')

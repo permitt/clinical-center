@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+
 from users.models import ClinicAdmin
 
 
@@ -19,11 +20,86 @@ class AppointmentSerializer(serializers.ModelSerializer):
         model = Appointment
         fields = '__all__'
 
-
-class AppointmentTypeSerializer(serializers.ModelSerializer):
+class PriceListSerializer(serializers.ModelSerializer):
     class Meta:
-        model = AppointmentType
-        fields = '__all__'
+        model = PriceList
+        fields = ['price']
+
+class AppointmentTypeSerializer(serializers.BaseSerializer):
+    def create(self, validated_data):
+        userLogged = ClinicAdmin.objects.filter(email=self.context['request'].user.username).get()
+        type = AppointmentType(typeName=validated_data['typeName'], duration=validated_data['duration'], clinic=userLogged.employedAt)
+        type.save()
+        price = validated_data['price']
+        priceListItem = PriceList.objects.create(price=price, clinic=type.clinic, appointmentType=type)
+        priceListItem.save()
+
+        return type
+
+    def to_internal_value(self, data):
+        price = data.get('price')
+        typeName = data.get('typeName')
+        duration = data.get('duration')
+
+        if not price:
+            raise serializers.ValidationError({
+                'price': 'This field is required.'
+            })
+        if not typeName:
+            raise serializers.ValidationError({
+                'typeName': 'This field is required.'
+            })
+        if not duration:
+            raise serializers.ValidationError({
+                'duration': 'This field is required.'
+            })
+        try:
+            int(duration)
+        except ValueError:
+            raise serializers.ValidationError({
+                'duration': 'This field must be integer.'
+            })
+
+        try:
+            int(price)
+        except ValueError:
+            raise serializers.ValidationError({
+                'price': 'This field must be integer.'
+            })
+
+        return {
+            'price': int(price),
+            'typeName': typeName,
+            'duration': int(duration)
+        }
+
+    def to_representation(self, instance):
+        query = instance.prices.all()
+        price = query[0].price
+
+        return {
+            'duration': instance.duration,
+            'typeName': instance.typeName,
+            'price': price,
+            'id': instance.id,
+            'clinicId': instance.clinic_id
+        }
+
+    def update(self, instance,validated_data):
+        print(validated_data)
+
+        instance.typeName = validated_data['typeName']
+        instance.duration = validated_data['duration']
+        newPrice = validated_data['price']
+        price = instance.prices.all()[0]
+        price.price = newPrice
+        print(instance.validate_unique('typeName'))
+        price.save()
+        print(dir(instance))
+        instance.save()
+
+        return instance
+
 
 class OperatingRoomSerializer(serializers.ModelSerializer):
     class Meta:
@@ -38,15 +114,11 @@ class OperatingRoomSerializer(serializers.ModelSerializer):
         userLogged = ClinicAdmin.objects.filter(email=self.context['request'].user.username).get()
         clinicId = userLogged.employedAt
         operatingRoom = OperatingRoom(**validated_data, clinic=clinicId)
-        # operatingRoom.clinic = clinicId
         operatingRoom.save()
 
         return operatingRoom
 
-class PriceListSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = PriceList
-        fields = '__all__'
+
 
 class DoctorRatingSerializer(serializers.ModelSerializer):
     class Meta:

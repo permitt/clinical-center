@@ -8,7 +8,7 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import DeleteIcon from '@material-ui/icons/Delete';
-import ListAltIcon from '@material-ui/icons/ListAlt';
+import ListIcon from '@material-ui/icons/List';
 
 import HallSearchBar from '../../containers/SearchBar/HallSearchBar'
 import Sidebar from "../../components/Sidebar/Sidebar"
@@ -23,7 +23,7 @@ import HallForm from '../Forms/HallForm'
 import FormContainer from '../../components/FormContainer/FormContainer'
 import Calendar from '../../components/Calendar/Calendar'
 import ErrorDialog from './ErrorDialog'
-import AppointmentTypeList from '../AppointmentTypeList/AppointmentTypeList'
+import PriceList from '../PriceList/PriceList'
 
 
 const useStyles = makeStyles(styles);
@@ -128,9 +128,9 @@ function ClAdminHome(props) {
       icon: MeetingRoomIcon
     },
     {
-      name: 'Appointment types',
+      name: 'Price list',
       onClick: showAppTypes,
-      icon: ListAltIcon
+      icon: ListIcon
     }
   ]
 
@@ -160,8 +160,9 @@ function ClAdminHome(props) {
               form={tableData.form}
               id={tableData.id}
               edit={tableData.allowEdit}
+              resetError={props.resetError}
             />}
-            {renderTypeTable && <AppointmentTypeList data={props.types} delete={props.deleteType}/>}
+            {renderTypeTable && <PriceList data={props.types} delete={props.deleteType}/>}
           </div>
         </div>
         <Modal
