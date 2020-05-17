@@ -49,7 +49,9 @@ const TableToolbar = props => {
   };
 
   const handleClose = () => {
+    console.log('evo ovde za add formu')
     setOpen(false);
+    props.resetError()
   };
 
   const handleSortClick = (val) => {
@@ -59,10 +61,12 @@ const TableToolbar = props => {
 
   }
 
-  useEffect(() => {
-    setOpen(false);
-    setSortByOpen(false);
-  }, [props])
+  // useEffect(() => {
+  //   console.log('DADADA')
+  //   if ()
+  //   setOpen(false);
+  //   setSortByOpen(false);
+  // }, [props])
 
 
   return (
@@ -138,12 +142,13 @@ export default function SimpleTable(props) {
 
   const handleClose = () => {
     setEdit({openModal:false, selected: {}});
+    console.log('resetujee ')
     props.resetError()
   };
 
   useEffect(() => {
     setFilteredData(rows)
-    setEdit({openModal:false, selected: {}})
+    // setEdit({openModal:false, selected: {}})
     
   }, [props])
 
@@ -178,7 +183,9 @@ export default function SimpleTable(props) {
         form={props.form}
         sortOptions={props.sortOptions}
         changeSortBy={props.changeSortBy}
-        search={search} />
+        search={search} 
+        resetError={props.resetError}
+        />
       <TableContainer className={classes.container} >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>

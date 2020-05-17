@@ -89,9 +89,9 @@ const formatValues = values => {
 function AppointmentTypeForm(props) {
   const { selected } = props
   const [state, setState] = React.useState(
-    {name: selected.typeName || '', 
-    duration: formatHours(selected.duration) || '',
-    price: selected.price || '' })
+    {name: selected ? selected.typeName :'', 
+    duration: selected ? formatHours(selected.duration):'',
+    price: selected ? selected.price : '' })
   console.log('selektovan lolol', selected)
 
   const submit = values => {
@@ -153,7 +153,7 @@ function AppointmentTypeForm(props) {
             />
           </Grid>
         </Grid>
-        { props.registerError && <Alert severity="error" style={{marginTop:'10px'}}>Appointment type with this name already exists</Alert>}
+        { props.error && <Alert severity="error" style={{marginTop:'10px'}}>Appointment type with this name already exists</Alert>}
         <Button
           type="submit"
           fullWidth
@@ -170,7 +170,7 @@ function AppointmentTypeForm(props) {
 
 const mapStateToProps = state => {
   return {
-    registerError: state.error.registerError
+    error: state.error.editError || state.error.addError,
   };
 };
 

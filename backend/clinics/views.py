@@ -11,6 +11,7 @@ from .custom_permissions import *
 from users.models import ClinicAdmin
 from .serializers import *
 import datetime
+from django.db import IntegrityError
 from django.db.models import Avg
 
 class ClinicListView(generics.ListAPIView):
@@ -58,7 +59,30 @@ class OperatingRoomView(viewsets.ModelViewSet):
             self.perform_destroy(instance)
             return Response(status=status.HTTP_204_NO_CONTENT)
 
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        try:
+            self.perform_update(serializer)
+        except IntegrityError as ext:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED,
+                            data={'msg': "Operating room with given name already exists"})
 
+        return Response(serializer.data)
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            self.perform_create(serializer)
+        except IntegrityError as ext:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED,
+                            data={'msg': "Operating room with given name already exists"})
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 class AppointmentViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentSerializer
@@ -86,6 +110,20 @@ class AppointmentTypeView(viewsets.ModelViewSet):
         else:
             self.perform_destroy(instance)
             return Response(status=status.HTTP_204_NO_CONTENT)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        try:
+            self.perform_update(serializer)
+        except IntegrityError as ext:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED, data={'msg': "Type with given name already exists"})
+
+        return Response(serializer.data)
+
+
 
 
 

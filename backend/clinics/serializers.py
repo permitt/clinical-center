@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from .models import *
 
+
 from users.models import ClinicAdmin
 
 
@@ -91,12 +92,14 @@ class AppointmentTypeSerializer(serializers.BaseSerializer):
         instance.typeName = validated_data['typeName']
         instance.duration = validated_data['duration']
         newPrice = validated_data['price']
+
+
+        instance.save()
         price = instance.prices.all()[0]
         price.price = newPrice
-        print(instance.validate_unique('typeName'))
         price.save()
-        print(dir(instance))
-        instance.save()
+
+
 
         return instance
 

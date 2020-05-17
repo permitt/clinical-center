@@ -2,8 +2,7 @@ import { call, put, select } from 'redux-saga/effects';
 import { push, go } from 'connected-react-router'
 import { hallService } from '../../services/HallService';
 import { setHalls, setDeletedHall, setHall, setEditedHall } from '../actions/HallActions';
-import { deleteError } from '../actions/ErrorActions';
-import { registerError } from '../actions/AuthActions';
+import { deleteError, addError, editError } from '../actions/ErrorActions';
 
 export function* hallsGet(action) {
   try {
@@ -38,7 +37,7 @@ export function* hallAdd(action) {
     yield put(setHall(action.payload))
   } catch (error) {
     console.log(error)
-    yield put(registerError(true))
+    yield put(addError(true))
   }
 }
 
@@ -47,6 +46,6 @@ export function* hallEdit(action) {
     const response = yield call(() => hallService.editHall(action.payload))
     yield put(setEditedHall(action.payload))
   } catch (error) {
-    yield put(registerError(true))
+    yield put(editError(true))
   }
 }

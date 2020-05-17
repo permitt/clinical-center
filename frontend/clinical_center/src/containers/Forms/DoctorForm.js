@@ -221,7 +221,7 @@ function DoctorForm (props) {
             </FormControl>  
           </Grid>
         </Grid>
-        { props.registerError && <Alert severity="error" style={{marginTop:'10px'}}>User with this email already exists</Alert>}
+        { props.addError && <Alert severity="error" style={{marginTop:'10px'}}>User with this email already exists</Alert>}
         <Button
           type="submit"
           fullWidth
@@ -238,7 +238,7 @@ function DoctorForm (props) {
 
 const mapStateToProps = state => {
   return {
-    registerError: state.error.registerError
+    addError: state.error.addError
   };
 };
 

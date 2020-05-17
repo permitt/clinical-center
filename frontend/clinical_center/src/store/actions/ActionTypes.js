@@ -9,6 +9,8 @@ export const LOGOUT = 'LOGOUT'
 export const LOGIN_ERROR = 'LOGIN_ERROR'
 export const REGISTER_ERROR = 'REGISTER_ERROR'
 export const DELETE_ERROR = 'DELETE_ERROR'
+export const ADD_ERROR = 'ADD_ERROR'
+export const EDIT_ERROR = 'EDIT_ERROR'
 export const RESET_ERROR = 'RESET_ERROR'
 
 export const GET_DOCTORS = 'GET_DOCTORS'

@@ -1,13 +1,14 @@
-import { LOGIN_ERROR, REGISTER_ERROR, DELETE_ERROR, RESET_ERROR } from '../actions/ActionTypes';
+import { LOGIN_ERROR, REGISTER_ERROR, DELETE_ERROR, RESET_ERROR, EDIT_ERROR, ADD_ERROR } from '../actions/ActionTypes';
 
 const initialState = {
   loginError: false,
   registerError: false,
   deleteError: false,
+  editError: false,
+  addError: false,
   errorMsg: ''
 };
 
-let i = 0;
 const errorReducer = (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_ERROR:
@@ -19,8 +20,14 @@ const errorReducer = (state = initialState, action) => {
     case DELETE_ERROR:
   
       return { ...state, deleteError: true, errorMsg : action.payload};
-    case RESET_ERROR:
+    case EDIT_ERROR:
+      console.log('u edit error reducer')
+      return { ...state, editError: true, errorMsg : action.payload};
+    case ADD_ERROR:
 
+      return { ...state, addError: true, errorMsg : action.payload};
+    case RESET_ERROR:
+      console.log('u reset error reducer')
       return { ...initialState};
     default:
       return state;

@@ -2,8 +2,7 @@ import { call, put, select } from 'redux-saga/effects';
 import { push, go } from 'connected-react-router'
 import { typeService } from '../../services/AppointmentTypeService';
 import { setTypes, setDeletedType, setType, setEditedType } from '../actions/AppointmentTypeActions';
-import { deleteError } from '../actions/ErrorActions';
-import { registerError } from '../actions/AuthActions';
+import { deleteError, editError, addError } from '../actions/ErrorActions';
 
 export function* typesGet(action) {
   try {
@@ -39,7 +38,7 @@ export function* typeAdd(action) {
     yield put(setType(response))
   } catch (error) {
     console.log(error)
-    yield put(registerError(true))
+    yield put(addError(true))
   }
 }
 
@@ -48,6 +47,7 @@ export function* typeEdit(action) {
     const response = yield call(() => typeService.editType(action.payload))
     yield put(setEditedType(response))
   } catch (error) {
-    yield put(registerError(true))
+    console.log(error)
+    yield put(editError(true))
   }
 }

@@ -1,8 +1,7 @@
 import { call, put } from 'redux-saga/effects';
 import { doctorService } from '../../services/DoctorService';
 import { setDoctors, setDoctor, setDeletedDoctor } from '../actions/DoctorActions';
-import { registerError } from '../actions/AuthActions';
-import { deleteError } from '../actions/ErrorActions';
+import { deleteError, addError } from '../actions/ErrorActions';
 
 export function* doctorsGet(action) {
   try {
@@ -29,6 +28,6 @@ export function* doctorAdd(action) {
     yield put(setDoctor(action.payload))
   } catch (error) {
     console.log(error)
-    yield put(registerError(true))
+    yield put(addError(true))
   }
 }

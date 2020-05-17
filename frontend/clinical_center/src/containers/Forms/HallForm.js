@@ -27,6 +27,7 @@ const MenuProps = {
 
 
 function HallForm (props) {
+  console.log('PROPS U FORMI', props)
   const { selected } = props
   const name = selected ? selected.name : ''
   const number = selected ? selected.number : ''
@@ -69,7 +70,7 @@ function HallForm (props) {
             />
           </Grid>
         </Grid>
-        { props.registerError && <Alert severity="error" style={{marginTop:'10px'}}>Operating room with this name already exists</Alert>}
+        { props.error && <Alert severity="error" style={{marginTop:'10px'}}>Operating room with this name already exists</Alert>}
         <Button
           type="submit"
           fullWidth
@@ -86,7 +87,7 @@ function HallForm (props) {
 
 const mapStateToProps = state => {
   return {
-    registerError: state.error.registerError
+    error: state.error.addError || state.error.editError
   };
 };
 
