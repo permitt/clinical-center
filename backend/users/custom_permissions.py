@@ -17,16 +17,16 @@ class CustomPatientPermissions(permissions.BasePermission):
     def has_object_permission(self, request, view, obj):
         if request.method == 'PUT' or request.method == 'PATCH':
             # If the profile is approved by Administrator and the logged in user is trying to access it
-            if obj.approved == True and obj.account == request.user:
+            if obj.approved == True and obj.user == request.user:
                 return True
             # Only Administrator
-            if hasattr(request.user, 'account'):
+            if hasattr(request.user, 'adminAccount'):
                 return True
             return False
         elif request.method == "DELETE":
             # Only Administrator
             print(request.user)
-            return hasattr(request.user, 'account')
+            return hasattr(request.user, 'adminAccount')
         elif request.method == "GET":
             return request.user and request.user.is_authenticated
         else:

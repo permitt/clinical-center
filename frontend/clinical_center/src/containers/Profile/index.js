@@ -14,7 +14,7 @@ export function Profile({ role }) {
     return (
         <div>
             <Helmet>
-                <title>KURACCe</title>
+                <title>Edit Profile</title>
             </Helmet>
             {role === DOCTOR && <DoctorHome />}
             {role === CLINIC_ADMIN && <ClAdminHome />}

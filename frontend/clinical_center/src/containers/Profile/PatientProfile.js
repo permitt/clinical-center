@@ -15,7 +15,7 @@ import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
-import { getClinics } from '../../store/actions/ClinicActions';
+import { getPatient, putPatient } from '../../store/actions/PatientsActions';
 import { getAppointmentTypes, checkAppointmentAvailable, setAppointmentTerms, postAppointment } from '../../store/actions/AppointmentActions';
 import { Typography } from '@material-ui/core';
 
@@ -45,22 +45,18 @@ const FormikTextField = withFormikField(TextField);
 
 function PatientProfile(props) {
     const classes = useStyles();
-    const [firstName, setFirstName] = React.useState('AAAA');
-    const [lastName, setLastName] = React.useState('Petrovi');
-    const [email, setEmail] = React.useState('ASdas');
-    const [password, setPassword] = React.useState('ASdsads');
-    const [address, setAddress] = React.useState('');
-    const [city, setCity] = React.useState('');
-    const [country, setCountry] = React.useState('');
-    const [phoneNumber, setPhoneNumber] = React.useState('');
-    const [policyNumber, setPolicyNumber] = React.useState('');
+    const [loading, setLoading] = React.useState(true);
+
+    React.useEffect(() => {
+        props.getPatient(props.email);
+    }, [props.email]);
 
 
     React.useEffect(() => {
-
-    }, []);
-
-
+        if (props.profile.firstName !== '' && props.profile.firstName !== undefined) {
+            setLoading(false);
+        }
+    }, [props.profile]);
 
     const sidebarOptions = [
         {
@@ -74,35 +70,36 @@ function PatientProfile(props) {
             icon: Person
         }
     ]
+
+    const submit = values => {
+
+        delete values.password2;
+        // jos neka validacija
+        console.log("SENDING : ", values);
+        props.putPatient(values);
+    };
+
     return (
-        <>
 
-            <div className={classes.wrapper}>
-                <Sidebar options={sidebarOptions} />
-                <div className={classes.mainPanel}>
-                    <div>
+        < div className={classes.wrapper} >
+            <Sidebar options={sidebarOptions} />
+            <div className={classes.mainPanel}>
+                <div>
 
 
-                        <Grid container justify="center" >
+                    <Grid container justify="center" >
 
-                            <Grid item xs={8}>
-
+                        <Grid item xs={8}>
+                            {loading ?
+                                <Typography variant='h5'>Loading...</Typography>
+                                :
                                 <Formik
-                                    initialValues={{
-                                        firstName: firstName,
-                                        lastName: lastName,
-                                        email: email,
-                                        address: address,
-                                        city: city,
-                                        country: country,
-                                        phoneNumber: phoneNumber,
-                                        password: '',
-                                        password2: '',
-
-                                    }}
                                     validationSchema={editPatientSchema}
-                                    onSubmit={<p></p>}
-                                    style={formStyle}>
+
+                                    onSubmit={submit}
+                                    style={formStyle}
+                                    initialValues={{ ...props.profile, password2: '' }}>
+
                                     <Form>
                                         <Grid container spacing={2}>
                                             <Grid item xs={6}>
@@ -113,6 +110,7 @@ function PatientProfile(props) {
                                                     variant="outlined"
                                                     fullWidth
                                                     label="First name"
+
                                                 />
                                             </Grid>
                                             <Grid item xs={6}>
@@ -123,6 +121,7 @@ function PatientProfile(props) {
                                                     variant="outlined"
                                                     fullWidth
                                                     label="Last name"
+
                                                 />
                                             </Grid>
                                             <Grid item xs={12}>
@@ -134,6 +133,7 @@ function PatientProfile(props) {
                                                     fullWidth
                                                     disabled
                                                     label="Email address"
+
                                                 />
                                             </Grid>
                                             <Grid item xs={12}>
@@ -145,6 +145,7 @@ function PatientProfile(props) {
                                                     fullWidth
                                                     disabled
                                                     label="Policy Number"
+
                                                 />
                                             </Grid>
                                             <Grid item xs>
@@ -155,7 +156,7 @@ function PatientProfile(props) {
                                                     variant="outlined"
                                                     fullWidth
                                                     label="Address"
-                                                    autoFocus
+
                                                 />
                                             </Grid>
                                             <Grid item xs>
@@ -166,6 +167,7 @@ function PatientProfile(props) {
                                                     variant="outlined"
                                                     fullWidth
                                                     label="City"
+
                                                 />
                                             </Grid>
                                             <Grid item xs>
@@ -176,7 +178,6 @@ function PatientProfile(props) {
                                                     variant="outlined"
                                                     fullWidth
                                                     label="Country"
-                                                    autoFocus
                                                 />
                                             </Grid>
                                             <Grid item xs={12}>
@@ -211,7 +212,7 @@ function PatientProfile(props) {
                                             </Grid>
 
                                         </Grid>
-                                        {props.registerError && <Alert severity="error" style={{ marginTop: '10px' }}>User with this email already exists</Alert>}
+
                                         <Button
                                             type="submit"
                                             fullWidth
@@ -222,31 +223,32 @@ function PatientProfile(props) {
                                             Save
       </Button>
                                     </Form>
-                                </Formik>
+                                </Formik>}
 
-                            </Grid>
                         </Grid>
-
-                    </div>
-
+                    </Grid>
 
                 </div>
+
+
             </div>
-        </>
+        </div >
+
     );
 }
 
 
 const mapStateToProps = state => {
     return {
-
+        profile: state.patient.current,
         email: state.authUser.email,
 
     };
 };
 
 const mapDispatchToProps = {
-
+    getPatient,
+    putPatient
 };
 
 export default withRouter(

@@ -1,13 +1,17 @@
+from django.conf import settings
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
+
+from .email import ACTIVATION_TITLE, ACTIVATION_BODY
 from .models import *
 
 
 class PatientSerializer(serializers.ModelSerializer):
     class Meta:
         model = Patient
-        exclude = ['user', 'approved', 'activation_link']
+        exclude = ['user', 'activation_link']
 
     def create(self, validated_data):
         email = validated_data.get("email", None)
@@ -22,9 +26,15 @@ class PatientSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         # Will send an email when updated to approved
-        if instance.approved is False and validated_data.approved is True:
-            pass
+        if instance.approved :
+            send_mail(ACTIVATION_TITLE,
+                      ACTIVATION_BODY % (
+                          instance.firstName, instance.lastName, instance.activation_link),
+                      settings.EMAIL_HOST_USER,
+                      [instance.email],
+                      fail_silently=True)
 
+        return instance
 
 class ClinicAdminSerializer(serializers.ModelSerializer):
     class Meta:

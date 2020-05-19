@@ -94,7 +94,7 @@ function PatientHome(props) {
         }
 
         props.postAppointment(data);
-
+        alert("RESERVED GOOD JOB")
     }
 
 

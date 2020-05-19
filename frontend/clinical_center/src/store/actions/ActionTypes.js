@@ -51,6 +51,9 @@ export const SET_EDITED_HALL = 'SET_EDITED_HALL'
 
 export const GET_PATIENTS = 'GET_PATIENTS'
 export const SET_PATIENTS = 'SET_PATIENTS'
+export const GET_PATIENT = 'GET_PATIENT'
+export const SET_PATIENT = 'SET_PATIENT'
+export const PUT_PATIENT = 'PUT_PATIENT'
 
 export const GET_TYPES = 'GET_TYPES'
 export const SET_TYPES = 'SET_TYPES'

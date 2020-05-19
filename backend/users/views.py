@@ -1,4 +1,5 @@
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 from django.shortcuts import render
 from rest_framework import  filters, viewsets, permissions, status
 from .serializers import *
@@ -24,7 +25,7 @@ class PatientViewset(viewsets.ModelViewSet):
         user.delete()
         instance.delete()
 
-
+ 
 
 class ClinicAdminViewset(viewsets.ModelViewSet):
     queryset = ClinicAdmin.objects.all()
