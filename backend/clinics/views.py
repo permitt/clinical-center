@@ -156,7 +156,7 @@ def time_add(time, duration):
 def appointmentCheck(request):
     try:
         date = datetime.datetime.strptime(request.data['appointmentDate'], '%Y-%m-%d')
-        dateDay = date.weekday() + 1
+        dateDay = date.weekday()
         appointmentType = request.data['appointmentType']
         duration = AppointmentType.objects.get(typeName=appointmentType).duration
     except:
@@ -192,7 +192,7 @@ def appointmentCheck(request):
             appointmentsQS = Appointment.objects.filter(doctor=doc, date=date)
 
             while(time_add(time, duration) <= endTime):
-                print(time, '  je sad provjera')
+
                 time_advanced = False
                 for app in appointmentsQS:
                     appEndTime = time_add(app.time, app.typeOf.duration)
@@ -205,7 +205,6 @@ def appointmentCheck(request):
                         time_advanced = True
 
                 if time_advanced:
-                    print("PRESKACEM SA OVIM TIMEOM ", time)
                     continue
 
                 doctorElement['time'].append(time)

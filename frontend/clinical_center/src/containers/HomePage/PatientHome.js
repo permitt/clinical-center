@@ -106,7 +106,7 @@ function PatientHome(props) {
                     <MenuItem value={timeExact}>{timeExact}</MenuItem>
                 ))}
             </Select >);
-            console.log("DOKTORI MOJI ", props.doctors)
+
             return {
                 title: doctor.firstName + ' ' + doctor.lastName,
                 id: doctor.email,
