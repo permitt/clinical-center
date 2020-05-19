@@ -101,7 +101,7 @@ class Appointment(models.Model):
 
             send_mail(APPOINTMENT_REQUEST_TITLE,
                   APPOINTMENT_REQUEST_BODY % (
-                   self.date, self.time, self.typeOf,self.patient, self.doctor),
+                   self.date, self.time, self.typeOf, self.patient, self.doctor),
                   settings.EMAIL_HOST_USER,
                   to_emails,
                   fail_silently=True)
@@ -128,7 +128,7 @@ class DoctorRating(models.Model):
         ]
 
     def __str__(self):
-        return f'{self.patient.firstName} {self.patient.lastName} {self.doctor.name} {self.rating}'
+        return f'{self.patient.firstName} {self.patient.lastName} {self.doctor.firstName} {self.rating}'
 
 class ClinicRating(models.Model):
     clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='ratings')
