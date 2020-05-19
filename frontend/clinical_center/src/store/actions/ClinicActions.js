@@ -1,6 +1,7 @@
 import {
     GET_CLINICS,
-    SET_CLINICS
+    SET_CLINICS,
+    SET_AVAILABLE_CLINICS
 } from './ActionTypes';
 
 export const getClinics = (orderBy) => {
@@ -16,3 +17,10 @@ export const setClinics = payload => {
         payload
     };
 };
+
+export const setAvailableClinics = payload => {
+    return {
+        type: SET_AVAILABLE_CLINICS,
+        payload
+    }
+}

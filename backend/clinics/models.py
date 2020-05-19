@@ -51,7 +51,7 @@ class AppointmentType(models.Model):
         unique_together = ['typeName', 'clinic']
 
     def __str__(self):
-        return self.typeName
+        return f'{self.typeName} at {self.clinic.name}'
 
 class Specialization(models.Model):
     typeOf = models.ForeignKey(to=AppointmentType, on_delete=models.CASCADE)

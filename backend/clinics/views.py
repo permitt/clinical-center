@@ -94,12 +94,16 @@ class AppointmentTypeView(viewsets.ModelViewSet):
     permission_classes = [AppointmentTypePermissions]
     serializer_class = AppointmentTypeSerializer
 
-    # def get_queryset(self):
-    #     user = self.request.user
-    #     userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
-    #     query = AppointmentType.objects.filter(clinic=userLogged.values('employedAt')[:1]).select_related()
-    #
-    #     return query
+    def get_queryset(self):
+        user = self.request.user
+        #dodavanje za pacijenta
+        if hasattr(user, 'patient'):
+            return AppointmentType.objects.all()
+
+        userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
+        query = AppointmentType.objects.filter(clinic=userLogged.values('employedAt')[:1]).select_related()
+
+        return query
 
     def destroy(self, request,pk) :
         instance = self.get_object()
@@ -158,20 +162,21 @@ def appointmentCheck(request):
         date = datetime.datetime.strptime(request.data['appointmentDate'], '%Y-%m-%d')
         dateDay = date.weekday()
         appointmentType = request.data['appointmentType']
-        duration = AppointmentType.objects.get(typeName=appointmentType).duration
+        #duration = AppointmentType.objects.get(typeName=appointmentType).duration
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':"Invalid parameters."})
 
     try:
-
         schedule = Schedule.objects.filter(employee_id = OuterRef('email'), day=dateDay)
+        appTypes = AppointmentType.objects.filter(clinic = OuterRef('employedAt'), typeName=appointmentType)
         doctors = Doctor.objects\
             .annotate(busyHours = Coalesce(Sum(Case(When(appointments__date=date, then='appointments__typeOf__duration'))), 0),
                       startTime= Subquery(schedule.values('startTime')[:1]),
                       endTime = Subquery(schedule.values('endTime')[:1]),
-                      rating = Avg('ratings__rating')
+                      rating = Avg('ratings__rating'),
+                      duration = Subquery(appTypes.values('duration')),
                       ) \
-            .filter(specializations__typeOf__typeName=appointmentType, busyHours__lte=((F('endTime')-F('startTime'))/60000000)-duration).distinct()
+            .filter(specializations__typeOf__typeName=appointmentType, busyHours__lte=((F('endTime')-F('startTime'))/60000000)-F('duration')).distinct()
 
         priceList = PriceList.objects.filter(clinic=OuterRef('id'), appointmentType__typeName=appointmentType)
         clinics = Clinic.objects. \
@@ -190,6 +195,7 @@ def appointmentCheck(request):
             time = doc.startTime
             endTime = doc.endTime
             appointmentsQS = Appointment.objects.filter(doctor=doc, date=date)
+            duration = doc.duration
 
             while(time_add(time, duration) <= endTime):
 

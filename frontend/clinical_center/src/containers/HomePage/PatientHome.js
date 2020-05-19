@@ -62,6 +62,7 @@ function PatientHome(props) {
             alert("NE MOZE PRAZNO");
             return;
         }
+
         const date = appointmentDate.toISOString().split('T')[0];
         props.checkAppointmentAvailable({ appointmentDate: date, appointmentType });
         setRenderClinicsTable(false);
@@ -182,8 +183,8 @@ function PatientHome(props) {
                                         <MenuItem disabled value="">
                                             Select Appointment Type
                                         </MenuItem>
-                                        {props.appointmentTypes.map(type => (
-                                            <MenuItem value={type.typeName}>{type.typeName}</MenuItem>
+                                        {[...new Set(props.appointmentTypes.map(v => v.typeName))].map(type => (
+                                            <MenuItem value={type}>{type}</MenuItem>
                                         ))}
 
 
@@ -210,7 +211,7 @@ function PatientHome(props) {
                             title="Clinics" />
                         }
                         {renderAppointmentClinics &&
-                            <CardList sortOptions={['haha']} data={prepareClinicsData(props.clinics)} action={(clinic) => { handleClinicClick(clinic); }} />
+                            <CardList sortOptions={['haha']} data={prepareClinicsData(props.availableClinics)} action={(clinic) => { handleClinicClick(clinic); }} />
                         }
                         {renderAppointmentDoctors &&
                             <CardList sortOptions={['haha']} data={prepareDoctorData()} action={(doctor) => handleReserveClick(doctor)} />
@@ -240,11 +241,11 @@ const prepareClinicsData = (data) => {
 const mapStateToProps = state => {
     return {
         clinics: state.clinic.all,
+        availableClinics: state.clinic.available,
         appointmentTypes: state.appointment.types,
         appointmentTerms: state.appointment.availableTerms,
         doctors: state.doctor.all,
         email: state.authUser.email,
-
     };
 };
 

@@ -76,6 +76,7 @@ class AppointmentTypeSerializer(serializers.BaseSerializer):
 
     def to_representation(self, instance):
         query = instance.prices.all()
+        print(query, ' je price query')
         price = query[0].price
 
         return {

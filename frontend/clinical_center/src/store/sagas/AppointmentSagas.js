@@ -3,7 +3,7 @@ import { push, go } from 'connected-react-router'
 import { appointmentService } from '../../services/AppointmentService';
 import { setAppointmentTypes, setAppointmentTerms } from '../actions/AppointmentActions';
 import { setDoctors } from '../actions/DoctorActions';
-import { setClinics } from '../actions/ClinicActions';
+import { setAvailableClinics } from '../actions/ClinicActions';
 import { DASHBOARD } from '../../routes';
 
 export function* appointmentTypesGet(action) {
@@ -20,7 +20,7 @@ export function* appointmentChecking(action) {
         const resp = yield call(() => appointmentService.getAppointmentCheck(action.payload));
         console.log("APP CHECKING : ", resp);
         yield put(setDoctors(resp.doctors));
-        yield put(setClinics(resp.clinics));
+        yield put(setAvailableClinics(resp.clinics));
         yield put(setAppointmentTerms(resp.availableTerms));
     } catch (err) {
         console.log(err);
