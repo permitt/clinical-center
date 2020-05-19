@@ -18,5 +18,5 @@ class AppointmentTypePermissions(permissions.BasePermission):
         self.allowed_methods=allowed_methods
 
     def has_permission(self, request, view):
-
+        return True
         return hasattr(request.user, 'adminAccount')

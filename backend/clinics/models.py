@@ -101,7 +101,7 @@ class Appointment(models.Model):
 
             send_mail(APPOINTMENT_REQUEST_TITLE,
                   APPOINTMENT_REQUEST_BODY % (
-                   self.date, self.time, self.typeOf, self.patient, self.doctor),
+                   self.date, self.time, self.typeOf, self.doctor, self.patient),
                   settings.EMAIL_HOST_USER,
                   to_emails,
                   fail_silently=True)

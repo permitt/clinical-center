@@ -50,6 +50,7 @@ class ClinicAdminSerializer(serializers.ModelSerializer):
 
 
 class DoctorSerializer(serializers.ModelSerializer):
+    rating = serializers.DecimalField(decimal_places=2, max_digits=4)
 
     def getClinicId(self, obj):
         user = self.context['request'].user

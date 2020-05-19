@@ -94,12 +94,12 @@ class AppointmentTypeView(viewsets.ModelViewSet):
     permission_classes = [AppointmentTypePermissions]
     serializer_class = AppointmentTypeSerializer
 
-    def get_queryset(self):
-        user = self.request.user
-        userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
-        query = AppointmentType.objects.filter(clinic=userLogged.values('employedAt')[:1]).select_related()
-
-        return query
+    # def get_queryset(self):
+    #     user = self.request.user
+    #     userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
+    #     query = AppointmentType.objects.filter(clinic=userLogged.values('employedAt')[:1]).select_related()
+    #
+    #     return query
 
     def destroy(self, request,pk) :
         instance = self.get_object()
@@ -168,7 +168,9 @@ def appointmentCheck(request):
         doctors = Doctor.objects\
             .annotate(busyHours = Coalesce(Sum(Case(When(appointments__date=date, then='appointments__typeOf__duration'))), 0),
                       startTime= Subquery(schedule.values('startTime')[:1]),
-                      endTime = Subquery(schedule.values('endTime')[:1])) \
+                      endTime = Subquery(schedule.values('endTime')[:1]),
+                      rating = Avg('ratings__rating')
+                      ) \
             .filter(specializations__typeOf__typeName=appointmentType, busyHours__lte=((F('endTime')-F('startTime'))/60000000)-duration).distinct()
 
         priceList = PriceList.objects.filter(clinic=OuterRef('id'), appointmentType__typeName=appointmentType)
