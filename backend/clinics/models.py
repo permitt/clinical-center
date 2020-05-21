@@ -18,9 +18,18 @@ class Clinic(models.Model):
     def __str__(self):
         return self.name
 
+class Diagnosis(models.Model):
+    description = models.TextField()
+    code = models.IntegerField()
+
+class AppointmentReport(models.Model):
+    diagnosis = models.ForeignKey(to=Diagnosis, on_delete=models.CASCADE)
+
+
 class HealthCard(models.Model):
     patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE, related_name="health_card")
-    # istorija bolesti
+
+    # istorija bolesti   sifrarnik dijagnoze
     # recepte iz spiska koje na kraju pregleda med sestra mora da ovjeri???
     # dijagnoze kao npr : dioptrija, alergija
     # izvjestaj o pregledu

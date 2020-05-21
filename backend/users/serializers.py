@@ -1,3 +1,6 @@
+import datetime
+import hashlib
+
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
@@ -20,6 +23,7 @@ class PatientSerializer(serializers.ModelSerializer):
         user.set_password(password)
         user.save()
         patient = Patient(**validated_data)
+        patient.activation_link = generate_link(user.email, datetime.datetime.now())
         patient.user = user
         patient.save()
         return patient
@@ -35,6 +39,10 @@ class PatientSerializer(serializers.ModelSerializer):
                       fail_silently=True)
 
         return instance
+
+def generate_link(email, timestamp):
+    src = email + timestamp.strftime('%Y-%m-%d %H:%M')
+    return hashlib.sha1(src.encode('utf-8')).hexdigest()
 
 class ClinicAdminSerializer(serializers.ModelSerializer):
     class Meta:
