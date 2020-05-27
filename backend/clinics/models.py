@@ -141,3 +141,12 @@ class ClinicRating(models.Model):
         ]
     def __str__(self):
         return f'{self.patient.firstName} {self.patient.lastName} {self.clinic.name} {self.rating}'
+
+class Holiday(models.Model):
+    doctor = models.ForeignKey(to='users.Doctor', on_delete=models.CASCADE, related_name='holiday')
+    startDate = models.DateField(null=False)
+    endDate = models.DateField(null=False)
+    approved = models.BooleanField(default=False)
+
+    class Meta:
+        unique_together = ['doctor', 'startDate']

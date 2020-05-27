@@ -57,7 +57,6 @@ class Doctor(models.Model):
 
 class Schedule(models.Model):
 
-
     class WeekDay(models.IntegerChoices):
         MONDAY = 0
         TUESDAY = 1
