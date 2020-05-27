@@ -8,7 +8,6 @@ from users.models import Doctor, Schedule
 from users.serializers import DoctorSerializer
 from rest_framework import viewsets, generics, filters, permissions
 from .custom_permissions import *
-from users.models import ClinicAdmin
 from .serializers import *
 import datetime
 from django.db import IntegrityError

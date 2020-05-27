@@ -57,7 +57,7 @@ export default function HolidayRequest(props) {
           Holiday request number {index + 1}
         </Typography>
         <Typography variant="h4" component="h2">
-          {request.doctor}
+          {request.employee}
         </Typography>
         <Typography variant="h6" component="p">
             {bull}Start date: {request.startDate}

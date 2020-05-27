@@ -1,5 +1,6 @@
 from django.db import models
 from .email import APPOINTMENT_REQUEST_BODY, APPOINTMENT_REQUEST_TITLE
+from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from users.models import ClinicAdmin
 from django.conf import settings
@@ -143,10 +144,10 @@ class ClinicRating(models.Model):
         return f'{self.patient.firstName} {self.patient.lastName} {self.clinic.name} {self.rating}'
 
 class Holiday(models.Model):
-    doctor = models.ForeignKey(to='users.Doctor', on_delete=models.CASCADE, related_name='holiday')
+    employee = models.ForeignKey(to=User, on_delete=models.CASCADE, related_name='holiday',null=False)
     startDate = models.DateField(null=False)
     endDate = models.DateField(null=False)
     approved = models.BooleanField(default=False)
 
     class Meta:
-        unique_together = ['doctor', 'startDate']
+        unique_together = ['employee', 'startDate']
