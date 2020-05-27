@@ -10,46 +10,26 @@ import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 
-const useStyles = makeStyles(theme => ({
-  root: {
-    minWidth: 275,
-  },
-  bullet: {
-    display: 'inline-block',
-    margin: '0 2px',
-    transform: 'scale(0.8)',
-  },
-  title: {
-    fontSize: 14,
-  },
-  pos: {
-    marginBottom: 12,
-  },
-  button: {
-      marginTop: 10
-  },
-  modal: {
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  paper: {
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-    textAlign: 'center'
-  },
-}));
+import style from '../../assets/jss/material-dashboard-react/components/requestCardStyle';
+
+const useStyles = makeStyles(style)
 
 export default function HolidayRequest(props) {
   const classes = useStyles();
   const bull = <span className={classes.bullet}>•</span>;
   const { request, index } = props
   const [open, setOpen] = React.useState(false)
+  const [text, setText] = React.useState('')
 
   const handleClose =  () => setOpen(false)
 
+  const approve = () => {
+    props.resolveRequest({id: request.id, decision: true})
+  }
+
+  const reject = () => {
+    props.resolveRequest({id: request.id, decision: false, text: text})
+  }
   return (
     <Card className={classes.root} variant="outlined">
       <CardContent>
@@ -66,7 +46,7 @@ export default function HolidayRequest(props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="big" variant="contained" color="primary">Approve</Button>
+        <Button size="big" variant="contained" color="primary" onClick={approve}>Approve</Button>
         <Button size="big" variant="contained" color="secondary" onClick={() => setOpen(true)}>Reject</Button>
       </CardActions>
       <Modal
@@ -94,8 +74,17 @@ export default function HolidayRequest(props) {
                 variant="outlined"
                 autoFocus
                 fullWidth
+                onChange={e => setText(e.target.value)}
             />
-            <Button className={classes.button} size="big" color="primary" variant="contained">Done</Button>
+            <Button 
+              className={classes.button} 
+              size="big" 
+              color="primary" 
+              variant="contained"
+              onClick={reject}
+              >
+                Done
+              </Button>
           </div>
         </Fade>
       </Modal>

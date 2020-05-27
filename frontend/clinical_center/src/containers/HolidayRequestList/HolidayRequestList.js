@@ -7,6 +7,7 @@ import Grid from '@material-ui/core/Grid';
 
 import { gridStyle } from "../../assets/jss/material-dashboard-react/components/gridStyle.js";
 import { resetError } from '../../store/actions/ErrorActions'
+import { resolveRequest } from '../../store/actions/HolidayRequestActions'
 import HolidayRequest from './HolidayRequest.js';
 
 
@@ -21,7 +22,7 @@ function HolidayRequestList(props) {
         <Grid container spacing={3}>
             {data.map((request, index) => (
                 <Grid item xs={6}>
-                    <HolidayRequest request={request} index={index}/>
+                    <HolidayRequest request={request} index={index} resolve={props.resolveRequest}/>
                 </Grid>
             ))}
             {data.length === 0 && 
@@ -41,6 +42,7 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
   resetError,
+  resolveRequest
 };
 
 export default withRouter(

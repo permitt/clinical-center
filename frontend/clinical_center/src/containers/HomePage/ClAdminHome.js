@@ -17,6 +17,7 @@ import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.
 import { getDoctors, deleteDoctor } from '../../store/actions/DoctorActions'
 import { resetError } from '../../store/actions/ErrorActions'
 import { getHalls, deleteHall } from '../../store/actions/HallActions'
+import { getRequests } from '../../store/actions/HolidayRequestActions'
 import { getTypes, deleteType } from '../../store/actions/AppointmentTypeActions'
 import DoctorForm from '../Forms/DoctorForm'
 import HallForm from '../Forms/HallForm'
@@ -37,7 +38,6 @@ function ClAdminHome(props) {
   const [modal, setModal] = React.useState({open: false, data: {}});
   const [table, setTable] = React.useState({render: false, type: ''})
   const [ renderTable, setRenderTable] = React.useState({ 'type': false, 'requests': false })
- // const [ renderRequestTable, setRenderRequestTable] = React.useState(false)
   const [tableData, setTableData] = React.useState({ data: [], title:'', columns:[], form:null})
   const [errorDialogOpen, setErrorDialogOpen] = React.useState(props.error)
 
@@ -62,7 +62,7 @@ function ClAdminHome(props) {
   const showRequests = () => {
     setTable({render: false, type: ''})
     setRenderTable({ 'types': false, 'requests': true })
-    //props.getHolidayRequests()
+    props.getRequests()
   }
   
   const doctorColumns = [
@@ -210,8 +210,7 @@ const mapStateToProps = state => {
     error: state.error.deleteError,
     msg: state.error.errorMsg,
     types: state.type.all,
-    //requests: state.requests.all
-    requests: []
+    requests: state.request.all
   };
 };
 
@@ -223,7 +222,7 @@ const mapDispatchToProps = {
   resetError,
   getTypes,
   deleteType,
-  //getHolidayRequests
+  getRequests
 };
 
 export default withRouter(
