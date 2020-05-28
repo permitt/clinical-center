@@ -2,7 +2,7 @@ import sys
 from rest_framework import viewsets, generics, filters, permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.db.models import Avg, F, Sum, OuterRef, Subquery, When, Case
+from django.db.models import Avg, F, Sum, OuterRef, Subquery, When, Case, FilteredRelation, Q, Value as V
 from django.db.models.functions import Coalesce
 from users.models import Doctor, Schedule
 from users.serializers import DoctorSerializer
@@ -10,6 +10,7 @@ from rest_framework import viewsets, generics, filters, permissions
 from .custom_permissions import *
 from .serializers import *
 import datetime
+from django.db.models.functions import Concat
 from django.db import IntegrityError
 from django.db.models import Avg
 
@@ -126,9 +127,24 @@ class AppointmentTypeView(viewsets.ModelViewSet):
 
         return Response(serializer.data)
 
+class HolidayRequestView(viewsets.ReadOnlyModelViewSet):
+    permission_classes = [permissions.IsAuthenticated]
+    #queryset = Holiday.objects.all()
+    serializer_class = HolidaySerializer
+
+    def get_queryset(self):
+        user = self.request.user
+        userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
+        queryset = Holiday.objects.select_related('employee')\
+            .filter(resolved=False)\
+            .annotate(nameDoc=Concat('employee__docAccount__firstName',V(' '), 'employee__docAccount__lastName')) \
+            .annotate(email=F('employee__docAccount__email')) \
+            .filter(employee__docAccount__employedAt=userLogged.values('employedAt')[:1]) \
+            .all()
+            # .annotate(nameNurse=Concat('employee__adminAccount__firstName', V(' '), 'employee__adminAccount__lastName')) \
 
 
-
+        return queryset
 
 #     def get_queryset(self):
 #         queryset = Clinic.objects.all()

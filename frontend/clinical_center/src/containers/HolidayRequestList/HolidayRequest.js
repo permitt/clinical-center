@@ -24,11 +24,11 @@ export default function HolidayRequest(props) {
   const handleClose =  () => setOpen(false)
 
   const approve = () => {
-    props.resolveRequest({id: request.id, decision: true})
+    props.resolve({id: request.id, decision: true})
   }
 
   const reject = () => {
-    props.resolveRequest({id: request.id, decision: false, text: text})
+    props.resolve({id: request.id, decision: false, text: text})
   }
   return (
     <Card className={classes.root} variant="outlined">
@@ -37,7 +37,10 @@ export default function HolidayRequest(props) {
           Holiday request number {index + 1}
         </Typography>
         <Typography variant="h4" component="h2">
-          {request.employee}
+          {request.nameDoc || request.nameNurse}
+        </Typography>
+        <Typography className={classes.pos} color="textSecondary">
+          {request.email}
         </Typography>
         <Typography variant="h6" component="p">
             {bull}Start date: {request.startDate}
@@ -46,8 +49,8 @@ export default function HolidayRequest(props) {
         </Typography>
       </CardContent>
       <CardActions>
-        <Button size="big" variant="contained" color="primary" onClick={approve}>Approve</Button>
-        <Button size="big" variant="contained" color="secondary" onClick={() => setOpen(true)}>Reject</Button>
+        <Button size="medium" variant="contained" color="primary" onClick={approve}>Approve</Button>
+        <Button size="medium" variant="contained" color="secondary" onClick={() => setOpen(true)}>Reject</Button>
       </CardActions>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -78,7 +81,7 @@ export default function HolidayRequest(props) {
             />
             <Button 
               className={classes.button} 
-              size="big" 
+              size="medium" 
               color="primary" 
               variant="contained"
               onClick={reject}

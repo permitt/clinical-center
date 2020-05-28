@@ -1,7 +1,7 @@
 import { SET_REQUESTS, REMOVE_REQUEST } from '../actions/ActionTypes';
 
 const initialState = {
-  all: []
+  all: null
 };
 const requestReducer = (state = initialState, action) => {
 

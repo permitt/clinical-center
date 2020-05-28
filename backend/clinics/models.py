@@ -148,6 +148,7 @@ class Holiday(models.Model):
     startDate = models.DateField(null=False)
     endDate = models.DateField(null=False)
     approved = models.BooleanField(default=False)
+    resolved = models.BooleanField(default=False)
 
     class Meta:
         unique_together = ['employee', 'startDate']

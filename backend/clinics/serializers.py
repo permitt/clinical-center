@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+from users.serializers import DoctorSerializer
 
 
 from users.models import ClinicAdmin
@@ -122,7 +123,6 @@ class OperatingRoomSerializer(serializers.ModelSerializer):
         return operatingRoom
 
 
-
 class DoctorRatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorRating
@@ -132,3 +132,12 @@ class ClinicRatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClinicRating
         fields = '__all__'
+
+class HolidaySerializer(serializers.ModelSerializer):
+    nameDoc = serializers.StringRelatedField()
+    nameNurse = serializers.StringRelatedField()
+    email = serializers.StringRelatedField()
+
+    class Meta:
+        model = Holiday
+        fields = ['startDate', 'endDate', 'approved','nameDoc','nameNurse','email']
