@@ -12,5 +12,6 @@ router.register('holiday', views.HolidayRequestView, basename="holiday")
 urlpatterns = [
         path('clinic/', views.ClinicListView.as_view()),
         path('appointment/check/', views.appointmentCheck),
+        path('holiday/resolve/<int:pk>/', views.resolveRequest),
         *router.urls
     ]

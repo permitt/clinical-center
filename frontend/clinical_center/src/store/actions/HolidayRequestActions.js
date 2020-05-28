@@ -2,7 +2,8 @@ import {
     GET_REQUESTS,
     SET_REQUESTS,
     REMOVE_REQUEST,
-    RESOLVE_REQUEST
+    RESOLVE_REQUEST,
+    REQUEST_RESOLVED
    } from './ActionTypes';
   
   export const getRequests = () => {

@@ -2,7 +2,7 @@ import ApiService from './ApiService';
 
 const ENDPOINTS = {
   REQUESTS: '/api/clinics/holiday/',
-  RESOLVE: '/api/clinics/holiday/:id/'
+  RESOLVE: '/api/clinics/holiday/resolve/:id/'
 };
 
 class HolidayService extends ApiService {
@@ -13,7 +13,8 @@ class HolidayService extends ApiService {
     return data;
   }
   resolveRequest = async info => {
-    const { data } = await this.apiClient.put(ENDPOINTS.RESOLVE.replace(":id", info.id), info)
+    console.log(info)
+    const { data } = await this.apiClient.post(ENDPOINTS.RESOLVE.replace(":id", info.id), info)
 
     return data
   }

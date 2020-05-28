@@ -9,6 +9,8 @@ from users.serializers import DoctorSerializer
 from rest_framework import viewsets, generics, filters, permissions
 from .custom_permissions import *
 from .serializers import *
+from django.core.mail import send_mail
+from .holidayEmail import *
 import datetime
 from django.db.models.functions import Concat
 from django.db import IntegrityError
@@ -146,7 +148,37 @@ class HolidayRequestView(viewsets.ReadOnlyModelViewSet):
 
         return queryset
 
-#     def get_queryset(self):
+
+@api_view(["POST"])
+def resolveRequest(request,pk):
+
+    try:
+        decision = request.data['decision']
+        holidayRequest = Holiday.objects.select_related('employee').get(pk=pk)
+        to_emails = [holidayRequest.employee]
+        if (not decision):
+            text = request.data['text']
+            send_mail(HOLIDAY_REQUEST_TITLE,
+                      HOLIDAY_REJECTED_REQUEST_BODY % (text),
+                      settings.EMAIL_HOST_USER,
+                      to_emails,
+                      fail_silently=True)
+        else:
+            send_mail(HOLIDAY_REQUEST_TITLE,
+                      HOLIDAY_APPROVED_REQUEST_BODY % (holidayRequest.startDate.strftime("%m/%d/%Y"), holidayRequest.endDate.strftime("%m/%d/%Y")),
+                      settings.EMAIL_HOST_USER,
+                      to_emails,
+                      fail_silently=True)
+
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
+
+    holidayRequest.approved = decision
+    holidayRequest.resolved = True
+    holidayRequest.save()
+
+    return Response(status=status.HTTP_200_OK)
+    #     def get_queryset(self):
 #         queryset = Clinic.objects.all()
 #         #obavezni parametri za zakazivanje
 #         date = self.request.query_params('date', None)
@@ -162,6 +194,7 @@ class HolidayRequestView(viewsets.ReadOnlyModelViewSet):
 #     queryset = Clinic.objects.all()
 #     serializer_class = ClinicSerializer
 #     #permission_classes = [custom_permissions.CustomPatientPermissions]
+
 
 
 def time_add(time, duration):

@@ -152,3 +152,6 @@ class Holiday(models.Model):
 
     class Meta:
         unique_together = ['employee', 'startDate']
+
+    def __str__(self):
+        return f'{self.employee} {self.approved} {self.resolved}'

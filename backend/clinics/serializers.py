@@ -140,4 +140,4 @@ class HolidaySerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Holiday
-        fields = ['startDate', 'endDate', 'approved','nameDoc','nameNurse','email']
+        fields = ['id','startDate', 'endDate', 'approved','nameDoc','nameNurse','email']
