@@ -6,6 +6,7 @@ from .serializers import *
 from rest_framework.response import Response
 from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import *
+from rest_framework.decorators import api_view
 from . import custom_permissions
 
 
@@ -70,5 +71,32 @@ class DoctorViewset(viewsets.ModelViewSet):
         instance.delete()
 
 
+class NurseViewset(viewsets.ModelViewSet):
+    serializer_class = NurseSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    lookup_field = 'email'
+    lookup_value_regex = '[\w@.]+'
+    queryset = Nurse.objects.all()
+
+
 class MyTokenObtainPairView(TokenObtainPairView):
     serializer_class = MyTokenObtainPairSerializer
+
+
+@api_view(["POST"])
+def changePass(request):
+    try:
+        loggedUser = request.user
+        newPass = request.data['password']
+        user = User.objects.select_related('employee').get(email=loggedUser.email)
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
+
+    if (hasattr(user, 'adminAccount')):
+        user.adcminAccount.changedPass = True
+        user.adminAccount.save()
+
+    print(user)
+    print(dir(user))
+
+    return Response(status=status.HTTP_200_OK)

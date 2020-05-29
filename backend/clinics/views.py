@@ -131,7 +131,6 @@ class AppointmentTypeView(viewsets.ModelViewSet):
 
 class HolidayRequestView(viewsets.ReadOnlyModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
-    #queryset = Holiday.objects.all()
     serializer_class = HolidaySerializer
 
     def get_queryset(self):
@@ -140,10 +139,10 @@ class HolidayRequestView(viewsets.ReadOnlyModelViewSet):
         queryset = Holiday.objects.select_related('employee')\
             .filter(resolved=False)\
             .annotate(nameDoc=Concat('employee__docAccount__firstName',V(' '), 'employee__docAccount__lastName')) \
+            .annotate(nameNurse=Concat('employee__adminAccount__firstName', V(' '), 'employee__adminAccount__lastName'))\
             .annotate(email=F('employee__docAccount__email')) \
             .filter(employee__docAccount__employedAt=userLogged.values('employedAt')[:1]) \
             .all()
-            # .annotate(nameNurse=Concat('employee__adminAccount__firstName', V(' '), 'employee__adminAccount__lastName')) \
 
 
         return queryset

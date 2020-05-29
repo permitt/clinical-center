@@ -57,7 +57,10 @@ class ClinicAdminSerializer(serializers.ModelSerializer):
         if instance.approved is False and validated_data.approved is True:
             pass
 
-
+class NurseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Nurse
+        exclude = ['user', 'activated']
 
 class DoctorSerializer(serializers.ModelSerializer):
     #rating = serializers.DecimalField(decimal_places=2, max_digits=4)
@@ -109,18 +112,24 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             token['last_name'] = user.patient.lastName
             token['email'] = user.patient.email
             token['role'] = "PATIENT"
-
         if hasattr(user, 'adminAccount'):
             token['first_name'] = user.adminAccount.firstName
             token['last_name'] = user.adminAccount.lastName
             token['email'] = user.adminAccount.email
+            token['changedPass'] = user.adminAccount.changedPass
             token['role'] = "CLINIC_ADMIN"
-
         if hasattr(user, 'docAccount'):
             token['first_name'] = user.docAccount.firstName
             token['last_name'] = user.docAccount.lastName
             token['email'] = user.docAccount.email
             token['role'] = "DOCTOR"
+            token['changedPass'] = user.docAccount.changedPass
+        if hasattr(user, 'nurseAccount'):
+            token['first_name'] = user.nurseAccount.firstName
+            token['last_name'] = user.nurseAccount.lastName
+            token['email'] = user.nurseAccount.email
+            token['role'] = "NURSE"
+            token['changedPass'] = user.nurseAccount.changedPass
 
         return token
 
