@@ -22,3 +22,11 @@ export const loginSchema = Yup.object().shape({
   password: Yup.string().required().min(6)
 });
 
+
+export const changePassSchema = Yup.object().shape({
+  password: Yup.string().required('Password is required').min(6),
+  password2: Yup.string()
+    .oneOf([Yup.ref('password'), null], "Passwords don't match")
+    .required('Password confirmation is required')
+});
+

@@ -13,6 +13,7 @@ import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.
 import Sidebar from "../../components/Sidebar/Sidebar"
 import PatientList from "../PatientList/PatientList"
 import { getPatients } from '../../store/actions/PatientsActions'
+import { EDIT_PROFILE } from '../../routes';
 
 const useStyles = makeStyles(styles);
 
@@ -57,7 +58,7 @@ function DoctorHome(props) {
     },
     {
       name: 'Profile',
-      onClick: showPatients,
+      onClick: () => props.history.push(EDIT_PROFILE),
       icon: PersonIcon
     }
   ]

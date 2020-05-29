@@ -9,6 +9,7 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ListIcon from '@material-ui/icons/List';
+import PersonIcon from '@material-ui/icons/Person';
 
 import HallSearchBar from '../../containers/SearchBar/HallSearchBar'
 import Sidebar from "../../components/Sidebar/Sidebar"
@@ -27,6 +28,7 @@ import ErrorDialog from './ErrorDialog'
 import PriceList from '../PriceList/PriceList'
 import WorkOffIcon from '@material-ui/icons/WorkOff';
 import HolidayRequestList from '../HolidayRequestList/HolidayRequestList';
+import { EDIT_PROFILE } from '../../routes';
 
 const useStyles = makeStyles(styles);
 
@@ -145,6 +147,11 @@ function ClAdminHome(props) {
       name: 'Holiday requests',
       onClick: showRequests,
       icon: WorkOffIcon
+    },
+    {
+      name: 'Profile',
+      onClick: () => props.history.push(EDIT_PROFILE),
+      icon: PersonIcon
     }
   ]
 

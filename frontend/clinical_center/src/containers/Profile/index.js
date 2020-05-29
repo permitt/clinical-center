@@ -4,10 +4,9 @@ import { connect } from 'react-redux'
 import { compose } from 'redux'
 import { Helmet } from 'react-helmet';
 
-import { CLINIC_ADMIN, PATIENT, DOCTOR } from '../../utils/constants'
-import ClAdminHome from '../HomePage/ClAdminHome'
+import { PATIENT, ADMIN } from '../../utils/constants'
+import EditProfile from './EditProfile'
 import PatientProfile from './PatientProfile'
-import DoctorHome from '../HomePage/DoctorHome'
 
 export function Profile({ role }) {
 
@@ -16,8 +15,7 @@ export function Profile({ role }) {
             <Helmet>
                 <title>Edit Profile</title>
             </Helmet>
-            {role === DOCTOR && <DoctorHome />}
-            {role === CLINIC_ADMIN && <ClAdminHome />}
+            {role !== PATIENT && role !== ADMIN && <EditProfile />}
             {role === PATIENT && <PatientProfile />}
         </div>
     )

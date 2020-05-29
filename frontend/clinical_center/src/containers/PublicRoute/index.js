@@ -10,11 +10,12 @@ export function PublicRoute({
   component: Component,
   restricted,
   isAuthenticated,
+  changedPass,
   ...rest
 }) {
   return (
     <Route {...rest} 
-        render={props => isAuthenticated  && restricted ? <Redirect to={DASHBOARD} /> : <Component {...props} />  }
+        render={props => isAuthenticated  && restricted? <Redirect to={DASHBOARD} /> : <Component {...props} />  }
     />
   );
 }
@@ -25,7 +26,8 @@ PublicRoute.propTypes = {
 
 const mapStateToProps = state => {
     return {
-      isAuthenticated: state.authUser.isAuth
+      isAuthenticated: state.authUser.isAuth,
+      changedPass: state.authUser.changedPass
     };
   };
 

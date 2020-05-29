@@ -4,7 +4,9 @@ import AuthService from '../../services/AuthService';
 const initialState = {
   isAuth: AuthService.isAuthenticated(),
   role: AuthService.getUserRole(),
-  email: AuthService.getUserEmail()
+  email: AuthService.getUserEmail(),
+  // changedPass : AuthService.isPassChanged()
+  changedPass: true
 }
 
 const authReducer = (state = initialState, action) => {

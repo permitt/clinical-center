@@ -1,6 +1,8 @@
 export const CLINIC_ADMIN = 'CLINIC_ADMIN'
 export const DOCTOR = 'DOCTOR'
 export const PATIENT = 'PATIENT'
+export const ADMIN = 'ADMIN'
+export const NURSE = 'NURSE'
 export const DELETE = 'DELETE'
 export const EDIT = 'EDIT'
 export const ADD = 'ADD'
