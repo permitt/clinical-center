@@ -4,20 +4,26 @@ import { Route, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 
+import { PATIENT } from '../../utils/constants'
 import { LOGIN, CHANGE_PASSWORD } from '../../routes'
 
 export function PrivateRoute({
   component: Component,
   isAuthenticated,
   changedPass,
+  role,
   ...rest
 }) {
-  console.log('changed',changedPass)
-  console.log('isAuth',isAuthenticated)
+
   return (
     <Route {...rest} 
-        render={props => isAuthenticated && changedPass? <Component {...props} /> 
-        : isAuthenticated? <Redirect to={CHANGE_PASSWORD}/> :<Redirect to={LOGIN} />}
+        render={props => {
+          if (isAuthenticated && changedPass)
+            return  <Component {...props} /> 
+          if (isAuthenticated && !changedPass)
+            return <Redirect to={CHANGE_PASSWORD} />
+          return <Redirect to={LOGIN} />
+        }}
     />
   );
 }
@@ -29,7 +35,8 @@ PrivateRoute.propTypes = {
 const mapStateToProps = state => {
     return {
       isAuthenticated: state.authUser.isAuth,
-      changedPass: state.authUser.changedPass
+      changedPass: state.authUser.changedPass || false,
+      role: state.authUser ? state.authUser.role : null
     };
   };
 

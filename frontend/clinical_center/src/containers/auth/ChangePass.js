@@ -32,7 +32,7 @@ class ChangePass extends Component {
          <Typography component="h1" variant="h5">
             Insert new password
           </Typography>
-          <Typography component="p" variant="p" style={{margin:15}}>
+          <Typography component="p" variant="body2" style={{margin:15}}>
             You need to change your password before entering this site. Password should contain at least 6 characters.
           </Typography> 
               <Grid>

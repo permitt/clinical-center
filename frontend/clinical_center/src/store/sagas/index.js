@@ -1,15 +1,15 @@
 import { all, takeLatest } from 'redux-saga/effects';
 import {
-  LOGIN, LOGOUT, REGISTER,
+  LOGIN, LOGOUT, REGISTER, CHANGEPASS,
   GET_DOCTORS, DELETE_DOCTOR, ADD_DOCTOR,
   GET_CLINICS,
   GET_APPOINTMENT_TYPES, GET_APPOINTMENT_CHECK, POST_APPOINTMENT,
   GET_HALLS, SEARCH_HALLS, DELETE_HALL, ADD_HALL, EDIT_HALL,
   GET_PATIENTS, GET_PATIENT, PUT_PATIENT,
   GET_TYPES, SEARCH_TYPES, DELETE_TYPE, ADD_TYPE, EDIT_TYPE, 
-  GET_REQUESTS, RESOLVE_REQUEST
+  GET_REQUESTS, RESOLVE_REQUEST, GET_PROFILE, EDIT_PROFILE
 } from '../actions/ActionTypes';
-import { userLogin, userRegister, userLogout } from './AuthSagas';
+import { userLogin, userRegister, userLogout, userChangePass, profileGet, profileEdit } from './AuthSagas';
 import { doctorsGet, doctorDelete, doctorAdd } from './DoctorSagas';
 import { clinicsGet } from './ClinicSagas';
 import { appointmentTypesGet, appointmentChecking, appointmentPost } from './AppointmentSagas';
@@ -23,6 +23,9 @@ export default function* rootSaga() {
     takeLatest(LOGIN, userLogin),
     takeLatest(LOGOUT, userLogout),
     takeLatest(REGISTER, userRegister),
+    takeLatest(CHANGEPASS, userChangePass),
+    takeLatest(GET_PROFILE, profileGet),
+    takeLatest(EDIT_PROFILE, profileEdit),
 
     takeLatest(GET_DOCTORS, doctorsGet),
     takeLatest(DELETE_DOCTOR, doctorDelete),

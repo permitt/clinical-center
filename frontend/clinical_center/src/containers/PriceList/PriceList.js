@@ -35,7 +35,6 @@ const useToolbarStyles = makeStyles(toolbarStyles)
 
 function PriceList(props) {
   const  { data } = props
-  console.log(data)
   const classes = useStyles();
   const toolBarclasses = useToolbarStyles();
   const [open, setOpen] = React.useState(false);

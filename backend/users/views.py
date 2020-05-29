@@ -84,19 +84,56 @@ class MyTokenObtainPairView(TokenObtainPairView):
 
 
 @api_view(["POST"])
-def changePass(request):
+def changepass(request):
     try:
         loggedUser = request.user
         newPass = request.data['password']
-        user = User.objects.select_related('employee').get(email=loggedUser.email)
+        newPassConfirmation = request.data['password2']
+        if (newPass != newPassConfirmation):
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'changed': False,'msg': "Passwords don't match."})
+        user = User.objects.select_related().get(username=loggedUser)
     except:
-        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'changed': False, 'msg': "Invalid parameters."})
 
     if (hasattr(user, 'adminAccount')):
-        user.adcminAccount.changedPass = True
+        user.adminAccount.changedPass = True
+        user.adminAccount.password = newPass
         user.adminAccount.save()
+    if (hasattr(user, 'docAccount')):
+        user.docAccount.changedPass = True
+        user.docAccount.password = newPass
+        user.docAccount.save()
+    if (hasattr(user, 'nurseAccount')):
+        user.nurseAccount.changedPass = True
+        user.nurseAccount.password = newPass
+        user.nurseAccount.save()
+    user.set_password(newPass)
+    user.save()
 
-    print(user)
-    print(dir(user))
+    return Response(status=status.HTTP_200_OK, data={'changed': True})
 
-    return Response(status=status.HTTP_200_OK)
+
+@api_view(["GET"])
+def profile(request):
+    try:
+        loggedUser = request.user
+        user = User.objects.select_related().get(username=loggedUser)
+        if (not user):
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "No logged in user."})
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "No logged in user."})
+
+    if (hasattr(user, 'adminAccount')):
+        profile = ClinicAdminSerializer(user.adminAccount, many=False)
+
+        return Response(status=status.HTTP_200_OK, data={'profile': profile.data })
+    if (hasattr(user, 'docAccount')):
+        profile = DoctorSerializer(user.docAccount, many=False)
+
+        return Response(status=status.HTTP_200_OK, data={'profile': profile.data})
+    if (hasattr(user, 'nurseAccount')):
+        profile = NurseSerializer(user.nurseAccount, many=False)
+
+        return Response(status=status.HTTP_200_OK, data={'profile': profile.data})
+
+    return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': 'No user profile found'})

@@ -4,7 +4,7 @@ import { Route, Redirect } from 'react-router-dom'
 import { connect } from 'react-redux'
 import { compose } from 'redux'
 
-import { DASHBOARD } from '../../routes'
+import { DASHBOARD, CHANGE_PASSWORD } from '../../routes'
 
 export function PublicRoute({
   component: Component,
@@ -13,9 +13,17 @@ export function PublicRoute({
   changedPass,
   ...rest
 }) {
+
   return (
     <Route {...rest} 
-        render={props => isAuthenticated  && restricted? <Redirect to={DASHBOARD} /> : <Component {...props} />  }
+        render={props => {
+          if (isAuthenticated  && restricted && changedPass)
+           return <Redirect to={DASHBOARD} /> 
+          if (isAuthenticated && !changedPass )
+            return <Redirect to={CHANGE_PASSWORD}/>
+          
+          return <Component {...props} />  
+        }}
     />
   );
 }
@@ -27,7 +35,7 @@ PublicRoute.propTypes = {
 const mapStateToProps = state => {
     return {
       isAuthenticated: state.authUser.isAuth,
-      changedPass: state.authUser.changedPass
+      changedPass: state.authUser.changedPass || false
     };
   };
 

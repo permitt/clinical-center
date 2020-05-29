@@ -13,7 +13,6 @@ class HolidayService extends ApiService {
     return data;
   }
   resolveRequest = async info => {
-    console.log(info)
     const { data } = await this.apiClient.post(ENDPOINTS.RESOLVE.replace(":id", info.id), info)
 
     return data

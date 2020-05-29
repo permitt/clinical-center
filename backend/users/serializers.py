@@ -39,7 +39,7 @@ class PatientSerializer(serializers.ModelSerializer):
 class ClinicAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClinicAdmin
-        exclude = ['user', 'activated']
+        exclude = ['user']
 
     def create(self, validated_data):
         email = validated_data.get("email", None)
@@ -52,15 +52,10 @@ class ClinicAdminSerializer(serializers.ModelSerializer):
         clinicAdmin.save()
         return clinicAdmin
 
-    def update(self, instance, validated_data):
-        # Will send an email when updated to approved
-        if instance.approved is False and validated_data.approved is True:
-            pass
-
 class NurseSerializer(serializers.ModelSerializer):
     class Meta:
         model = Nurse
-        exclude = ['user', 'activated']
+        exclude = ['user']
 
 class DoctorSerializer(serializers.ModelSerializer):
     #rating = serializers.DecimalField(decimal_places=2, max_digits=4)
@@ -73,7 +68,7 @@ class DoctorSerializer(serializers.ModelSerializer):
         return clinicId
     class Meta:
         model = Doctor
-        exclude = ['user', 'activated']
+        exclude = ['user']
 
     def create(self, validated_data):
         requestBody = self.context['request'].data

@@ -24,7 +24,6 @@ export default function HolidayRequest(props) {
   const handleClose =  () => setOpen(false)
 
   const approve = () => {
-    console.log('rekverst',request)
     props.resolve({id: request.id, decision: true})
   }
 

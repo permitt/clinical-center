@@ -9,15 +9,14 @@ import Button from '@material-ui/core/Button';
 import { withFormikField } from '../../utils/withFormikField'
 import { formStyle, submitButton } from '../../assets/jss/material-dashboard-react/components/FormStyle';
 import { changePassSchema } from './validations'
-import { register } from '../../store/actions/AuthActions';
+import { changePass } from '../../store/actions/AuthActions';
 
 const FormikTextField = withFormikField(TextField);
 
 class ChangePassForm extends Component {
 
   submit = (values) => {
-
-    this.props.register(values);
+    this.props.changePass(values);
   };
 
 
@@ -74,11 +73,11 @@ class ChangePassForm extends Component {
 
 const mapStateToProps = state => {
   return {
-    registerError: state.error.registerError
+    // registerError: state.error.registerError
   };
 };
 
-const mapDispatchToProps = { register };
+const mapDispatchToProps = { changePass };
 
 export default withRouter(
   connect(

@@ -11,23 +11,19 @@ import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
 import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
-
-import { paper, avatar } from '../../assets/jss/material-dashboard-react/components/FormStyle';
-
-import Sidebar from "../../components/Sidebar/Sidebar";
-
-import { USER_PROFILE, DASHBOARD, EDIT_PROFILE } from '../../routes';
 import Grid from '@material-ui/core/Grid';
 import Button from '@material-ui/core/Button';
-import Select from '@material-ui/core/Select';
-import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
-import { getPatient, putPatient } from '../../store/actions/PatientsActions';
-
-import { withFormikField } from '../../utils/withFormikField'
-import Alert from '@material-ui/lab/Alert';
 import { Formik, Form, Field } from 'formik';
-import { formStyle, submitButton } from '../../assets/jss/material-dashboard-react/components/FormStyle';
 import TextField from '@material-ui/core/TextField';
+import Alert from '@material-ui/lab/Alert';
+
+import { paper, avatar } from '../../assets/jss/material-dashboard-react/components/FormStyle';
+import Sidebar from "../../components/Sidebar/Sidebar";
+import { DASHBOARD, EDIT_PROFILE } from '../../routes';
+import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
+import { getProfile, editProfile } from '../../store/actions/AuthActions';
+import { withFormikField } from '../../utils/withFormikField'
+import { formStyle, submitButton } from '../../assets/jss/material-dashboard-react/components/FormStyle';
 import { editPatientSchema } from '../Forms/validations';
 
 const useStyles = makeStyles(styles);
@@ -49,18 +45,17 @@ const FormikTextField = withFormikField(TextField);
 
 function EditProfile(props) {
     const classes = useStyles();
-    const [loading, setLoading] = React.useState(false);
+    const [loading, setLoading] = React.useState(true);
+    const [success, setSucces] = React.useState(false);
 
     React.useEffect(() => {
-        //props.getUser(props.email);
-    }, [props.email]);
-
+        props.getProfile();
+    }, []);
 
     React.useEffect(() => {
-        if (props.profile.firstName !== '' && props.profile.firstName !== undefined) {
-            setLoading(false);
-        }
-    }, [props.profile]);
+        if (props.profile) 
+            setLoading(false)
+    });
 
     const sidebarOptions = [
         {
@@ -76,11 +71,8 @@ function EditProfile(props) {
     ]
 
     const submit = values => {
-
-        delete values.password2;
-        // jos neka validacija
-        console.log("SENDING : ", values);
-        props.putPatient(values);
+        props.editProfile(values);
+        setSucces(true)
     };
 
     return (
@@ -104,7 +96,17 @@ function EditProfile(props) {
                                 validationSchema={editPatientSchema}
                                 onSubmit={submit}
                                 style={formStyle}
-                                initialValues={{ ...props.profile, password2: '' }}>
+                                initialValues={{
+                                    firstName: props.profile.firstName || '',
+                                    lastName: props.profile.lastName || '',
+                                    email: props.profile.email || '',
+                                    address: props.profile.address || '',
+                                    city: props.profile.city || '',
+                                    country: props.profile.country || '',
+                                    phoneNumber: props.profile.phoneNumber || '',
+                                    password: props.profile.password,
+                                    password2: ''
+                                }}>
                                 <Form style={{textAlign:'center'}}>
                                     <Grid container spacing={2}>
                                         <Grid item xs={6}>
@@ -198,6 +200,11 @@ function EditProfile(props) {
                                                 label="Confirm password"
                                             />
                                         </Grid>
+                                        {success &&
+                                        <Grid item xs={12}>
+                                            <Alert severity="success">Profile data successfully changed</Alert>
+                                        </Grid>
+                                        }
                                     </Grid>
                                     <Button
                                         type="submit"   
@@ -221,15 +228,13 @@ function EditProfile(props) {
 
 const mapStateToProps = state => {
     return {
-        profile: state.patient.current,
-        email: state.authUser.email,
-
+         profile: state.authUser.profile,
     };
 };
 
 const mapDispatchToProps = {
-   //getUser,
-    //editUser
+   getProfile,
+    editProfile
 };
 
 export default withRouter(
