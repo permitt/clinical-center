@@ -22,7 +22,6 @@ class PatientViewset(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         user = request.user
-        print(request.query_params)
         query = Patient.objects.select_related().filter(appointments__doctor__email=user)
         if 'firstName' in request.query_params:
             query = query.filter(firstName__startswith=request.query_params['firstName'])
@@ -34,6 +33,10 @@ class PatientViewset(viewsets.ModelViewSet):
             query = query.filter(country=request.query_params['country'])
         if 'city' in request.query_params:
             query = query.filter(country=request.query_params['city'])
+        if ('ordering' in request.query_params):
+            query = query.order_by(request.query_params['ordering'])
+        else:
+            query = query.order_by('firstName')
         serializer = self.get_serializer(query.all(), many=True)
 
         return Response(serializer.data)

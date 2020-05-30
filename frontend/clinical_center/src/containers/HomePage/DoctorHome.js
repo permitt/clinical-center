@@ -15,21 +15,40 @@ import Sidebar from "../../components/Sidebar/Sidebar"
 import PatientList from "../PatientList/PatientList"
 import { getPatients } from '../../store/actions/PatientsActions'
 import { EDIT_PROFILE } from '../../routes';
+import PatientProfile from '../PatientProfile/PatientProfile'
 
 const useStyles = makeStyles(styles);
 
 function DoctorHome(props) {
   const classes = useStyles();
-  const [renderTable, setRenderTable ] =  React.useState(false)
+  const [state, setState ] =  React.useState({
+    renderTable: false, 
+    viewPatient: false, 
+    email: null
+  })
 
   const showPatients = () => {
-    setRenderTable(true)
+    setState({
+      renderTable: true, 
+      viewPatient: false, 
+      email: null
+    })
     props.getPatients()
   }
   
-  const sortPatients = (sortBy) => {
+  const sortPatients = sortBy => {
     props.getPatients({'sort': sortBy})
   }
+
+  const showPatient = email => {
+    console.log(email)
+    setState({
+      renderTable: false, 
+      viewPatient: true, 
+      email: email
+    })
+  }
+
 
   const sidebarOptions =  [ 
     {
@@ -68,9 +87,10 @@ function DoctorHome(props) {
       <Sidebar options={sidebarOptions} />
     <div className={classes.mainPanel}> 
       <div style={{margin:30}}>  
-        {renderTable && <PatientSearchBar/>}
+        {state.renderTable && <PatientSearchBar/>}
       </div>
-      {renderTable && <PatientList data={props.patients} sort={sortPatients}/>}
+      {state.renderTable && <PatientList data={props.patients} sort={sortPatients} viewPatient={showPatient}/>}
+      {state.viewPatient && <PatientProfile email={state.email}/>}
     </div>
   </div>
   );

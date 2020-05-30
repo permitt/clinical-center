@@ -135,6 +135,7 @@ export default function PatientList(props) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
+  
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -169,7 +170,7 @@ export default function PatientList(props) {
                   return (
                     <TableRow
                       hover
-                      onClick={() => console.log('kliknuto')}
+                      onClick={() => props.viewPatient(row.email)}
                       tabIndex={-1}
                       key={row.email}
                     >
