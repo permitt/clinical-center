@@ -1,7 +1,7 @@
 import { call, put, select } from 'redux-saga/effects';
 import { push, go } from 'connected-react-router'
 import { appointmentService } from '../../services/AppointmentService';
-import { setAppointmentTypes, setAppointmentTerms } from '../actions/AppointmentActions';
+import { setAppointmentTypes, setAppointmentTerms, setScheduledAppointment } from '../actions/AppointmentActions';
 import { setDoctors } from '../actions/DoctorActions';
 import { setAvailableClinics } from '../actions/ClinicActions';
 import { DASHBOARD } from '../../routes';
@@ -40,8 +40,10 @@ export function* appointmentPost(action) {
 export function* appointmentSchedule(action) {
     try {
         const resp = yield call(() => appointmentService.scheduleAppointment(action.payload));
-        console.log("APP SCHEDULE : ", resp);
-    } catch (err) {
-        console.log(err);
+        const msg = resp.data ? resp.data.msg : 'Successfully scheduled'
+        yield put(setScheduledAppointment({show: true, success: true, msg}))
+    } catch (error) {
+        const msg = error.response? error.response.data.msg : 'Can not schedule'
+        yield put(setScheduledAppointment({show: true, success: false, msg}))
     }
 }

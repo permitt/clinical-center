@@ -1,5 +1,6 @@
 from django.db import models
 from .email import APPOINTMENT_REQUEST_BODY, APPOINTMENT_REQUEST_TITLE
+from .operationEmail import  OPERATION_REQUEST_BODY, OPERATION_REQUEST_TITLE
 from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from users.models import ClinicAdmin
@@ -53,7 +54,7 @@ class AppointmentType(models.Model):
         unique_together = ['typeName', 'clinic']
 
     def __str__(self):
-        return f'{self.typeName} at {self.clinic.name}'
+        return f'{self.typeName}'
 
 class Specialization(models.Model):
     typeOf = models.ForeignKey(to=AppointmentType, on_delete=models.CASCADE)
@@ -156,3 +157,36 @@ class Holiday(models.Model):
 
     def __str__(self):
         return f'{self.employee} {self.approved} {self.resolved}'
+
+class Operation(models.Model):
+    clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='operations')
+    date = models.DateField(null=True, blank=True)
+    time = models.TimeField(null=True, blank=True)
+    #tip operacije ??
+    # typeOf = models.ForeignKey(to=AppointmentType, on_delete=models.CASCADE)
+    doctors = models.ManyToManyField(to='users.Doctor', related_name='operations')
+    # if the operatingRoom is Null => this is a request for the ClinicAdmin to approve
+    operatingRoom = models.ForeignKey(to=OperatingRoom, on_delete=models.CASCADE, null=True)
+    patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE, related_name='operations', null=False)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=['clinic', 'date', 'time', 'operatingRoom'], name='unique doctor date time,operation, for a clinic')
+        ]
+
+    def save(self, *args, **kwargs):
+        super(Operation, self).save(*args, **kwargs)
+
+        if self.operatingRoom is None:
+            clinic_admins = ClinicAdmin.objects.select_related('employedAt').filter(employedAt=self.clinic)
+            to_emails = [admin.email for admin in clinic_admins]
+
+            send_mail(OPERATION_REQUEST_TITLE,
+                      OPERATION_REQUEST_BODY% (
+                          self.date, self.time, self.patient),
+                      settings.EMAIL_HOST_USER,
+                      to_emails,
+                      fail_silently=True)
+
+    def __str__(self):
+        return f'{self.patient} {self.doctors}'

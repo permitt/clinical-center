@@ -12,6 +12,7 @@ from .serializers import *
 from django.core.mail import send_mail
 from .holidayEmail import *
 import datetime
+from users.models import Patient
 from django.db.models.functions import Concat
 from django.db import IntegrityError
 from django.db.models import Avg
@@ -69,8 +70,7 @@ class OperatingRoomView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         user = self.request.user
-        userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
-        query = OperatingRoom.objects.filter(clinic=userLogged.values('employedAt')[:1])
+        query = OperatingRoom.objects.filter(clinic=user.adminAccount.employedAt)
 
         return query
 
@@ -123,8 +123,7 @@ class AppointmentTypeView(viewsets.ModelViewSet):
         if hasattr(user, 'patient'):
             return AppointmentType.objects.all()
 
-        userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
-        query = AppointmentType.objects.filter(clinic=userLogged.values('employedAt')[:1]).select_related()
+        query = AppointmentType.objects.filter(clinic=user.adminAccount.employedAt).select_related()
 
         return query
 
@@ -292,3 +291,50 @@ def appointmentCheck(request):
     except Exception as inst:
         print(inst)
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':'Cannot book an appointment.'})
+
+
+class OperationView(viewsets.ModelViewSet):
+    serializer_class = OperationSerializer
+    permission_classes = [permissions.IsAuthenticated]
+    queryset = Operation.objects.all()
+
+@api_view(["POST"])
+def scheduleAppointment(request):
+    data = request.data
+    try:
+        patient = Patient.objects.filter(email=data['patient']).get()
+        if (not patient):
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Patient doesn't exists."})
+        date = data['date']
+        time = data['time']
+        type = data['type']
+        if (type != 'operation' and type != 'appointment'):
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
+        if (type == 'operation'):
+            doctorEmails = data['doctors']
+            doctors = Doctor.objects.filter(email__in=doctorEmails)
+            if (len(doctors) == 0):
+                return Response(status=status.HTTP_200_OK, data={'msg': 'Can not schedule operation'})
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':"Invalid parameters."})
+    specialization = Specialization.objects.select_related('doctor').filter(doctor__email=request.user).get()
+    doctor = specialization.doctor
+    if (type == 'appointment'):
+        newAppointment = Appointment(doctor=doctor,patient=patient,time=time,date=date, clinic=doctor.employedAt, typeOf=specialization.typeOf)
+        newAppointment.save()
+
+        return Response(status=status.HTTP_200_OK, data={'msg': 'Successfully scheduled appointment'})
+    if (type == 'operation'):
+        newOperation = Operation(clinic=doctor.employedAt, patient=patient, date=date, time=time)
+        operations = Operation.objects.filter(time=time).filter(date=date).filter(doctors__in=doctors).distinct().all()
+
+        if(len(operations) > 0):
+            return Response(status=status.HTTP_200_OK, data={'msg': 'Can not schedule operation'})
+        newOperation.save()
+        for doc in doctors:
+            newOperation.doctors.add(doc)
+
+        return Response(status=status.HTTP_200_OK, data={'msg': 'Successfully scheduled operation'})
+
+
+    return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':'Cannot schedule an appointment.'})

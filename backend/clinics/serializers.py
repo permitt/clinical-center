@@ -146,3 +146,8 @@ class HealthCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = HealthCard
         fields = '__all__'
+
+class OperationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Operation
+        fields = '__all__'

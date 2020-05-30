@@ -22,7 +22,7 @@ class PatientViewset(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         user = request.user
-        query = Patient.objects.select_related().filter(appointments__doctor__email=user)
+        query = Patient.objects.select_related().filter(appointments__doctor__email=user).distinct()
         if 'firstName' in request.query_params:
             query = query.filter(firstName__startswith=request.query_params['firstName'])
         if 'lastName' in request.query_params:
@@ -82,8 +82,10 @@ class DoctorViewset(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         user = request.user
-        userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
-        query = Doctor.objects.filter(employedAt=userLogged.values('employedAt')[:1])
+        if (hasattr(user,'adminAccount')):
+            query = Doctor.objects.filter(employedAt=user.adminAccount.employedAt)
+        if (hasattr(user,'docAccount')):
+            query = Doctor.objects.filter(employedAt=user.docAccount.employedAt)
         serializer = self.get_serializer(query, many=True)
 
         return Response(serializer.data)
@@ -132,8 +134,7 @@ class NurseViewset(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         user = request.user
-        userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
-        query = Nurse.objects.filter(employedAt=userLogged.values('employedAt')[:1])
+        query = Nurse.objects.filter(employedAt=user.adminAccount.employedAt)
         serializer = self.get_serializer(query, many=True)
 
         return Response(serializer.data)
@@ -158,12 +159,11 @@ class MyTokenObtainPairView(TokenObtainPairView):
 @api_view(["POST"])
 def changepass(request):
     try:
-        loggedUser = request.user
+        user = request.user
         newPass = request.data['password']
         newPassConfirmation = request.data['password2']
         if (newPass != newPassConfirmation):
             return Response(status=status.HTTP_400_BAD_REQUEST, data={'changed': False,'msg': "Passwords don't match."})
-        user = User.objects.select_related().get(username=loggedUser)
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'changed': False, 'msg': "Invalid parameters."})
 
@@ -188,8 +188,7 @@ def changepass(request):
 @api_view(["GET"])
 def profile(request):
     try:
-        loggedUser = request.user
-        user = User.objects.select_related().get(username=loggedUser)
+        user = request.user
         if (not user):
             return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "No logged in user."})
     except:
