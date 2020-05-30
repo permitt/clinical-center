@@ -57,6 +57,7 @@ return (
                     <TextField 
                         id="outlined-basic"
                         label="Insert number" 
+                        type="number"
                         variant="outlined" 
                         onChange={e => setNumber(e.target.value)}
                     />

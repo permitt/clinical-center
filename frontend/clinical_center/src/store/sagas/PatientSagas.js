@@ -31,3 +31,13 @@ export function* patientPut(action) {
     console.log(error);
   }
 }
+
+export function* patientsSearch(action) {
+  try {
+    console.log(action)
+    const response = yield call(() => patientService.searchPatients(action.payload))
+    yield put(setPatients(response));
+  } catch (error) {
+    console.log({ error });
+  }
+}

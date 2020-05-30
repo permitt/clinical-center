@@ -9,6 +9,7 @@ import WorkOffIcon from '@material-ui/icons/WorkOff';
 import ScheduleIcon from '@material-ui/icons/Schedule';
 import PersonIcon from '@material-ui/icons/Person';
 
+import PatientSearchBar from '../../containers/SearchBar/PatientSearchBar'
 import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
 import Sidebar from "../../components/Sidebar/Sidebar"
 import PatientList from "../PatientList/PatientList"
@@ -66,6 +67,9 @@ function DoctorHome(props) {
     <div className={classes.wrapper}>
       <Sidebar options={sidebarOptions} />
     <div className={classes.mainPanel}> 
+      <div style={{margin:30}}>  
+        {renderTable && <PatientSearchBar/>}
+      </div>
       {renderTable && <PatientList data={props.patients} sort={sortPatients}/>}
     </div>
   </div>

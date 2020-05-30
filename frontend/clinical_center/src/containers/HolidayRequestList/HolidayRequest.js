@@ -37,7 +37,7 @@ export default function HolidayRequest(props) {
         <Typography className={classes.title} color="textSecondary" gutterBottom>
           Holiday request number {index + 1}
         </Typography>
-        <Typography variant="h4" component="h2">
+        <Typography variant="h4" component="h6">
           {request.name}
         </Typography>
         <Typography className={classes.pos} color="textSecondary">

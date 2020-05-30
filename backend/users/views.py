@@ -22,8 +22,19 @@ class PatientViewset(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         user = request.user
-        query = Patient.objects.select_related().filter(appointments__doctor__email=user).all()
-        serializer = self.get_serializer(query, many=True)
+        print(request.query_params)
+        query = Patient.objects.select_related().filter(appointments__doctor__email=user)
+        if 'firstName' in request.query_params:
+            query = query.filter(firstName__startswith=request.query_params['firstName'])
+        if 'lastName' in request.query_params:
+            query = query.filter(lastName__startswith=request.query_params['lastName'])
+        if 'policyNumber' in request.query_params:
+            query = query.filter(policyNumber=request.query_params['policyNumber'])
+        if 'country' in request.query_params:
+            query = query.filter(country=request.query_params['country'])
+        if 'city' in request.query_params:
+            query = query.filter(country=request.query_params['city'])
+        serializer = self.get_serializer(query.all(), many=True)
 
         return Response(serializer.data)
 
@@ -70,16 +81,6 @@ class DoctorViewset(viewsets.ModelViewSet):
         user = request.user
         userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
         query = Doctor.objects.filter(employedAt=userLogged.values('employedAt')[:1])
-        if 'firstName' in request.query_params:
-            queryset = query.filter(firstName__startswith=request.query_params['firstName'])
-        if 'lastName' in request.query_params:
-            queryset = query.filter(lastName__startswith=request.query_params['lastName'])
-        if 'policyNumber' in request.query_params:
-            queryset = queryset.filter(policyNumber=request.query_params['policyNumber'])
-        if 'country' in request.query_params:
-            queryset = queryset.filter(country=request.query_params['country'])
-        if 'city' in request.query_params:
-            queryset = queryset.filter(country=request.query_params['city'])
         serializer = self.get_serializer(query, many=True)
 
         return Response(serializer.data)
