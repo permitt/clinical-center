@@ -11,7 +11,7 @@ from . import custom_permissions
 
 
 class PatientViewset(viewsets.ModelViewSet):
-    queryset = Patient.objects.all()
+
     serializer_class = PatientSerializer
     permission_classes = [custom_permissions.CustomPatientPermissions]
     filter_backends = [filters.OrderingFilter]
@@ -19,6 +19,14 @@ class PatientViewset(viewsets.ModelViewSet):
     ordering = ['firstName']
     lookup_field = 'email'
     lookup_value_regex = '[\w@.]+'
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
+        query = Doctor.objects.filter(employedAt=userLogged.values('employedAt')[:1])
+        serializer = self.get_serializer(query, many=True)
+
+        return Response(serializer.data)
 
     def perform_destroy(self, instance):
         # Delete the user as well
@@ -39,20 +47,33 @@ class ClinicAdminViewset(viewsets.ModelViewSet):
         user = instance.user
         user.delete()
         instance.delete()
-# JWT customized view
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        user = instance.user
+        user.set_password(instance.password)
+        user.save()
+
+        return Response(serializer.data)
 
 class DoctorViewset(viewsets.ModelViewSet):
+    queryset = Doctor.objects.all()
     serializer_class = DoctorSerializer
     permission_classes = [custom_permissions.CustomDoctorPermissions]
     lookup_field = 'email'
     lookup_value_regex = '[\w@.]+'
 
-    def get_queryset(self):
-        user = self.request.user
+    def list(self, request, *args, **kwargs):
+        user = request.user
         userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
         query = Doctor.objects.filter(employedAt=userLogged.values('employedAt')[:1])
+        serializer = self.get_serializer(query, many=True)
 
-        return query
+        return Response(serializer.data)
 
     def destroy(self, request, email):
         instance = self.get_object()
@@ -69,13 +90,52 @@ class DoctorViewset(viewsets.ModelViewSet):
         user.delete()
         instance.delete()
 
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        user = instance.user
+        user.set_password(instance.password)
+        user.save()
+
+        return Response(serializer.data)
+
 
 class NurseViewset(viewsets.ModelViewSet):
     serializer_class = NurseSerializer
+    queryset=Nurse.objects.all()
     permission_classes = [custom_permissions.CustomNursePermissions]
     lookup_field = 'email'
     lookup_value_regex = '[\w@.]+'
     queryset = Nurse.objects.all()
+
+    def perform_destroy(self, instance):
+        # Delete the user as well
+        user = instance.user
+        user.delete()
+        instance.delete()
+
+    def list(self, request, *args, **kwargs):
+        user = request.user
+        userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
+        query = Nurse.objects.filter(employedAt=userLogged.values('employedAt')[:1])
+        serializer = self.get_serializer(query, many=True)
+
+        return Response(serializer.data)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        self.perform_update(serializer)
+        user = instance.user
+        user.set_password(instance.password)
+        user.save()
+
+        return Response(serializer.data)
 
 
 class MyTokenObtainPairView(TokenObtainPairView):

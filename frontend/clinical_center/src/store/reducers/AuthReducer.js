@@ -16,7 +16,7 @@ const authReducer = (state = initialState, action) => {
       return { ...state, isAuth: action.payload }
     case SET_ROLE:
 
-      return { ...state, role: action.payload }
+      return { ...state, role: action.payload, profile:null }
     case SET_USER_EMAIL:
 
       return { ...state, email: action.payload }

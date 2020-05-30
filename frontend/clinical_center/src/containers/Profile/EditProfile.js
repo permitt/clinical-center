@@ -47,7 +47,7 @@ function EditProfile(props) {
     const classes = useStyles();
     const [loading, setLoading] = React.useState(true);
     const [success, setSucces] = React.useState(false);
-
+    
     React.useEffect(() => {
         props.getProfile();
     }, []);

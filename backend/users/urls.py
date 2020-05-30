@@ -4,8 +4,8 @@ from . import views
 from rest_framework_simplejwt import views as jwt_views
 
 router = routers.SimpleRouter()
-router.register('patient', views.PatientViewset)
-router.register('doctor', views.DoctorViewset, basename='Doctor')
+router.register('patient', views.PatientViewset,basename='Patient')
+router.register('doctor', views.DoctorViewset)
 router.register('clinicadmin', views.ClinicAdminViewset)
 router.register('nurse', views.NurseViewset)
 

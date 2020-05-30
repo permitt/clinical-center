@@ -41,7 +41,7 @@ class CustomDoctorPermissions(permissions.BasePermission):
 
     def has_permission(self, request, view):
 
-        return hasattr(request.user, 'adminAccount') and request.user.is_authenticated
+        return (hasattr(request.user, 'adminAccount') or hasattr(request.user,'docAccount')) and request.user.is_authenticated
 
 class CustomClinicAdminPermissions(permissions.BasePermission):
 
@@ -61,4 +61,4 @@ class CustomNursePermissions(permissions.BasePermission):
 
     def has_permission(self, request, view):
 
-        return hasattr(request.user, 'adminAccount') and request.user.is_authenticated
+        return (hasattr(request.user, 'adminAccount') or hasattr(request.user,'nurseAccount')) and request.user.is_authenticated
