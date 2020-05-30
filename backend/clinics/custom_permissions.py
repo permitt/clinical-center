@@ -10,7 +10,6 @@ class OperatingRoomPermissions(permissions.BasePermission):
 
         return hasattr(request.user, 'adminAccount')
 
-
 class AppointmentTypePermissions(permissions.BasePermission):
 
     def __init__(self, allowed_methods=['GET', 'POST', 'DELETE', 'PUT']):
@@ -18,5 +17,6 @@ class AppointmentTypePermissions(permissions.BasePermission):
         self.allowed_methods=allowed_methods
 
     def has_permission(self, request, view):
-        return True
-        return hasattr(request.user, 'adminAccount')
+
+        return hasattr(request.user, 'adminAccount') or hasattr(request.user,'account')
+

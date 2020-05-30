@@ -18,7 +18,7 @@ from django.db.models import Avg
 
 class ClinicListView(generics.ListAPIView):
     serializer_class = ClinicSerializer
-    #permission_classes = [permissions.IsAuthenticated]
+    permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
     ordering_fields = ['name', 'address', 'city', 'country']
     queryset = Clinic.objects.annotate(rating=Avg('ratings__rating')).all()
@@ -89,6 +89,7 @@ class OperatingRoomView(viewsets.ModelViewSet):
 class AppointmentViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentSerializer
     queryset = Appointment.objects.all()
+    permission_classes = [permissions.IsAuthenticated]
 
 
 class AppointmentTypeView(viewsets.ModelViewSet):
