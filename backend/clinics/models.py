@@ -33,6 +33,7 @@ class HealthCard(models.Model):
      WUT, posle koliko  
     """
 
+
 class OperatingRoom(models.Model):
     clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='operating_rooms')
     name = models.CharField(max_length=20)

@@ -23,6 +23,27 @@ class ClinicListView(generics.ListAPIView):
     ordering_fields = ['name', 'address', 'city', 'country']
     queryset = Clinic.objects.annotate(rating=Avg('ratings__rating')).all()
 
+class HealthCardView(viewsets.ModelViewSet):
+    queryset = HealthCard.objects
+    serializer_class = HealthCardSerializer
+    permission_classes = [HealthCardPermissions]
+
+
+    def list(self, request):
+        queryset = self.get_queryset()
+        patient = "pacijent@gmail.com"
+        queryset = queryset.filter(patient_id=patient)
+
+        print(request.body)
+
+
+        serializer = HealthCardSerializer(queryset, many=True)
+
+
+
+        return Response(status=status.HTTP_200_OK, data={'healthCard':serializer.data}, content_type='application/json')
+
+
 class OperatingRoomView(viewsets.ModelViewSet):
     serializer_class = OperatingRoomSerializer
     permission_classes = [OperatingRoomPermissions]
@@ -91,7 +112,6 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     queryset = Appointment.objects.all()
     permission_classes = [permissions.IsAuthenticated]
 
-
 class AppointmentTypeView(viewsets.ModelViewSet):
     queryset = AppointmentType.objects.all()
     permission_classes = [AppointmentTypePermissions]
@@ -151,7 +171,6 @@ class HolidayRequestView(viewsets.ReadOnlyModelViewSet):
             .filter(clinic=userLogged.values('employedAt')[:1]).all()
 
         return queryset
-
 
 @api_view(["POST"])
 def resolveRequest(request,pk):

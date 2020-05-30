@@ -34,6 +34,8 @@ class PatientService extends ApiService {
     queryString = queryString.slice(0,-1)
     const { data } = await this.apiClient.get(ENDPOINTS.PATIENTS + `?${queryString}`)
 
+
+
     return data;
   }
 

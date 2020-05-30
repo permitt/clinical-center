@@ -141,3 +141,8 @@ class HolidaySerializer(serializers.ModelSerializer):
     class Meta:
         model = Holiday
         fields = ['id','clinic','startDate', 'endDate', 'approved','name','email']
+
+class HealthCardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HealthCard
+        fields = '__all__'
