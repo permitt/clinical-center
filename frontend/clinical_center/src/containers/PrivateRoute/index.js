@@ -14,15 +14,24 @@ export function PrivateRoute({
   role,
   ...rest
 }) {
-
+  console.log('u private', changedPass)
   return (
     <Route {...rest} 
         render={props => {
-          if (isAuthenticated && changedPass)
-            return  <Component {...props} /> 
-          if (isAuthenticated && !changedPass)
-            return <Redirect to={CHANGE_PASSWORD} />
-          return <Redirect to={LOGIN} />
+          if (role === PATIENT){
+            
+            return isAuthenticated ?  <Component {...props} /> : <Redirect to={LOGIN} />
+          }
+          else {
+            if (isAuthenticated && changedPass)
+
+              return  <Component {...props} /> 
+            else if (isAuthenticated && !changedPass)
+
+              return <Redirect to={CHANGE_PASSWORD} />
+              else 
+                return <Redirect to={LOGIN} />
+          }
         }}
     />
   );

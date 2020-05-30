@@ -125,8 +125,8 @@ class AuthService extends ApiService {
       console.log(error)
       return null
     }
-
-    return decodedToken.changedPass
+    
+    return decodedToken.changedPass !== undefined ? decodedToken.changedPass: true
   }
 
   getUserEmail = () => {

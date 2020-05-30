@@ -18,5 +18,5 @@ class AppointmentTypePermissions(permissions.BasePermission):
 
     def has_permission(self, request, view):
 
-        return hasattr(request.user, 'adminAccount') or hasattr(request.user,'account')
+        return hasattr(request.user, 'adminAccount') or hasattr(request.user,'patient')
 
