@@ -11,7 +11,7 @@ from . import custom_permissions
 
 
 class PatientViewset(viewsets.ModelViewSet):
-
+    queryset = Patient.objects.all()
     serializer_class = PatientSerializer
     permission_classes = [custom_permissions.CustomPatientPermissions]
     filter_backends = [filters.OrderingFilter]
@@ -22,8 +22,7 @@ class PatientViewset(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         user = request.user
-        userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
-        query = Doctor.objects.filter(employedAt=userLogged.values('employedAt')[:1])
+        query = Patient.objects.select_related().filter(appointments__doctor__email=user).all()
         serializer = self.get_serializer(query, many=True)
 
         return Response(serializer.data)
@@ -71,6 +70,16 @@ class DoctorViewset(viewsets.ModelViewSet):
         user = request.user
         userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
         query = Doctor.objects.filter(employedAt=userLogged.values('employedAt')[:1])
+        if 'firstName' in request.query_params:
+            queryset = query.filter(firstName__startswith=request.query_params['firstName'])
+        if 'lastName' in request.query_params:
+            queryset = query.filter(lastName__startswith=request.query_params['lastName'])
+        if 'policyNumber' in request.query_params:
+            queryset = queryset.filter(policyNumber=request.query_params['policyNumber'])
+        if 'country' in request.query_params:
+            queryset = queryset.filter(country=request.query_params['country'])
+        if 'city' in request.query_params:
+            queryset = queryset.filter(country=request.query_params['city'])
         serializer = self.get_serializer(query, many=True)
 
         return Response(serializer.data)
@@ -78,7 +87,7 @@ class DoctorViewset(viewsets.ModelViewSet):
     def destroy(self, request, email):
         instance = self.get_object()
 
-        if (len(instance.appointment_set.all()) > 0):
+        if (len(instance.appointments.all()) > 0):
             return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Doctor with appointments can't be deleted"})
         else:
             self.perform_destroy(instance)
