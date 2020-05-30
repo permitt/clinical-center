@@ -134,10 +134,10 @@ class ClinicRatingSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class HolidaySerializer(serializers.ModelSerializer):
-    nameDoc = serializers.StringRelatedField()
-    nameNurse = serializers.StringRelatedField()
+    name = serializers.StringRelatedField()
     email = serializers.StringRelatedField()
+    clinic = serializers.StringRelatedField()
 
     class Meta:
         model = Holiday
-        fields = ['id','startDate', 'endDate', 'approved','nameDoc','nameNurse','email']
+        fields = ['id','clinic','startDate', 'endDate', 'approved','name','email']

@@ -2,7 +2,7 @@ import sys
 from rest_framework import viewsets, generics, filters, permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.db.models import Avg, F, Sum, OuterRef, Subquery, When, Case, FilteredRelation, Q, Value as V
+from django.db.models import Avg, F, Sum, OuterRef, Subquery, When, Case, FilteredRelation, Q, Value as V, CharField
 from django.db.models.functions import Coalesce
 from users.models import Doctor, Schedule
 from users.serializers import DoctorSerializer
@@ -137,13 +137,17 @@ class HolidayRequestView(viewsets.ReadOnlyModelViewSet):
         user = self.request.user
         userLogged = ClinicAdmin.objects.filter(email=user.username).select_related()
         queryset = Holiday.objects.select_related('employee')\
-            .filter(resolved=False)\
-            .annotate(nameDoc=Concat('employee__docAccount__firstName',V(' '), 'employee__docAccount__lastName')) \
-            .annotate(nameNurse=Concat('employee__adminAccount__firstName', V(' '), 'employee__adminAccount__lastName'))\
-            .annotate(email=F('employee__docAccount__email')) \
-            .filter(employee__docAccount__employedAt=userLogged.values('employedAt')[:1]) \
-            .all()
-
+            .filter(resolved=False) \
+            .annotate(clinic=Case(When(employee__docAccount__isnull=False, then=F('employee__docAccount__employedAt__pk')),
+                                   When(employee__nurseAccount__isnull=False, then=F('employee__nurseAccount__employedAt__pk')),
+                                   output_field=CharField()))\
+            .annotate(name=Case(When(employee__docAccount__isnull=False, then=Concat('employee__docAccount__firstName',V(' '), 'employee__docAccount__lastName')),
+                                   When(employee__nurseAccount__isnull=False, then=Concat('employee__nurseAccount__firstName', V(' '), 'employee__nurseAccount__lastName')),
+                      output_field = CharField()))\
+            .annotate(email=Case(When(employee__docAccount__isnull=False, then=F('employee__docAccount__email')),
+                                   When(employee__nurseAccount__isnull=False, then=F('employee__nurseAccount__email')),
+                                   output_field=CharField()))\
+            .filter(clinic=userLogged.values('employedAt')[:1]).all()
 
         return queryset
 

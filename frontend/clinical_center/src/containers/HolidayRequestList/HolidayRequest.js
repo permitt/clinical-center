@@ -30,6 +30,7 @@ export default function HolidayRequest(props) {
   const reject = () => {
     props.resolve({id: request.id, decision: false, text: text})
   }
+  console.log(request)
   return (
     <Card className={classes.root} variant="outlined">
       <CardContent>
@@ -37,7 +38,7 @@ export default function HolidayRequest(props) {
           Holiday request number {index + 1}
         </Typography>
         <Typography variant="h4" component="h2">
-          {request.nameDoc || request.nameNurse}
+          {request.name}
         </Typography>
         <Typography className={classes.pos} color="textSecondary">
           {request.email}

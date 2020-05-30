@@ -26,12 +26,11 @@ class PatientViewset(viewsets.ModelViewSet):
         user.delete()
         instance.delete()
 
- 
 
 class ClinicAdminViewset(viewsets.ModelViewSet):
     queryset = ClinicAdmin.objects.all()
     serializer_class = ClinicAdminSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [custom_permissions.CustomClinicAdminPermissions]
     lookup_field = 'email'
     lookup_value_regex = '[\w@.]+'
 
@@ -73,7 +72,7 @@ class DoctorViewset(viewsets.ModelViewSet):
 
 class NurseViewset(viewsets.ModelViewSet):
     serializer_class = NurseSerializer
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [custom_permissions.CustomNursePermissions]
     lookup_field = 'email'
     lookup_value_regex = '[\w@.]+'
     queryset = Nurse.objects.all()
