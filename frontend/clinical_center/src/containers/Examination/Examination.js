@@ -25,6 +25,8 @@ import {
 
 import { paper } from '../../assets/jss/material-dashboard-react/components/FormStyle';
 import { getPatient } from '../../store/actions/PatientsActions'
+import { scheduleAppointment } from '../../store/actions/AppointmentActions'
+import { convertTime, formatDate } from '../../utils/utils'
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -69,9 +71,12 @@ const handleTimeChange = (time) => {
   };
 
 const schedule = () => {
-    const values = {date: selectedDate, time: selectedTime, type : selectedType}
+    let values = {date: formatDate(selectedDate), time: convertTime(selectedTime.toLocaleTimeString()), type : selectedType}
+    values['patient'] = email
     console.log(values)
+    props.scheduleAppointment(values)
 }
+
 
 useEffect(() => {
     props.getPatient(email)
@@ -183,7 +188,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
- getPatient
+ getPatient, scheduleAppointment
 };
 
 export default withRouter(

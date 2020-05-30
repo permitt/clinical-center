@@ -32,8 +32,16 @@ export function* appointmentPost(action) {
         const resp = yield call(() => appointmentService.postAppointment(action.payload));
         yield put(push(DASHBOARD));
         console.log("APP POSTING : ", resp);
-
     } catch (err) {
 
+    }
+}
+
+export function* appointmentSchedule(action) {
+    try {
+        const resp = yield call(() => appointmentService.scheduleAppointment(action.payload));
+        console.log("APP SCHEDULE : ", resp);
+    } catch (err) {
+        console.log(err);
     }
 }
