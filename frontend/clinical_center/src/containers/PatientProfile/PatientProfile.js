@@ -122,7 +122,13 @@ return (
       </Button>
           </Grid>
           <Grid item xs={3}>
-          <Button variant="contained" color="primary"  size="large" startIcon={<LocalHospitalIcon />}>
+          <Button 
+            variant="contained" 
+            color="primary"  
+            size="large" 
+            startIcon={<LocalHospitalIcon />}
+            onClick={props.startExamination}
+            >
           Start examination
       </Button>
           </Grid>

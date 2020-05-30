@@ -16,6 +16,7 @@ import PatientList from "../PatientList/PatientList"
 import { getPatients } from '../../store/actions/PatientsActions'
 import { EDIT_PROFILE } from '../../routes';
 import PatientProfile from '../PatientProfile/PatientProfile'
+import Examination from '../Examination/Examination'
 
 const useStyles = makeStyles(styles);
 
@@ -24,14 +25,16 @@ function DoctorHome(props) {
   const [state, setState ] =  React.useState({
     renderTable: false, 
     viewPatient: false, 
-    email: null
+    email: null,
+    startExamination: false
   })
 
   const showPatients = () => {
     setState({
       renderTable: true, 
       viewPatient: false, 
-      email: null
+      email: null,
+      startExamination: false
     })
     props.getPatients()
   }
@@ -45,7 +48,17 @@ function DoctorHome(props) {
     setState({
       renderTable: false, 
       viewPatient: true, 
-      email: email
+      email: email,
+      startExamination: false
+    })
+  }
+
+  
+  const startExamination = () => {
+    setState({...state,
+      renderTable: false, 
+      viewPatient: false, 
+      startExamination: true
     })
   }
 
@@ -58,7 +71,7 @@ function DoctorHome(props) {
     },
     {
       name: 'Start examination',
-      onClick: showPatients,
+      onClick: startExamination,
       icon: LocalHospitalIcon
     },
     {
@@ -90,7 +103,8 @@ function DoctorHome(props) {
         {state.renderTable && <PatientSearchBar/>}
       </div>
       {state.renderTable && <PatientList data={props.patients} sort={sortPatients} viewPatient={showPatient}/>}
-      {state.viewPatient && <PatientProfile email={state.email}/>}
+      {state.viewPatient && <PatientProfile email={state.email} startExamination={startExamination}/>}
+      {state.startExamination && <Examination email={state.email}/>}
     </div>
   </div>
   );
