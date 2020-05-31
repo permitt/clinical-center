@@ -47,7 +47,10 @@ function HallSearchBar(props) {
 
 return (
     <Grid container justify="center">
-        <Paper elevation={3} style={{width: '60%'}} >
+        <Paper elevation={3} style={{width: '60%'}} align="center">
+        <Typography component="h1" variant="h5" style={{fontWeight:700}}>
+            Search for available halls
+        </Typography>
             <Grid
                 container
                 spacing={5}
@@ -73,7 +76,7 @@ return (
                 <Grid item xs={6}  align="center"  style={{marginBottom:'20px'}}>
                 <TextField
                     id="datetime-local"
-                    label="Next appointment"
+                    label="Select date and time"
                     type="datetime-local"
                     defaultValue={selectedDate}
                     onChange={e => setSelectedDate(e.target.value)}

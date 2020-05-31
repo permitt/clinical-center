@@ -10,6 +10,7 @@ import Fade from '@material-ui/core/Fade';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ListIcon from '@material-ui/icons/List';
 import PersonIcon from '@material-ui/icons/Person';
+import TimelineIcon from '@material-ui/icons/Timeline';
 
 import HallSearchBar from '../../containers/SearchBar/HallSearchBar'
 import Sidebar from "../../components/Sidebar/Sidebar"
@@ -29,6 +30,7 @@ import PriceList from '../PriceList/PriceList'
 import WorkOffIcon from '@material-ui/icons/WorkOff';
 import HolidayRequestList from '../HolidayRequestList/HolidayRequestList';
 import { EDIT_PROFILE } from '../../routes';
+import ReportsPage from '../ReportsPage/ReportsPage'
 
 const useStyles = makeStyles(styles);
 
@@ -39,7 +41,7 @@ function ClAdminHome(props) {
   const classes = useStyles();
   const [modal, setModal] = React.useState({open: false, data: {}});
   const [table, setTable] = React.useState({render: false, type: ''})
-  const [ renderTable, setRenderTable] = React.useState({ 'type': false, 'requests': false })
+  const [ renderTable, setRenderTable] = React.useState({ 'type': false, 'requests': false, 'reports': true })
   const [tableData, setTableData] = React.useState({ data: [], title:'', columns:[], form:null})
   const [errorDialogOpen, setErrorDialogOpen] = React.useState(props.error)
 
@@ -57,13 +59,18 @@ function ClAdminHome(props) {
 
   const showAppTypes = () => {
     setTable({render: false, type: ''})
-    setRenderTable({ 'types': true, 'requests': false })
+    setRenderTable({ 'types': true, 'requests': false,  reports:true})
     props.getTypes()
   }
 
   const showRequests = () => {
     setTable({render: false, type: ''})
-    setRenderTable({ 'types': false, 'requests': true })
+    setRenderTable({ 'types': false, 'requests': true,  reports:true })
+    props.getRequests()
+  }
+  const showReports = () => {
+    setTable({render: false, type: ''})
+    setRenderTable({ 'types': false, 'requests': false, reports:true })
     props.getRequests()
   }
   
@@ -153,6 +160,13 @@ function ClAdminHome(props) {
       name: 'Holiday requests',
       onClick: showRequests,
       icon: WorkOffIcon
+      
+    },
+    {
+      name: 'Reports',
+      onClick: showReports,
+      icon: TimelineIcon
+      
     },
     {
       name: 'Profile',
@@ -191,6 +205,7 @@ function ClAdminHome(props) {
             />}
             {renderTable['types'] && <PriceList data={props.types} delete={props.deleteType}/>}
             {renderTable['requests'] && <HolidayRequestList data={props.requests} delete={props.deleteType}/>}
+            {renderTable['reports'] && <ReportsPage />}
           </div>
         </div>
         <Modal

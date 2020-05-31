@@ -7,7 +7,8 @@ import {
   GET_HALLS, SEARCH_HALLS, DELETE_HALL, ADD_HALL, EDIT_HALL,
   GET_PATIENTS, GET_PATIENT, PUT_PATIENT, SEARCH_PATIENTS,
   GET_TYPES, SEARCH_TYPES, DELETE_TYPE, ADD_TYPE, EDIT_TYPE, 
-  GET_REQUESTS, RESOLVE_REQUEST, GET_PROFILE, EDIT_PROFILE, SCHEDULE_APPOINTMENT, CREATE_REQUEST
+  GET_REQUESTS, RESOLVE_REQUEST, GET_PROFILE, EDIT_PROFILE, SCHEDULE_APPOINTMENT, CREATE_REQUEST,
+  GET_CLINIC_REPORTS, GET_INCOME
 } from '../actions/ActionTypes';
 import { userLogin, userRegister, userLogout, userChangePass, profileGet, profileEdit } from './AuthSagas';
 import { doctorsGet, doctorDelete, doctorAdd } from './DoctorSagas';
@@ -17,6 +18,7 @@ import { hallsGet, hallsSearch, hallDelete, hallAdd, hallEdit } from './HallSaga
 import { typesGet, typesSearch, typeDelete, typeAdd, typeEdit } from './AppointmentTypeSagas'
 import { patientsGet, patientGet, patientPut, patientsSearch } from './PatientSagas'
 import { requestResolve, requestsGet, requestCreate } from './HolidayRequestSagas'
+import { clinicReportsGet, incomeGet } from './ReportSagas'
 
 export default function* rootSaga() {
   yield all([
@@ -56,6 +58,9 @@ export default function* rootSaga() {
 
     takeLatest(GET_REQUESTS, requestsGet),
     takeLatest(RESOLVE_REQUEST, requestResolve),
-    takeLatest(CREATE_REQUEST, requestCreate)
+    takeLatest(CREATE_REQUEST, requestCreate),
+
+    takeLatest(GET_CLINIC_REPORTS, clinicReportsGet),
+    takeLatest(GET_INCOME, incomeGet)
   ]);
 }
