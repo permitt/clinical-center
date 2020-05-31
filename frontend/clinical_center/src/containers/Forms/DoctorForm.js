@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { Formik, Form, Field } from 'formik';
@@ -20,6 +20,8 @@ import { withFormikField } from '../../utils/withFormikField'
 import { formStyle, submitButton } from '../../assets/jss/material-dashboard-react/components/FormStyle';
 import { addDoctor } from '../../store/actions/DoctorActions';
 import { registerDoctorSchema } from './validations'
+import { getTypes } from '../../store/actions/AppointmentTypeActions'
+
 
 const FormikTextField = withFormikField(TextField);
 const ITEM_HEIGHT = 48;
@@ -40,6 +42,7 @@ function DoctorForm (props) {
   const [startTime, setStartTime] = React.useState(new Date());
   const [endTime, setEndTime] = React.useState(new Date());
   const [days, setDays] = React.useState([]);
+  const [specialization, setSpecialization] = React.useState('')
 
   const handleDayChange = event => {
     setDays(event.target.value);
@@ -53,10 +56,21 @@ function DoctorForm (props) {
     setEndTime(time);
   };
 
+  const handleChangSpecialization = (event) => {
+    setSpecialization(event.target.value);
+  };
+
+  useEffect(() => {
+    props.getTypes()
+  },[])
+
   const submit = (values) => {
+
     const from = startTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
     const to = endTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
     days.forEach((day, index) => values.schedule.push({day: index, from, to}))
+    values.specialization = specialization
+    console.log(values)
     props.addDoctor(values)
   };
   return (
@@ -71,7 +85,8 @@ function DoctorForm (props) {
         phoneNumber: '',
         password: '',
         password2: '',
-        schedule: []
+        schedule: [],
+        specialization: ''
       }}
       validationSchema={registerDoctorSchema}
       onSubmit={submit}
@@ -203,7 +218,7 @@ function DoctorForm (props) {
               <InputLabel id="demo-mutiple-checkbox-label">Tag</InputLabel>
               <Select
                 labelId="demo-mutiple-checkbox-label"
-                id="demo-mutiple-checkbox"
+                id="specialization"
                 multiple
                 value={days}
                 onChange={handleDayChange}
@@ -219,6 +234,20 @@ function DoctorForm (props) {
                 ))}
               </Select>
             </FormControl>  
+          </Grid>
+          <Grid item xs={12}>
+            <FormControl variant="outlined" fullWidth>
+            <InputLabel id="demo-simple-select-outlined-label">Specialization</InputLabel>
+              <Select
+                labelId="selecte-type"
+                id="demo-simple-select-outlined-type"
+                value={specialization}
+                onChange={handleChangSpecialization}
+                label="Type of"
+              >
+                {props.types.map((type,index) => <MenuItem key={index} value={type.id}>{type.typeName}</MenuItem> )}
+              </Select>
+            </FormControl>
           </Grid>
         </Grid>
         { props.addError && <Alert severity="error" style={{marginTop:'10px'}}>User with this email already exists</Alert>}
@@ -238,11 +267,12 @@ function DoctorForm (props) {
 
 const mapStateToProps = state => {
   return {
-    addError: state.error.addError
+    addError: state.error.addError,
+    types: state.type.all
   };
 };
 
-const mapDispatchToProps = { addDoctor };
+const mapDispatchToProps = { addDoctor, getTypes };
 
 export default withRouter(
   connect(

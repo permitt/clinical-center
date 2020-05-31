@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.contrib.auth.models import User
+from clinics.models import Specialization
 from django.core.mail import send_mail
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -91,6 +92,11 @@ class DoctorSerializer(serializers.ModelSerializer):
                 schedule.save()
         except:
             doctor.delete()
+
+        specialization = requestBody['specialization']
+        if (specialization):
+            specialization = Specialization(doctor=doctor, typeOf_id=specialization)
+            specialization.save()
 
         return doctor
 
