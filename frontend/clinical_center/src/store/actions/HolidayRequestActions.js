@@ -3,7 +3,8 @@ import {
     SET_REQUESTS,
     REMOVE_REQUEST,
     RESOLVE_REQUEST,
-    REQUEST_RESOLVED
+    REQUEST_RESOLVED,
+    CREATE_REQUEST
    } from './ActionTypes';
   
   export const getRequests = () => {
@@ -31,6 +32,14 @@ import {
 
     return {
       type: RESOLVE_REQUEST,
+      payload
+    };
+  };
+
+  export const createRequest = payload => {
+
+    return {
+      type: CREATE_REQUEST,
       payload
     };
   };

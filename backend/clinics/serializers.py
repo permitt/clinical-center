@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import *
+import datetime
 from users.serializers import DoctorSerializer
 
 
@@ -141,6 +142,24 @@ class HolidaySerializer(serializers.ModelSerializer):
     class Meta:
         model = Holiday
         fields = ['id','clinic','startDate', 'endDate', 'approved','name','email']
+
+    def validate(self, data):
+
+        if data['startDate'] > data['endDate']:
+            raise serializers.ValidationError("End date must occur after start date")
+        now = datetime.datetime.now().date()
+        if data['startDate'] < now:
+            raise serializers.ValidationError("start date must occur after today's date")
+        return data
+
+    def create(self, validated_data):
+        requestBody = self.context['request'].data
+        user = self.context['request'].user
+        holiday = Holiday(**validated_data, employee=user)
+        holiday.save()
+
+
+        return holiday
 
 class HealthCardSerializer(serializers.ModelSerializer):
     class Meta:

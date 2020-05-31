@@ -22,3 +22,12 @@ export function* requestResolve(action) {
     yield put(deleteError(response.data.msg))
   }
 }
+
+export function* requestCreate(action) {
+  try {
+    const { data } = yield call(() => holidayService.createRequest(action.payload))
+    alert('Holiday request sent.')
+  } catch (error) {
+    console.log(error)
+  }
+}

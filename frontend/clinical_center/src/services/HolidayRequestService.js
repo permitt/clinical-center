@@ -17,6 +17,12 @@ class HolidayService extends ApiService {
 
     return data
   }
+
+  createRequest = async info => {
+    const { data } = await this.apiClient.post(ENDPOINTS.REQUESTS, info)
+
+    return data
+  }
 }
 
 export const holidayService = new HolidayService();

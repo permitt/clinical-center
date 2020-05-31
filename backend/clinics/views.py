@@ -149,7 +149,7 @@ class AppointmentTypeView(viewsets.ModelViewSet):
 
         return Response(serializer.data)
 
-class HolidayRequestView(viewsets.ReadOnlyModelViewSet):
+class HolidayRequestView(viewsets.ModelViewSet):
     permission_classes = [permissions.IsAuthenticated]
     serializer_class = HolidaySerializer
 
@@ -170,6 +170,8 @@ class HolidayRequestView(viewsets.ReadOnlyModelViewSet):
             .filter(clinic=userLogged.values('employedAt')[:1]).all()
 
         return queryset
+
+
 
 @api_view(["POST"])
 def resolveRequest(request,pk):
