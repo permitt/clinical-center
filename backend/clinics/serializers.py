@@ -17,6 +17,7 @@ class ClinicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Clinic
         fields = '__all__'
+        depth = 1
 
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:

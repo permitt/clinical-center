@@ -184,7 +184,9 @@ class HolidayRequestView(viewsets.ModelViewSet):
 
 @api_view(["POST"])
 def resolveRequest(request,pk):
-
+    user = request.user
+    if (not user):
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     try:
         decision = request.data['decision']
         holidayRequest = Holiday.objects.select_related('employee').get(pk=pk)
@@ -242,6 +244,7 @@ def time_add(time, duration):
 
 @api_view(["POST"])
 def appointmentCheck(request):
+
     try:
         date = datetime.datetime.strptime(request.data['appointmentDate'], '%Y-%m-%d')
         dateDay = date.weekday()
@@ -315,6 +318,9 @@ class OperationView(viewsets.ModelViewSet):
 
 @api_view(["POST"])
 def scheduleAppointment(request):
+    user = request.user
+    if (not user):
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
     data = request.data
     try:
         patient = Patient.objects.filter(email=data['patient']).get()
@@ -338,7 +344,6 @@ def scheduleAppointment(request):
 
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':"Invalid parameters."})
 
-    user = request.user
     doctor = user.docAccount
     if (type == 'appointment'):
         type = AppointmentType.objects.get(id=typeApp)
@@ -373,3 +378,46 @@ def scheduleAppointment(request):
 
 
     return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':'Cannot schedule an appointment.'})
+
+
+@api_view(["GET"])
+def income(request):
+    user = request.user
+    if (not user):
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    if not('start' in request.query_params and 'end' in request.query_params) :
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':"Invalid parameters."})
+
+    start = request.query_params['start']
+    end = request.query_params['end']
+
+
+    appointments = Appointment.objects.filter(date__lte=end,date__gte=start)\
+        .all()\
+        .aggregate(income=Sum('typeOf__prices__price'))\
+
+    print(appointments)
+
+    # for a in appointments:
+    #     print(a.income)
+
+    #serializer = AppointmentSerializer(appointments, many=True)
+
+    return Response(status=status.HTTP_200_OK, data={'appointments': '', 'income': appointments['income']})
+
+@api_view(["GET"])
+def reports(request):
+    user = request.user
+    if (not user):
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    clinic = Clinic.objects\
+        .annotate(rating=Avg('ratings__rating')) \
+        .prefetch_related('doctors') \
+        .get(id=user.adminAccount.employedAt.id)
+
+    clinicSerializer = ClinicSerializer(clinic, many=False)
+    doctorSerializer = DoctorSerializer(clinic.doctors.annotate(rating=Avg('ratings__rating')), many=True)
+
+    return Response(status=status.HTTP_200_OK, data={'clinic': clinicSerializer.data, "doctors": doctorSerializer.data})

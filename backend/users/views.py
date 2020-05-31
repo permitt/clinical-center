@@ -8,7 +8,7 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import *
 from rest_framework.decorators import api_view
 from . import custom_permissions
-
+from django.db.models import Avg
 
 class PatientViewset(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
@@ -83,9 +83,9 @@ class DoctorViewset(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         user = request.user
         if (hasattr(user,'adminAccount')):
-            query = Doctor.objects.filter(employedAt=user.adminAccount.employedAt)
+            query = Doctor.objects.filter(employedAt=user.adminAccount.employedAt).annotate(rating=Avg('ratings__rating'))
         if (hasattr(user,'docAccount')):
-            query = Doctor.objects.filter(employedAt=user.docAccount.employedAt)
+            query = Doctor.objects.filter(employedAt=user.docAccount.employedAt).annotate(rating=Avg('ratings__rating'))
         serializer = self.get_serializer(query, many=True)
 
         return Response(serializer.data)
@@ -199,7 +199,7 @@ def profile(request):
 
         return Response(status=status.HTTP_200_OK, data={'profile': profile.data })
     if (hasattr(user, 'docAccount')):
-        profile = DoctorSerializer(user.docAccount, many=False)
+        profile = DoctorSerializer(user.docAccount.annotate(rating=Avg('ratings__rating')), many=False)
 
         return Response(status=status.HTTP_200_OK, data={'profile': profile.data})
     if (hasattr(user, 'nurseAccount')):

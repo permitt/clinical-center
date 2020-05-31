@@ -15,5 +15,7 @@ urlpatterns = [
         path('appointment/check/', views.appointmentCheck),
         path('holiday/resolve/<int:pk>/', views.resolveRequest),
         path('appointment/schedule', views.scheduleAppointment),
+        path('clinicreports/', views.reports),
+        path('income/', views.income),
         *router.urls
     ]
