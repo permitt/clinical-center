@@ -27,7 +27,7 @@ import {
 } from '@material-ui/pickers';
 
 import { paper } from '../../assets/jss/material-dashboard-react/components/FormStyle';
-import { getPatient, getPatients } from '../../store/actions/PatientsActions'
+import { getPatients } from '../../store/actions/PatientsActions'
 import { scheduleAppointment } from '../../store/actions/AppointmentActions'
 import { getDoctors } from '../../store/actions/DoctorActions'
 import { convertTime, formatDate } from '../../utils/utils'
@@ -67,8 +67,7 @@ const useStyles = makeStyles((theme) => ({
       },
   }));
 
-function Examination(props) {
-const { patient, choosen, email } = props
+function ScheduleForm(props) {
 const classes = useStyles();
 const [selectedDate, setSelectedDate] = React.useState(new Date());
 const [selectedTime, setSelectedTime] = React.useState(new Date());
@@ -91,22 +90,21 @@ const handleTimeChange = (time) => {
     setSelectedTime(time);
   };
 
-const schedule = () => {
-    let values = {
-      date: formatDate(selectedDate), 
-      time: convertTime(selectedTime.toLocaleTimeString()), 
-      type : selectedType,
-      doctors: selectedDoctors
-    }
-    
-    values['patient'] = choosen ? email : choosenPatient
-    console.log(values)
-    props.scheduleAppointment(values)
-}
 
 const handleChangePatient = (event) => {
   setChoosenPatient(event.target.value)
 };
+const schedule = () => {
+  let values = {
+    date: formatDate(selectedDate), 
+    time: convertTime(selectedTime.toLocaleTimeString()), 
+    type : selectedType,
+    doctors: selectedDoctors
+  }
+  values['patient'] = choosenPatient
+  props.scheduleAppointment(values)
+}
+
 
 useEffect(() => {
   if(selectedType === 'operation')
@@ -114,63 +112,19 @@ useEffect(() => {
 },[selectedType])
 
 useEffect(() => {
- setError(false)
-},[props.patient])
-
-useEffect(() => {
   setError(props.scheduled.show)
  },[props.scheduled])
 
-
 useEffect(() => {
-    props.getPatient(email)
+  props.getPatients()
 },[])
 
-useEffect(() => {
-  if(!props.choosen)
-    props.getPatients()
-},[props.choosen])
-console.log(props.choosen)
 return (
     <Container component="main">
     <Paper style={paper} elevation={3}>
         <Avatar style={ {backgroundColor: '#7394D7'}} className={classes.large}>
             <LocalHospitalIcon />
         </Avatar>
-        {!choosen? (
-          <Grid 
-          container
-          direction="row"
-          justify="center"
-          alignItems="center" 
-          spacing={3}
-          style={{margin:10}}
-          >
-          <Grid item xs={6} align="right">
-          <Typography component="h1" variant="h4">
-            Patient: 
-          </Typography>
-        </Grid>
-        <Grid item xs={6}>
-        <FormControl variant="outlined" className={classes.formControl}>
-        <InputLabel id="demo-simple-select-outlined-label">Patient</InputLabel>
-          <Select
-            labelId="demo-simple-select-outlined-label"
-            id="demo-simple-select-outlined"
-            value={choosenPatient}
-            onChange={handleChangePatient}
-            label=""
-          >
-            {props.patients.map((patient,index) => <MenuItem key={index} value={patient.email}>{patient.firstName} {patient.lastName}</MenuItem> )}
-          </Select>
-        </FormControl>
-          </Grid>
-          </Grid>
-        ): (
-          <Typography component="h1" variant="h4">
-            Patient: {patient.firstName + ' ' + patient.lastName}
-          </Typography>
-        )}
         <Grid 
         container
         direction="row"
@@ -179,19 +133,34 @@ return (
         spacing={3}
         style={{margin:10}}
         >
-          <Grid item xs={12} >
-            <Typography  variant="h6" component="h2">
-                Insert information about examination
-            </Typography>
-            <TextField
-                    id="outlined-multiline-static"
-                    multiline
-                    rows={4}
-                    defaultValue=""
-                    variant="outlined"
-                    fullWidth
-                />
-          </Grid>
+        <Grid item xs={6} align="right">
+        <Typography component="h1" variant="h4">
+          Patient: 
+        </Typography>
+      </Grid>
+      <Grid item xs={6}>
+      <FormControl variant="outlined" className={classes.formControl}>
+      <InputLabel id="demo-simple-select-outlined-label">Patient</InputLabel>
+        <Select
+          labelId="demo-simple-select-outlined-label"
+          id="demo-simple-select-outlined"
+          value={choosenPatient}
+          onChange={handleChangePatient}
+          label=""
+        >
+          {props.patients.map((patient,index) => <MenuItem key={index} value={patient.email}>{patient.firstName} {patient.lastName}</MenuItem> )}
+        </Select>
+      </FormControl>
+        </Grid>
+        </Grid>
+        <Grid 
+        container
+        direction="row"
+        justify="center"
+        alignItems="center" 
+        spacing={3}
+        style={{margin:10}}
+        >
           <Grid item xs={3}>
             <Typography component="h6" variant="h6">
               Schedule next:
@@ -292,7 +261,6 @@ return (
 
 const mapStateToProps = state => {
   return {
-    patient: state.patient.current,
     patients: state.patient.all,
     doctors: state.doctor.all,
     doctorEmail: state.authUser.email,
@@ -301,12 +269,12 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
- getPatient, scheduleAppointment, getDoctors, getPatients
+ scheduleAppointment, getDoctors, getPatients
 };
 
 export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(Examination)
+  )(ScheduleForm)
 );

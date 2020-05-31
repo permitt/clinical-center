@@ -30,6 +30,7 @@ import { getPatients } from '../../store/actions/PatientsActions'
 import { EDIT_PROFILE } from '../../routes';
 import PatientProfile from '../PatientProfile/PatientProfile'
 import Examination from '../Examination/Examination'
+import ScheduleForm from '../Examination/ScheduleForm'
 import { formatDate } from '../../utils/utils'
 import { createRequest } from '../../store/actions/HolidayRequestActions'
 
@@ -42,11 +43,16 @@ function DoctorHome(props) {
     viewPatient: false, 
     email: null,
     startExamination: false,
-    holiday: false
+    choosen: false,
+    holiday: false,
+    scheduleForm: false
   })
   const [selectedStartDate, setSelectedStartDate] = React.useState(new Date());
   const [selectedEndDate, setSelectedEndDate] = React.useState(new Date());
 
+  useEffect(() => {
+    showPatients()
+  },[])
   const handleStartDateChange = (date) => {
     setSelectedStartDate(date);
   };
@@ -62,7 +68,8 @@ function DoctorHome(props) {
       email: null,
       startExamination: false,
       choosen: false,
-      holiday: false
+      holiday: false,
+      scheduleForm: false
     })
     props.getPatients()
   }
@@ -79,7 +86,8 @@ function DoctorHome(props) {
       email: email,
       startExamination: false,
       choosen: false,
-      holiday: false
+      holiday: false,
+      scheduleForm: false
     })
   }
 
@@ -90,7 +98,8 @@ function DoctorHome(props) {
       viewPatient: false, 
       startExamination: true,
       choosen,
-      holiday: false
+      holiday: false,
+      scheduleForm: false
     })
   }
 
@@ -100,7 +109,18 @@ function DoctorHome(props) {
       viewPatient: false, 
       startExamination: false,
       choosen: false,
-      holiday: true
+      holiday: true,
+      scheduleForm: false
+    })
+  }
+  const showScheduleForm = () => {
+    setState({...state,
+      renderTable: false, 
+      viewPatient: false, 
+      startExamination: false,
+      choosen: false,
+      holiday: false,
+      scheduleForm: true
     })
   }
 
@@ -156,7 +176,7 @@ function DoctorHome(props) {
     },
     {
       name: 'Schedule appointment ',
-      onClick: showPatients,
+      onClick: showScheduleForm,
       icon: ScheduleIcon
     },
     {
@@ -175,6 +195,7 @@ function DoctorHome(props) {
       {state.renderTable && <PatientList data={props.patients} sort={sortPatients} viewPatient={showPatient}/>}
       {state.viewPatient && <PatientProfile email={state.email} startExamination={startExamination}/>}
       {state.startExamination && <Examination email={state.email} choosen={state.choosen}/>}
+      {state.scheduleForm && <ScheduleForm />}
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
