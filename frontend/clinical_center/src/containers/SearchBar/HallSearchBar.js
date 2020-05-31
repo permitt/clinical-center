@@ -15,8 +15,10 @@ import TextField from '@material-ui/core/TextField';
 
 import { searchHalls } from '../../store/actions/HallActions'
 
+const formatDate = date =>  date.getFullYear() + '-' + ('0' + (date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + 'T00:00'
+
 function HallSearchBar(props) {
- const [selectedDate, setSelectedDate] = React.useState(new Date());
+ const [selectedDate, setSelectedDate] = React.useState(formatDate(new Date()));
  const [name, setName] = React.useState('')
  const [number, setNumber] = React.useState('')
 
@@ -24,16 +26,22 @@ function HallSearchBar(props) {
     setSelectedDate(date);
   };
 
-  const formatDate = date =>  date.getFullYear() + '-' + ('0' + (date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2)
-
-
   const handleClick = () => {
       let query = {}
       if (name)
         query['name'] = name 
       if(number) 
         query['number'] = number
-      query['date'] = formatDate(selectedDate)
+
+    const dateTime = selectedDate.split('T')
+    try {
+        query['date'] = dateTime[0]
+        query['time'] = dateTime[1]
+    } catch (error) {
+        console.log(error)
+    }
+    
+      console.log(query)
       props.searchHalls(query)
   }
 
@@ -63,20 +71,16 @@ return (
                     />
                 </Grid>
                 <Grid item xs={6}  align="center"  style={{marginBottom:'20px'}}>
-                    <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                        <KeyboardDatePicker
-                            disableToolbar
-                            variant="inline"
-                            format="dd-MM-yyyy"
-                            id="date-picker-inline"
-                            label="Choose date"
-                            value={selectedDate}
-                            onChange={handleDateChange}
-                            KeyboardButtonProps={{
-                            'aria-label': 'change date',
-                            }}
-                        />
-                    </MuiPickersUtilsProvider>
+                <TextField
+                    id="datetime-local"
+                    label="Next appointment"
+                    type="datetime-local"
+                    defaultValue={selectedDate}
+                    onChange={e => setSelectedDate(e.target.value)}
+                    InputLabelProps={{
+                    shrink: true,
+                    }}
+                />
                 </Grid>
                 <Grid item align="center">
                 <Button 

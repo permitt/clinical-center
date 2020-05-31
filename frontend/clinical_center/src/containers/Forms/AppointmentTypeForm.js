@@ -134,7 +134,7 @@ function AppointmentTypeForm(props) {
             />
           </Grid>
         </Grid>
-            { props.error && <Alert severity="error" style={{marginTop:'10px'}}>{props.errorMsg}</Alert>}
+            { props.error && <Alert severity="error" style={{marginTop:'10px'}}>{props.errorMsg? props.errorMsg:"Can't perform action"}</Alert>}
         <Button
           type="submit"
           fullWidth

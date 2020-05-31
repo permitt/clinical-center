@@ -45,7 +45,7 @@ export function* hallEdit(action) {
   try {
     const response = yield call(() => hallService.editHall(action.payload))
     yield put(setEditedHall(action.payload))
-  } catch (error) {
-    yield put(editError(true))
+  } catch ({response}) {
+    yield put(editError(response.data.msg))
   }
 }

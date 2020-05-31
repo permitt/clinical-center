@@ -56,8 +56,8 @@ class OperatingRoomView(viewsets.ModelViewSet):
             queryset = queryset.filter(name__startswith=request.query_params['name'])
         if 'number' in request.query_params:
             queryset = queryset.filter(number=request.query_params['number'])
-        if 'date' in request.query_params :
-            queryset = queryset.exclude(appointment__date=request.query_params['date'])
+        if 'date' in request.query_params and 'time' in request.query_params:
+            queryset = queryset.exclude(appointment__date=request.query_params['date'], appointment__time=request.query_params['time'])
         serializer = OperatingRoomSerializer(queryset, many=True)
         appTypeSerializer = AppointmentTypeSerializer
         dates = {}
@@ -76,7 +76,7 @@ class OperatingRoomView(viewsets.ModelViewSet):
 
     def destroy(self, request,pk) :
         instance = self.get_object()
-        if (len(instance.appointment_set.all()) > 0):
+        if (len(instance.appointment_set.all()) > 0 or len(instance.operation_set.all())):
             return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Reserved hall can't be deleted"})
         else:
             self.perform_destroy(instance)
@@ -87,6 +87,8 @@ class OperatingRoomView(viewsets.ModelViewSet):
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
+        if (len(instance.appointment_set.all()) > 0 or len(instance.operation_set.all())):
+            return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Reserved hall can't be changed"})
         try:
             self.perform_update(serializer)
         except IntegrityError as ext:

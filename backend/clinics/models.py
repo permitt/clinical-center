@@ -162,7 +162,7 @@ class Operation(models.Model):
     clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='operations')
     date = models.DateField(null=True, blank=True)
     time = models.TimeField(null=True, blank=True)
-    duration = models.TimeField(null=True, blank=True)
+    duration = models.IntegerField(null=True)
     doctors = models.ManyToManyField(to='users.Doctor', related_name='operations')
     # if the operatingRoom is Null => this is a request for the ClinicAdmin to approve
     operatingRoom = models.ForeignKey(to=OperatingRoom, on_delete=models.CASCADE, null=True)
