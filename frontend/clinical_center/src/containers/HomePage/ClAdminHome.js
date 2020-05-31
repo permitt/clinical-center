@@ -97,6 +97,10 @@ function ClAdminHome(props) {
         props.getHalls()
         setRenderTable({ 'types': false, 'requests': false })
         setTable({render: true, type: type})
+        break;
+      }
+      default : {
+        break;
       }
     }
   }
@@ -123,7 +127,9 @@ function ClAdminHome(props) {
           form: <FormContainer form={<HallForm />} title="Add new operationg room" />}
         ) }
         break;
-    }
+    default: 
+      break;
+  }
   },[props.halls, props.doctors])
 
 

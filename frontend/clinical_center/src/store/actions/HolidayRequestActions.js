@@ -3,7 +3,6 @@ import {
     SET_REQUESTS,
     REMOVE_REQUEST,
     RESOLVE_REQUEST,
-    REQUEST_RESOLVED,
     CREATE_REQUEST
    } from './ActionTypes';
   
