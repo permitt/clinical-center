@@ -39,11 +39,12 @@ function PriceList(props) {
   const toolBarclasses = useToolbarStyles();
   const [open, setOpen] = React.useState(false);
   const [selected, setSelected] = React.useState(null)
+  const [filteredData, setFilteredData] = React.useState(data)
   const [searchInput, setSearchInput] = React.useState('')
 
   const handleChange = event => {
     setSearchInput(event.target.value)
-    //props.search(event.target.value)
+    search(event.target.value)
   }
 
   const handleOpen = () => {
@@ -63,8 +64,15 @@ function PriceList(props) {
 
   useEffect(() => {
     setOpen(false)
+    setFilteredData(data)
     
   }, [props])
+
+  const search = name => {
+    name = name.toLowerCase()
+    const rows = data.filter(row => String(row.typeName).toLowerCase().startsWith(name))
+    setFilteredData(rows)
+  }
 
   const formatHours = mins => {
     const hours = Math.floor(mins / 60);  
@@ -125,7 +133,7 @@ function PriceList(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row) => (
+          {filteredData.map((row) => (
             <TableRow key={row.id}>
               <TableCell align="left">{row.typeName}</TableCell>
               <TableCell align="left" >{formatHours(row.duration)}</TableCell>

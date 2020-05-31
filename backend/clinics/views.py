@@ -2,7 +2,7 @@ import sys
 from rest_framework import viewsets, generics, filters, permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.db.models import Avg, F, Sum, OuterRef, Subquery, When, Case, FilteredRelation, Q, Value as V, CharField
+from django.db.models import DateTimeField,Avg,IntegerField, F, Sum, OuterRef, Subquery, When, Case, FilteredRelation, Q, Value as V, CharField, TimeField, ExpressionWrapper
 from django.db.models.functions import Coalesce
 from users.models import Doctor, Schedule
 from users.serializers import DoctorSerializer
@@ -136,15 +136,19 @@ class AppointmentTypeView(viewsets.ModelViewSet):
         for app in instance.appointment_set.all():
             if (now < app.date):
                 return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "This type has following appointments and can't be deleted"})
-        else:
-            self.perform_destroy(instance)
-            return Response(status=status.HTTP_204_NO_CONTENT)
+
+        self.perform_destroy(instance)
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
     def update(self, request, *args, **kwargs):
         partial = kwargs.pop('partial', False)
         instance = self.get_object()
         serializer = self.get_serializer(instance, data=request.data, partial=partial)
         serializer.is_valid(raise_exception=True)
+        now = datetime.datetime.now().date()
+        for app in instance.appointment_set.all():
+            if (now < app.date):
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "This type has following appointments and can't be changed"})
         try:
             self.perform_update(serializer)
         except IntegrityError as ext:
@@ -225,10 +229,13 @@ def resolveRequest(request,pk):
 
 
 def time_add(time, duration):
+    print (time)
+    print(duration)
     start = datetime.datetime(
         2000, 1, 1,
         hour=time.hour, minute=time.minute, second=time.second)
     end = start + datetime.timedelta(minutes=duration)
+    print(end)
     return end.time()
 
 @api_view(["POST"])
@@ -298,6 +305,7 @@ def appointmentCheck(request):
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':'Cannot book an appointment.'})
 
 
+
 class OperationView(viewsets.ModelViewSet):
     serializer_class = OperationSerializer
     permission_classes = [permissions.IsAuthenticated]
@@ -311,7 +319,7 @@ def scheduleAppointment(request):
         if (not patient):
             return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Patient doesn't exists."})
         date = data['date']
-        time = data['time']
+        choosenTime = data['time']
         type = data['type']
         if (type != 'operation' and type != 'appointment'):
             raise Exception
@@ -325,17 +333,33 @@ def scheduleAppointment(request):
             if (not typeApp):
                 raise Exception
     except:
+
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':"Invalid parameters."})
+
     user = request.user
     doctor = user.docAccount
     if (type == 'appointment'):
-        newAppointment = Appointment(doctor=doctor,patient=patient,time=time,date=date, clinic=doctor.employedAt, typeOf_id=typeApp)
-        newAppointment.save()
+        type = AppointmentType.objects.get(id=typeApp)
+        choosenTime = datetime.datetime.strptime(choosenTime,'%H:%M')
+        choosenTimeEnd = time_add(choosenTime, type.duration)
+
+
+        appointments = Appointment.objects.filter(doctor=doctor,patient=patient,date=date)\
+            .annotate(endTime=ExpressionWrapper(F('time') + datetime.timedelta(minutes=F('typeOf__duration')), output_field=TimeField()))\
+            .exclude(time__gt=choosenTimeEnd)\
+            .exclude(time__lt=choosenTime - F('typeOf__duration') )
+
+#
+
+        print(appointments)
+
+        newAppointment = Appointment(doctor=doctor,patient=patient,time=choosenTime,date=date, clinic=doctor.employedAt, typeOf_id=typeApp)
+        #newAppointment.save()
 
         return Response(status=status.HTTP_200_OK, data={'msg': 'Successfully scheduled appointment'})
     if (type == 'operation'):
-        newOperation = Operation(clinic=doctor.employedAt, patient=patient, date=date, time=time)
-        operations = Operation.objects.filter(time=time).filter(date=date).filter(doctors__in=doctors).distinct().all()
+        newOperation = Operation(clinic=doctor.employedAt, patient=patient, date=date, time=choosenTime)
+        operations = Operation.objects.filter(time=choosenTime).filter(date=date).filter(doctors__in=doctors).distinct().all()
 
         if(len(operations) > 0):
             return Response(status=status.HTTP_200_OK, data={'msg': 'Can not schedule operation'})

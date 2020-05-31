@@ -45,8 +45,8 @@ export function* typeEdit(action) {
   try {
     const response = yield call(() => typeService.editType(action.payload))
     yield put(setEditedType(response))
-  } catch (error) {
-    console.log(error)
-    yield put(editError(true))
+  } catch ({response}) {
+
+    yield put(editError(response.data.msg))
   }
 }

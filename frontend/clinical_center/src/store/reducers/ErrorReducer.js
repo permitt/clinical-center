@@ -21,7 +21,7 @@ const errorReducer = (state = initialState, action) => {
   
       return { ...state, deleteError: true, errorMsg : action.payload};
     case EDIT_ERROR:
-
+    
       return { ...state, editError: true, errorMsg : action.payload};
     case ADD_ERROR:
 
