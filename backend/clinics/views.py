@@ -123,7 +123,10 @@ class AppointmentTypeView(viewsets.ModelViewSet):
         if hasattr(user, 'patient'):
             return AppointmentType.objects.all()
 
-        query = AppointmentType.objects.filter(clinic=user.adminAccount.employedAt).select_related()
+        if hasattr(user, 'adminAccount'):
+            query = AppointmentType.objects.filter(clinic=user.adminAccount.employedAt).select_related()
+        elif hasattr(user, 'docAccount') :
+            query = AppointmentType.objects.filter(specializations__doctor__email=user.docAccount.email)
 
         return query
 
@@ -311,18 +314,22 @@ def scheduleAppointment(request):
         time = data['time']
         type = data['type']
         if (type != 'operation' and type != 'appointment'):
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
+            raise Exception
         if (type == 'operation'):
             doctorEmails = data['doctors']
             doctors = Doctor.objects.filter(email__in=doctorEmails)
             if (len(doctors) == 0):
                 return Response(status=status.HTTP_200_OK, data={'msg': 'Can not schedule operation'})
+        if (type == 'appointment'):
+            typeApp = data['typeApp']
+            if (not typeApp):
+                raise Exception
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':"Invalid parameters."})
-    specialization = Specialization.objects.select_related('doctor').filter(doctor__email=request.user).get()
-    doctor = specialization.doctor
+    user = request.user
+    doctor = user.docAccount
     if (type == 'appointment'):
-        newAppointment = Appointment(doctor=doctor,patient=patient,time=time,date=date, clinic=doctor.employedAt, typeOf=specialization.typeOf)
+        newAppointment = Appointment(doctor=doctor,patient=patient,time=time,date=date, clinic=doctor.employedAt, typeOf_id=typeApp)
         newAppointment.save()
 
         return Response(status=status.HTTP_200_OK, data={'msg': 'Successfully scheduled appointment'})

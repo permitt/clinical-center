@@ -20,7 +20,7 @@ class AppointmentTypePermissions(permissions.BasePermission):
 
     def has_permission(self, request, view):
 
-        return hasattr(request.user, 'adminAccount') or hasattr(request.user,'patient')
+        return hasattr(request.user, 'adminAccount') or hasattr(request.user,'patient') or hasattr(request.user,'docAccount')
 
 class HealthCardPermissions(permissions.BasePermission):
 

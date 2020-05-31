@@ -31,6 +31,7 @@ import { getPatient, getPatients } from '../../store/actions/PatientsActions'
 import { scheduleAppointment } from '../../store/actions/AppointmentActions'
 import { getDoctors } from '../../store/actions/DoctorActions'
 import { convertTime, formatDate } from '../../utils/utils'
+import { getTypes } from '../../store/actions/AppointmentTypeActions'
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -76,6 +77,11 @@ const [selectedType, setSelectedType] = React.useState('appointment');
 const [selectedDoctors, setSelectedDoctors] = React.useState([props.doctorEmail]);
 const [error, setError] = React.useState(props.scheduled.show)
 const [choosenPatient, setChoosenPatient] = React.useState('')
+const [selectedAppType, setSelectedAppType] = React.useState('')
+
+const handleChangeAppType = (event) => {
+  setSelectedAppType(event.target.value);
+};
 
 const handleChange = (event) => {
   setSelectedType(event.target.value);
@@ -96,7 +102,8 @@ const schedule = () => {
       date: formatDate(selectedDate), 
       time: convertTime(selectedTime.toLocaleTimeString()), 
       type : selectedType,
-      doctors: selectedDoctors
+      doctors: selectedDoctors,
+      typeApp: selectedAppType
     }
     
     values['patient'] = choosen ? email : choosenPatient
@@ -124,6 +131,7 @@ useEffect(() => {
 
 useEffect(() => {
     props.getPatient(email)
+    props.getTypes()
 },[])
 
 useEffect(() => {
@@ -197,7 +205,7 @@ return (
               Schedule next:
             </Typography>
           </Grid>
-          <Grid item xs={selectedType === 'operation'? 3: 9}>
+          <Grid item xs={3}>
           <FormControl variant="outlined" className={classes.formControl}>
         <InputLabel id="demo-simple-select-outlined-label">Type</InputLabel>
         <Select
@@ -212,7 +220,7 @@ return (
         </Select>
       </FormControl>
           </Grid>
-          {selectedType === 'operation' &&
+          {selectedType === 'operation' ? (
             <Grid item xs={6}>
             <FormControl variant="outlined" className={classes.formControl}>
               <InputLabel id="demo-simple-select-outlined-label">Doctors</InputLabel>
@@ -233,7 +241,22 @@ return (
                     </MenuItem>))}
               </Select>
               </FormControl>
-            </Grid>}
+            </Grid>): (
+                <Grid item xs={6}>
+                 <FormControl variant="outlined" className={classes.formControl}>
+                  <InputLabel id="demo-simple-select-outlined-label">Type of</InputLabel>
+                    <Select
+                      labelId="selecte-type"
+                      id="demo-simple-select-outlined-type"
+                      value={selectedAppType}
+                      onChange={handleChangeAppType}
+                      label="Type of"
+                    >
+                      {props.types.map((type,index) => <MenuItem key={index} value={type.id}>{type.typeName}</MenuItem> )}
+                    </Select>
+                  </FormControl>
+                </Grid>
+              )}
           <Grid item xs={3}>
             <Typography component="h6" variant="h6">
                 Date:
@@ -296,12 +319,13 @@ const mapStateToProps = state => {
     patients: state.patient.all,
     doctors: state.doctor.all,
     doctorEmail: state.authUser.email,
-    scheduled: state.appointment.scheduled
+    scheduled: state.appointment.scheduled,
+    types: state.type.all
   };
 };
 
 const mapDispatchToProps = {
- getPatient, scheduleAppointment, getDoctors, getPatients
+ getPatient, scheduleAppointment, getDoctors, getPatients, getTypes
 };
 
 export default withRouter(

@@ -57,7 +57,7 @@ class AppointmentType(models.Model):
         return f'{self.typeName}'
 
 class Specialization(models.Model):
-    typeOf = models.ForeignKey(to=AppointmentType, on_delete=models.CASCADE)
+    typeOf = models.ForeignKey(to=AppointmentType, on_delete=models.CASCADE, related_name='specializations')
     doctor = models.ForeignKey(to='users.Doctor', on_delete=models.CASCADE, related_name='specializations')
 
     def __str__(self):
@@ -162,8 +162,7 @@ class Operation(models.Model):
     clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='operations')
     date = models.DateField(null=True, blank=True)
     time = models.TimeField(null=True, blank=True)
-    #tip operacije ??
-    # typeOf = models.ForeignKey(to=AppointmentType, on_delete=models.CASCADE)
+    duration = models.TimeField(null=True, blank=True)
     doctors = models.ManyToManyField(to='users.Doctor', related_name='operations')
     # if the operatingRoom is Null => this is a request for the ClinicAdmin to approve
     operatingRoom = models.ForeignKey(to=OperatingRoom, on_delete=models.CASCADE, null=True)
@@ -171,7 +170,7 @@ class Operation(models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['clinic', 'date', 'time', 'operatingRoom'], name='unique doctor date time,operation, for a clinic')
+            models.UniqueConstraint(fields=['clinic', 'date', 'time', 'operatingRoom'], name='unique room date time, for a clinic')
         ]
 
     def save(self, *args, **kwargs):
@@ -189,4 +188,4 @@ class Operation(models.Model):
                       fail_silently=True)
 
     def __str__(self):
-        return f'{self.patient} {self.doctors}'
+        return f'{self.patient} {self.operatingRoom}'
