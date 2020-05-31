@@ -127,7 +127,7 @@ return (
             color="primary"  
             size="large" 
             startIcon={<LocalHospitalIcon />}
-            onClick={props.startExamination}
+            onClick={() => props.startExamination({choosen: true})}
             >
           Start examination
       </Button>

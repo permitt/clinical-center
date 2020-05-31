@@ -61,6 +61,7 @@ function DoctorHome(props) {
       viewPatient: false, 
       email: null,
       startExamination: false,
+      choosen: false,
       holiday: false
     })
     props.getPatients()
@@ -77,16 +78,18 @@ function DoctorHome(props) {
       viewPatient: true, 
       email: email,
       startExamination: false,
+      choosen: false,
       holiday: false
     })
   }
 
   
-  const startExamination = () => {
+  const startExamination = ({choosen}) => {
     setState({...state,
       renderTable: false, 
       viewPatient: false, 
       startExamination: true,
+      choosen,
       holiday: false
     })
   }
@@ -96,6 +99,7 @@ function DoctorHome(props) {
       renderTable: false, 
       viewPatient: false, 
       startExamination: false,
+      choosen: false,
       holiday: true
     })
   }
@@ -137,12 +141,12 @@ function DoctorHome(props) {
     },
     {
       name: 'Start examination',
-      onClick: startExamination,
+      onClick: () => startExamination({choosen: false}),
       icon: LocalHospitalIcon
     },
     {
       name: 'Work calendar',
-      onClick: showPatients,
+      onClick: () => {},
       icon: TodayIcon
     },
     {
@@ -170,7 +174,7 @@ function DoctorHome(props) {
       </div>
       {state.renderTable && <PatientList data={props.patients} sort={sortPatients} viewPatient={showPatient}/>}
       {state.viewPatient && <PatientProfile email={state.email} startExamination={startExamination}/>}
-      {state.startExamination && <Examination email={state.email}/>}
+      {state.startExamination && <Examination email={state.email} choosen={state.choosen}/>}
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -193,7 +197,7 @@ function DoctorHome(props) {
                     variant="inline"
                     format="MM/dd/yyyy"
                     margin="normal"
-                    id="date-picker-inline"
+                    id="date-picker-inline-start"
                     label="Start date"
                     value={selectedStartDate}
                     onChange={handleStartDateChange}
@@ -206,7 +210,7 @@ function DoctorHome(props) {
                     variant="inline"
                     format="MM/dd/yyyy"
                     margin="normal"
-                    id="date-picker-inline"
+                    id="date-picker-inline-end"
                     label="End date"
                     value={selectedEndDate}
                     onChange={handleEndDateChange}
