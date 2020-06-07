@@ -9,6 +9,8 @@ import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
 import DeleteIcon from '@material-ui/icons/Delete';
 import ListIcon from '@material-ui/icons/List';
+import PersonIcon from '@material-ui/icons/Person';
+import TimelineIcon from '@material-ui/icons/Timeline';
 
 import HallSearchBar from '../../containers/SearchBar/HallSearchBar'
 import Sidebar from "../../components/Sidebar/Sidebar"
@@ -17,6 +19,7 @@ import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.
 import { getDoctors, deleteDoctor } from '../../store/actions/DoctorActions'
 import { resetError } from '../../store/actions/ErrorActions'
 import { getHalls, deleteHall } from '../../store/actions/HallActions'
+import { getRequests } from '../../store/actions/HolidayRequestActions'
 import { getTypes, deleteType } from '../../store/actions/AppointmentTypeActions'
 import DoctorForm from '../Forms/DoctorForm'
 import HallForm from '../Forms/HallForm'
@@ -24,7 +27,10 @@ import FormContainer from '../../components/FormContainer/FormContainer'
 import Calendar from '../../components/Calendar/Calendar'
 import ErrorDialog from './ErrorDialog'
 import PriceList from '../PriceList/PriceList'
-
+import WorkOffIcon from '@material-ui/icons/WorkOff';
+import HolidayRequestList from '../HolidayRequestList/HolidayRequestList';
+import { EDIT_PROFILE } from '../../routes';
+import ReportsPage from '../ReportsPage/ReportsPage'
 
 const useStyles = makeStyles(styles);
 
@@ -35,7 +41,7 @@ function ClAdminHome(props) {
   const classes = useStyles();
   const [modal, setModal] = React.useState({open: false, data: {}});
   const [table, setTable] = React.useState({render: false, type: ''})
-  const [ renderTypeTable, setRenderTypeTable] = React.useState(false)
+  const [ renderTable, setRenderTable] = React.useState({ 'type': false, 'requests': false, 'reports': true })
   const [tableData, setTableData] = React.useState({ data: [], title:'', columns:[], form:null})
   const [errorDialogOpen, setErrorDialogOpen] = React.useState(props.error)
 
@@ -53,8 +59,19 @@ function ClAdminHome(props) {
 
   const showAppTypes = () => {
     setTable({render: false, type: ''})
-    setRenderTypeTable(true)
+    setRenderTable({ 'types': true, 'requests': false,  reports:true})
     props.getTypes()
+  }
+
+  const showRequests = () => {
+    setTable({render: false, type: ''})
+    setRenderTable({ 'types': false, 'requests': true,  reports:true })
+    props.getRequests()
+  }
+  const showReports = () => {
+    setTable({render: false, type: ''})
+    setRenderTable({ 'types': false, 'requests': false, reports:true })
+    props.getRequests()
   }
   
   const doctorColumns = [
@@ -73,19 +90,24 @@ function ClAdminHome(props) {
     { id: 'action', label: 'Reserved dates', minWidth: 30, align: 'center', icon: 'Calendar', action: (data) => handleOpen(data) },
     { id: 'action', label: 'Delete', minWidth: 20, align: 'center', icon: DeleteIcon , action: props.deleteHall}
   ];
+
   
   const showList = type => {
     switch(type) {
       case DOCTOR_TABLE: {
         props.getDoctors()
         setTable({render: true, type: type})
-        setRenderTypeTable(false)
+        setRenderTable({ 'types': false, 'requests': false })
         break;
       }
       case HALL_TABLE: {
         props.getHalls()
-        setRenderTypeTable(false)
+        setRenderTable({ 'types': false, 'requests': false })
         setTable({render: true, type: type})
+        break;
+      }
+      default : {
+        break;
       }
     }
   }
@@ -112,7 +134,9 @@ function ClAdminHome(props) {
           form: <FormContainer form={<HallForm />} title="Add new operationg room" />}
         ) }
         break;
-    }
+    default: 
+      break;
+  }
   },[props.halls, props.doctors])
 
 
@@ -131,6 +155,23 @@ function ClAdminHome(props) {
       name: 'Price list',
       onClick: showAppTypes,
       icon: ListIcon
+    },
+    {
+      name: 'Holiday requests',
+      onClick: showRequests,
+      icon: WorkOffIcon
+      
+    },
+    {
+      name: 'Reports',
+      onClick: showReports,
+      icon: TimelineIcon
+      
+    },
+    {
+      name: 'Profile',
+      onClick: () => props.history.push(EDIT_PROFILE),
+      icon: PersonIcon
     }
   ]
 
@@ -162,7 +203,9 @@ function ClAdminHome(props) {
               edit={tableData.allowEdit}
               resetError={props.resetError}
             />}
-            {renderTypeTable && <PriceList data={props.types} delete={props.deleteType}/>}
+            {renderTable['types'] && <PriceList data={props.types} delete={props.deleteType}/>}
+            {renderTable['requests'] && <HolidayRequestList data={props.requests} delete={props.deleteType}/>}
+            {renderTable['reports'] && <ReportsPage />}
           </div>
         </div>
         <Modal
@@ -194,7 +237,8 @@ const mapStateToProps = state => {
     halls: state.hall.all,
     error: state.error.deleteError,
     msg: state.error.errorMsg,
-    types: state.type.all
+    types: state.type.all,
+    requests: state.request.all
   };
 };
 
@@ -205,7 +249,8 @@ const mapDispatchToProps = {
   deleteHall,
   resetError,
   getTypes,
-  deleteType
+  deleteType,
+  getRequests
 };
 
 export default withRouter(

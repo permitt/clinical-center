@@ -3,6 +3,7 @@ import hashlib
 
 from django.conf import settings
 from django.contrib.auth.models import User
+from clinics.models import Specialization
 from django.core.mail import send_mail
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -47,7 +48,7 @@ def generate_link(email, timestamp):
 class ClinicAdminSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClinicAdmin
-        exclude = ['user', 'activated']
+        exclude = ['user']
 
     def create(self, validated_data):
         email = validated_data.get("email", None)
@@ -60,12 +61,10 @@ class ClinicAdminSerializer(serializers.ModelSerializer):
         clinicAdmin.save()
         return clinicAdmin
 
-    def update(self, instance, validated_data):
-        # Will send an email when updated to approved
-        if instance.approved is False and validated_data.approved is True:
-            pass
-
-
+class NurseSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Nurse
+        exclude = ['user']
 
 class DoctorSerializer(serializers.ModelSerializer):
     rating = serializers.DecimalField(decimal_places=2, max_digits=4)
@@ -78,7 +77,7 @@ class DoctorSerializer(serializers.ModelSerializer):
         return clinicId
     class Meta:
         model = Doctor
-        exclude = ['user', 'activated']
+        exclude = ['user']
 
     def create(self, validated_data):
         requestBody = self.context['request'].data
@@ -102,6 +101,11 @@ class DoctorSerializer(serializers.ModelSerializer):
         except:
             doctor.delete()
 
+        specialization = requestBody['specialization']
+        if (specialization):
+            specialization = Specialization(doctor=doctor, typeOf_id=specialization)
+            specialization.save()
+
         return doctor
 
 
@@ -117,18 +121,24 @@ class MyTokenObtainPairSerializer(TokenObtainPairSerializer):
             token['last_name'] = user.patient.lastName
             token['email'] = user.patient.email
             token['role'] = "PATIENT"
-
         if hasattr(user, 'adminAccount'):
             token['first_name'] = user.adminAccount.firstName
             token['last_name'] = user.adminAccount.lastName
             token['email'] = user.adminAccount.email
+            token['changedPass'] = user.adminAccount.changedPass
             token['role'] = "CLINIC_ADMIN"
-
         if hasattr(user, 'docAccount'):
             token['first_name'] = user.docAccount.firstName
             token['last_name'] = user.docAccount.lastName
             token['email'] = user.docAccount.email
             token['role'] = "DOCTOR"
+            token['changedPass'] = user.docAccount.changedPass
+        if hasattr(user, 'nurseAccount'):
+            token['first_name'] = user.nurseAccount.firstName
+            token['last_name'] = user.nurseAccount.lastName
+            token['email'] = user.nurseAccount.email
+            token['role'] = "NURSE"
+            token['changedPass'] = user.nurseAccount.changedPass
 
         return token
 

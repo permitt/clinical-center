@@ -33,31 +33,18 @@ import { resetError } from '../../store/actions/ErrorActions'
 const useStyles = makeStyles(styles);
 const useToolbarStyles = makeStyles(toolbarStyles)
 
-
-function createData(name, calories, fat, carbs, protein) {
-  return { name, calories, fat, carbs, protein };
-}
-
-const rows = [
-  createData('Frozen yoghurt', 159, 6.0, 24, 4.0),
-  createData('Ice cream sandwich', 237, 9.0, 37, 4.3),
-  createData('Eclair', 262, 16.0, 24, 6.0),
-  createData('Cupcake', 305, 3.7, 67, 4.3),
-  createData('Gingerbread', 356, 16.0, 49, 3.9),
-];
-
 function PriceList(props) {
   const  { data } = props
-  console.log(data)
   const classes = useStyles();
   const toolBarclasses = useToolbarStyles();
   const [open, setOpen] = React.useState(false);
   const [selected, setSelected] = React.useState(null)
+  const [filteredData, setFilteredData] = React.useState(data)
   const [searchInput, setSearchInput] = React.useState('')
 
   const handleChange = event => {
     setSearchInput(event.target.value)
-    //props.search(event.target.value)
+    search(event.target.value)
   }
 
   const handleOpen = () => {
@@ -77,8 +64,15 @@ function PriceList(props) {
 
   useEffect(() => {
     setOpen(false)
+    setFilteredData(data)
     
   }, [props])
+
+  const search = name => {
+    name = name.toLowerCase()
+    const rows = data.filter(row => String(row.typeName).toLowerCase().startsWith(name))
+    setFilteredData(rows)
+  }
 
   const formatHours = mins => {
     const hours = Math.floor(mins / 60);  
@@ -139,7 +133,7 @@ function PriceList(props) {
           </TableRow>
         </TableHead>
         <TableBody>
-          {data.map((row) => (
+          {filteredData.map((row) => (
             <TableRow key={row.id}>
               <TableCell align="left">{row.typeName}</TableCell>
               <TableCell align="left" >{formatHours(row.duration)}</TableCell>

@@ -7,7 +7,6 @@ import { deleteError, editError, addError } from '../actions/ErrorActions';
 export function* typesGet(action) {
   try {
     const response = yield call(() => typeService.getTypes())
-    console.log('response', response)
     yield put(setTypes(response))
   } catch (error) {
     console.log({ error });
@@ -46,8 +45,8 @@ export function* typeEdit(action) {
   try {
     const response = yield call(() => typeService.editType(action.payload))
     yield put(setEditedType(response))
-  } catch (error) {
-    console.log(error)
-    yield put(editError(true))
+  } catch ({response}) {
+
+    yield put(editError(response.data.msg))
   }
 }

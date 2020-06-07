@@ -1,5 +1,7 @@
 from rest_framework import serializers
 from .models import *
+import datetime
+from users.serializers import DoctorSerializer
 
 
 from users.models import ClinicAdmin
@@ -15,6 +17,7 @@ class ClinicSerializer(serializers.ModelSerializer):
     class Meta:
         model = Clinic
         fields = '__all__'
+        depth = 1
 
 class AppointmentSerializer(serializers.ModelSerializer):
     class Meta:
@@ -122,7 +125,6 @@ class OperatingRoomSerializer(serializers.ModelSerializer):
         return operatingRoom
 
 
-
 class DoctorRatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = DoctorRating
@@ -131,4 +133,41 @@ class DoctorRatingSerializer(serializers.ModelSerializer):
 class ClinicRatingSerializer(serializers.ModelSerializer):
     class Meta:
         model = ClinicRating
+        fields = '__all__'
+
+class HolidaySerializer(serializers.ModelSerializer):
+    name = serializers.StringRelatedField()
+    email = serializers.StringRelatedField()
+    clinic = serializers.StringRelatedField()
+
+    class Meta:
+        model = Holiday
+        fields = ['id','clinic','startDate', 'endDate', 'approved','name','email']
+
+    def validate(self, data):
+
+        if data['startDate'] > data['endDate']:
+            raise serializers.ValidationError("End date must occur after start date")
+        now = datetime.datetime.now().date()
+        if data['startDate'] < now:
+            raise serializers.ValidationError("start date must occur after today's date")
+        return data
+
+    def create(self, validated_data):
+        requestBody = self.context['request'].data
+        user = self.context['request'].user
+        holiday = Holiday(**validated_data, employee=user)
+        holiday.save()
+
+
+        return holiday
+
+class HealthCardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = HealthCard
+        fields = '__all__'
+
+class OperationSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Operation
         fields = '__all__'

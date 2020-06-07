@@ -94,7 +94,7 @@ function PatientHome(props) {
             alert("VRIJEME");
             return;
         }
-        const appTypeID = props.appointmentTypes.filter(type => type.typeName == appointmentType)[0].id;
+        const appTypeID = props.appointmentTypes.filter(type => type.typeName === appointmentType)[0].id;
         const data = {
             date: appointmentDate.toISOString().split('T')[0],
             time: appointmentTime,
@@ -125,7 +125,7 @@ function PatientHome(props) {
 
     const prepareDoctorData = () => {
 
-        return props.doctors.filter(doc => doc.employedAt == chosenClinic).map(doctor => {
+        return props.doctors.filter(doc => doc.employedAt === chosenClinic).map(doctor => {
             const selector = (<Select displayEmpty value={appointmentTime} onChange={(e) => setAppointmentTime(e.target.value)} >
                 <MenuItem disabled value=""> Select Appointment Time </MenuItem>
                 {props.appointmentTerms.filter(at => at.doctor === doctor.email)[0].time.map(timeExact => (

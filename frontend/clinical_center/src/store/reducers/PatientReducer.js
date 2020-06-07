@@ -5,7 +5,6 @@ const initialState = {
   current: ''
 };
 const patientReducer = (state = initialState, action) => {
-  let changedArr;
   switch (action.type) {
     case SET_PATIENTS:
       return { ...state, all: action.payload }

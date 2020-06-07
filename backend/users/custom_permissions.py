@@ -41,4 +41,24 @@ class CustomDoctorPermissions(permissions.BasePermission):
 
     def has_permission(self, request, view):
 
-        return hasattr(request.user, 'adminAccount') and request.user.is_authenticated
+        return (hasattr(request.user, 'adminAccount') or hasattr(request.user,'docAccount')) and request.user.is_authenticated
+
+class CustomClinicAdminPermissions(permissions.BasePermission):
+
+    def __init__(self, allowed_methods=['GET', 'POST', 'DELETE', 'PUT']):
+        super().__init__()
+        self.allowed_methods=allowed_methods
+
+    def has_permission(self, request, view):
+
+        return request.user.is_authenticated
+
+class CustomNursePermissions(permissions.BasePermission):
+
+    def __init__(self, allowed_methods=['GET', 'POST', 'DELETE', 'PUT']):
+        super().__init__()
+        self.allowed_methods=allowed_methods
+
+    def has_permission(self, request, view):
+
+        return (hasattr(request.user, 'adminAccount') or hasattr(request.user,'nurseAccount')) and request.user.is_authenticated

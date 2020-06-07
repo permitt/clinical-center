@@ -6,6 +6,8 @@ import {
     POST_APPOINTMENT,
     GET_APPOINTMENTS,
     SET_APPOINTMENTS,
+    SCHEDULE_APPOINTMENT,
+    SET_SCHEDULED_APPOINTMENT
 } from './ActionTypes';
 
 export const getAppointmentTypes = () => {
@@ -50,6 +52,21 @@ export const setAppointments = payload => {
 export const checkAppointmentAvailable = (payload) => {
     return {
         type: GET_APPOINTMENT_CHECK,
+        payload
+    };
+}
+
+export const scheduleAppointment = payload => {
+    return {
+        type: SCHEDULE_APPOINTMENT,
+        payload
+    };
+}
+
+
+export const setScheduledAppointment = payload => {
+    return {
+        type: SET_SCHEDULED_APPOINTMENT,
         payload
     };
 }

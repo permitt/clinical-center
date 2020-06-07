@@ -6,9 +6,16 @@ router = routers.SimpleRouter()
 router.register('appointment', views.AppointmentViewSet)
 router.register('operatingroom', views.OperatingRoomView, basename="operatingroom")
 router.register('appointment-type', views.AppointmentTypeView)
+router.register('holiday', views.HolidayRequestView, basename="holiday")
+router.register('healthcard', views.HealthCardView, basename="healthcard")
+router.register('operation', views.OperationView)
 
 urlpatterns = [
         path('clinic/', views.ClinicListView.as_view()),
         path('appointment/check/', views.appointmentCheck),
+        path('holiday/resolve/<int:pk>/', views.resolveRequest),
+        path('appointment/schedule', views.scheduleAppointment),
+        path('clinicreports/', views.reports),
+        path('income/', views.income),
         *router.urls
     ]

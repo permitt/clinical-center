@@ -4,7 +4,7 @@ import {
   GET_PATIENT,
   SET_PATIENT,
   PUT_PATIENT,
-
+  SEARCH_PATIENTS
 } from './ActionTypes';
 
 export const getPatients = payload => {
@@ -41,3 +41,10 @@ export const putPatient = payload => {
     payload
   }
 }
+
+export const searchPatients = payload => {
+  return {
+    type: SEARCH_PATIENTS,
+    payload
+  };
+};

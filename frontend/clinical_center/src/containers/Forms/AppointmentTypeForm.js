@@ -92,7 +92,7 @@ function AppointmentTypeForm(props) {
         duration: state.duration,
         price: state.price
       }}
-     //validationSchema={addTypeSchema}
+      validationSchema={addTypeSchema}
       onSubmit={submit}
       style={formStyle}>
       <Form  style={{marginTop:'20px'}}>
@@ -134,7 +134,7 @@ function AppointmentTypeForm(props) {
             />
           </Grid>
         </Grid>
-        { props.error && <Alert severity="error" style={{marginTop:'10px'}}>Appointment type with this name already exists</Alert>}
+            { props.error && <Alert severity="error" style={{marginTop:'10px'}}>{props.errorMsg? props.errorMsg:"Can't perform action"}</Alert>}
         <Button
           type="submit"
           fullWidth
@@ -152,6 +152,7 @@ function AppointmentTypeForm(props) {
 const mapStateToProps = state => {
   return {
     error: state.error.editError || state.error.addError,
+    errorMsg: state.error.errorMsg
   };
 };
 

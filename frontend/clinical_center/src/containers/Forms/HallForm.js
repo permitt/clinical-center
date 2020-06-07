@@ -69,7 +69,7 @@ function HallForm (props) {
             />
           </Grid>
         </Grid>
-        { props.error && <Alert severity="error" style={{marginTop:'10px'}}>Operating room with this name already exists</Alert>}
+        { props.error && <Alert severity="error" style={{marginTop:'10px'}}>{props.errorMsg? props.errorMsg: "Can't perform action"}</Alert>}
         <Button
           type="submit"
           fullWidth
@@ -86,7 +86,8 @@ function HallForm (props) {
 
 const mapStateToProps = state => {
   return {
-    error: state.error.addError || state.error.editError
+    error: state.error.addError || state.error.editError,
+    errorMsg: state.error.errorMsg
   };
 };
 

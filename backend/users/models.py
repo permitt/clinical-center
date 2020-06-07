@@ -31,7 +31,8 @@ class ClinicAdmin(models.Model):
     city = models.CharField(max_length=30)
     country = models.CharField(max_length=30)
     phoneNumber = models.IntegerField()
-    activated = models.BooleanField(default=False)
+    changedPass = models.BooleanField(default=False)
+
 
 
     def __str__(self):
@@ -49,14 +50,29 @@ class Doctor(models.Model):
     city = models.CharField(max_length=30)
     country = models.CharField(max_length=30)
     phoneNumber = models.IntegerField()
-    activated = models.BooleanField(default=False)
+    changedPass = models.BooleanField(default=False)
+
 
     def __str__(self):
         return f'{self.firstName} {self.lastName}'
 
+class Nurse(models.Model):
+    email = models.EmailField(max_length=70, primary_key=True, unique=True)
+    employedAt = models.ForeignKey(to='clinics.Clinic', on_delete=models.CASCADE, related_name='nurses', null=True)
+    user = models.OneToOneField(User, related_name='nurseAccount', on_delete=models.CASCADE, null=True)
+    firstName = models.CharField(max_length=30)
+    lastName = models.CharField(max_length=30)
+    password = models.CharField(max_length=100)
+    address = models.CharField(max_length=30)
+    city = models.CharField(max_length=30)
+    country = models.CharField(max_length=30)
+    phoneNumber = models.IntegerField()
+    changedPass = models.BooleanField(default=False)
+
+    def __str__(self):
+        return f'{self.firstName} {self.lastName}'
 
 class Schedule(models.Model):
-
 
     class WeekDay(models.IntegerChoices):
         MONDAY = 0

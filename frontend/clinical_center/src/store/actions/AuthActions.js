@@ -1,4 +1,7 @@
-import { LOGIN, AUTH_USER, REGISTER, LOGIN_ERROR, REGISTER_ERROR, SET_ROLE, LOGOUT, SET_USER_EMAIL } from './ActionTypes';
+import { LOGIN, AUTH_USER, REGISTER,
+   LOGIN_ERROR, REGISTER_ERROR, SET_ROLE,
+    LOGOUT, SET_USER_EMAIL, CHANGEPASS, 
+    SET_CHANGEDPASS, SET_PROFILE, GET_PROFILE, EDIT_PROFILE } from './ActionTypes';
 
 export const logIn = logInData => {
   return {
@@ -17,6 +20,20 @@ export const register = registerData => {
   return {
     type: REGISTER,
     payload: registerData
+  };
+};
+
+export const setChangedPass = payload => {
+  return {
+    type: SET_CHANGEDPASS,
+    payload
+  };
+};
+
+export const changePass = data => {
+  return {
+    type: CHANGEPASS,
+    payload: data
   };
 };
 
@@ -52,6 +69,27 @@ export const loginError = payload => {
 export const registerError = payload => {
   return {
     type: REGISTER_ERROR,
+    payload
+  };
+};
+
+export const setProfile = payload => {
+  return {
+    type: SET_PROFILE,
+    payload
+  };
+};
+
+
+export const getProfile = () => {
+  return {
+    type: GET_PROFILE
+  };
+};
+
+export const editProfile = payload => {
+  return {
+    type: EDIT_PROFILE,
     payload
   };
 };
