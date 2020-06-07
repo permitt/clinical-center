@@ -3,7 +3,7 @@ import ApiService from './ApiService';
 const ENDPOINTS = {
     GET_ALL_CLINICS: '/api/clinics/clinic/?ordering=',
     GET_CLINIC: '/api/clinics/clinic/:id',
-    GET_ADMIN_CLINIC: '/api/clinics/clinic/adminclinic/',
+    GET_ADMIN_CLINIC: '/api/clinics/adminclinic/',
     EDIT_ADMIN_CLINIC: '/api/clinics/clinic/:id/'
 };
 
@@ -27,7 +27,7 @@ class clinicServiceApi extends ApiService {
 
     editAdminClinic = (data) => {
 
-        return this.apiClient.PUT(ENDPOINTS.EDIT_ADMIN_CLINIC,data);
+        return this.apiClient.patch(ENDPOINTS.EDIT_ADMIN_CLINIC.replace(":id", data.id),data);
     }
 
 

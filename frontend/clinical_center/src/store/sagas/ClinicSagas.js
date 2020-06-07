@@ -16,8 +16,8 @@ export function* clinicsGet(action) {
 
 export function* adminClinicGet(action) {
     try {
-        const response = yield call(() => clinicService.getAdminClinic())
-        yield put(setAdminClinic(response));
+        const { data } = yield call(() => clinicService.getAdminClinic())
+        yield put(setAdminClinic(data.clinic));
     } catch (error) {
         console.log({ error });
     }
@@ -27,7 +27,7 @@ export function* adminClinicGet(action) {
 export function* adminClinicEdit(action) {
     try {
         const response = yield call(() => clinicService.editAdminClinic(action.payload))
-        yield put(setAdminClinic(response));
+        yield put(setAdminClinic(response.data));
     } catch (error) {
         console.log({ error });
     }

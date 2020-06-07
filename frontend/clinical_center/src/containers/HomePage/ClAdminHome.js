@@ -47,7 +47,7 @@ function ClAdminHome(props) {
   const [ renderTable, setRenderTable] = React.useState({ 
     'type': false, 
     'requests': false, 
-    'reports': true, 
+    'reports': false, 
     'clinic':false 
   })
   const [tableData, setTableData] = React.useState({ data: [], title:'', columns:[], form:null})
@@ -68,7 +68,6 @@ function ClAdminHome(props) {
   const showClinicInfo = () => {
     setTable({render: false, type: ''})
     setRenderTable({ 'types': false, 'requests': false,  reports:false, clinic:true })
-    props.getTypes()
   }
 
   const showAppTypes = () => {

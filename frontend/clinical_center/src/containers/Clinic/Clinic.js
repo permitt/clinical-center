@@ -11,6 +11,7 @@ import Container from '@material-ui/core/Container';
 import Paper from '@material-ui/core/Paper';
 import Divider from '@material-ui/core/Divider';
 import Grid from '@material-ui/core/Grid';
+import Rating from '@material-ui/lab/Rating';
 import Button from '@material-ui/core/Button';
 import { Formik, Form, Field } from 'formik';
 import TextField from '@material-ui/core/TextField';
@@ -28,24 +29,28 @@ const FormikTextField = withFormikField(TextField);
 
 export function Clinic(props) {
     const classes = useStyles();
-    const [loading, setLoading] = React.useState(false);
+    const [loading, setLoading] = React.useState(true);
     const [success, setSucces] = React.useState(false);
 
-   const name = props.clinic? props.clinic.name : '';
-   const description = props.clinic? props.clinic.description: '';
-   const address = props.clinic? props.clinic.address: '';
+    let name = props.clinic? props.clinic.name : '';
+   let description = props.clinic? props.clinic.description: '';
+   let address = props.clinic? props.clinic.address: ''
+   let rating = props.clinic? props.clinic.rating : 0;  
 
     React.useEffect(() => {
         props.getAdminClinic();
     }, []);
 
     React.useEffect(() => {
-        if (props.profile) 
+        if (props.clinic) {
             setLoading(false)
+        }     
     });
 
     const submit = values => {
+        values['id'] = props.clinic.id
         props.editAdminClinic(values);
+        console.log(values)
         setSucces(true)
     };
 
@@ -57,8 +62,9 @@ export function Clinic(props) {
         <LocalHospitalIcon />
     </Avatar>
     <Typography component="h1" variant="h5" style={{margin:10}}>
-        Information about clinic {name}
+       Clinic {name}
     </Typography>
+    <Rating name="read-only" value={rating} readOnly />
         <Grid container justify="center" >
         <Divider />
             {loading ?
@@ -68,9 +74,9 @@ export function Clinic(props) {
                     onSubmit={submit}
                     style={formStyle}
                     initialValues={{
-                       name,
-                       description,
-                       address
+                       name : name,
+                       description: description,
+                       address: address
                     }}>
                     <Form style={{textAlign:'center'}}>
                         <Grid container spacing={2}>
@@ -89,7 +95,7 @@ export function Clinic(props) {
                                 <Field
                                     component={FormikTextField}
                                     type="text"
-                                    name="Description"
+                                    name="description"
                                     variant="outlined"
                                     rows={4}
                                     fullWidth
@@ -128,7 +134,7 @@ export function Clinic(props) {
             </Grid>
         </Paper>
     </Container>
-        <AvailableTermsTable />
+        {/* <AvailableTermsTable /> */}
     </>
     )
 }

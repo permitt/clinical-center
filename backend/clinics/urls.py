@@ -9,13 +9,14 @@ router.register('appointment-type', views.AppointmentTypeView, basename="appoint
 router.register('holiday', views.HolidayRequestView, basename="holiday")
 router.register('healthcard', views.HealthCardView, basename="healthcard")
 router.register('operation', views.OperationView, basename="opeartion")
+router.register('clinic', views.ClinicListView)
 
 urlpatterns = [
-        path('clinic/', views.ClinicListView.as_view()),
         path('appointment/check/', views.appointmentCheck),
         path('holiday/resolve/<int:pk>/', views.resolveRequest),
         path('appointment/schedule', views.scheduleAppointment),
         path('clinicreports/', views.reports),
         path('income/', views.income),
+        path('adminclinic/', views.adminClinic),
         *router.urls
     ]

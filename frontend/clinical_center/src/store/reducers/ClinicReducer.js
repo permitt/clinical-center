@@ -14,6 +14,7 @@ const clinicReducer = (state = initialState, action) => {
         case SET_AVAILABLE_CLINICS:
             return { ...state, available: action.payload.length === 0 ? 'empty' : action.payload }
         case SET_ADMIN_CLINIC:
+            console.log(action.payload, 'reducer')
             return { ...state, adminClinic: action.payload }
         default:
             return state;
