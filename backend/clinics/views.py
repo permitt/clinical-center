@@ -115,7 +115,13 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if hasattr(self.request.user, 'patient'):
-            return Appointment.objects.filter(patient=self.request.user.patient,date__lt=datetime.datetime.now())
+            return Appointment.objects\
+                .filter(patient=self.request.user.patient,date__lt=datetime.datetime.now()).annotate(
+                type_name=F("typeOf__typeName"),
+                operatinRoom_name=F("operatingRoom__name"),
+                clinic_name=F("clinic__name"),
+                price=F("typeOf__prices__price")
+                )
 
         return Appointment.objects.all()
     permission_classes = [permissions.IsAuthenticated]
@@ -219,23 +225,6 @@ def resolveRequest(request,pk):
     holidayRequest.save()
 
     return Response(status=status.HTTP_200_OK)
-    #     def get_queryset(self):
-#         queryset = Clinic.objects.all()
-#         #obavezni parametri za zakazivanje
-#         date = self.request.query_params('date', None)
-#         type = self.request.query_params('type', None)
-#         if date is not None and type is not None:
-#             queryset = queryset.filter(doctors__spec=type)
-#         return queryset
-#
-#
-#
-#
-# class ClinicViewset(viewsets.ModelViewSet):
-#     queryset = Clinic.objects.all()
-#     serializer_class = ClinicSerializer
-#     #permission_classes = [custom_permissions.CustomPatientPermissions]
-
 
 
 def time_add(time, duration):
@@ -245,7 +234,6 @@ def time_add(time, duration):
         2000, 1, 1,
         hour=time.hour, minute=time.minute, second=time.second)
     end = start + datetime.timedelta(minutes=duration)
-    print(end)
     return end.time()
 
 @api_view(["POST"])
@@ -276,13 +264,11 @@ def appointmentCheck(request):
             filter(doctors__in=doctors).distinct()
 
         docSer = DoctorSerializer(doctors, many=True)
-        print(docSer.data, " DOKTORIIII BRE")
         clinicSer = ClinicSerializer(clinics, many=True)
         appointments = []
 
         for doc in doctors:
-            #appointments.append()
-            print(" OVOLIKO ZAUZET DOKTOR JU ", doc.busyHours)
+
             doctorElement = {'doctor':doc.email, 'time':[]}
             time = doc.startTime
             endTime = doc.endTime
@@ -311,7 +297,6 @@ def appointmentCheck(request):
             appointments.append(doctorElement)
         return Response(status=status.HTTP_200_OK, data={"doctors": docSer.data, "clinics": clinicSer.data, "availableTerms":appointments}, content_type='application/json')
     except Exception as inst:
-        print(inst)
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':'Cannot book an appointment.'})
 
 
@@ -319,7 +304,12 @@ def appointmentCheck(request):
 class OperationView(viewsets.ModelViewSet):
     serializer_class = OperationSerializer
     permission_classes = [permissions.IsAuthenticated]
-    queryset = Operation.objects.all()
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'patient'):
+            return Operation.objects.filter(patient=self.request.user.patient,date__lt=datetime.datetime.now())
+
+        return Operation.objects.all()
 
 @api_view(["POST"])
 def scheduleAppointment(request):

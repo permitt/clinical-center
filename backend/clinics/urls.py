@@ -3,12 +3,12 @@ from rest_framework import routers
 from . import views
 
 router = routers.SimpleRouter()
-router.register('appointment', views.AppointmentViewSet)
+router.register('appointment', views.AppointmentViewSet, basename="appointment")
 router.register('operatingroom', views.OperatingRoomView, basename="operatingroom")
-router.register('appointment-type', views.AppointmentTypeView)
+router.register('appointment-type', views.AppointmentTypeView, basename="appointmenttype")
 router.register('holiday', views.HolidayRequestView, basename="holiday")
 router.register('healthcard', views.HealthCardView, basename="healthcard")
-router.register('operation', views.OperationView)
+router.register('operation', views.OperationView, basename="opeartion")
 
 urlpatterns = [
         path('clinic/', views.ClinicListView.as_view()),
