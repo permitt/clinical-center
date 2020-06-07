@@ -2,17 +2,17 @@ import { all, takeLatest } from 'redux-saga/effects';
 import {
   LOGIN, LOGOUT, REGISTER, CHANGEPASS,
   GET_DOCTORS, DELETE_DOCTOR, ADD_DOCTOR,
-  GET_CLINICS,
+  GET_CLINICS, EDIT_ADMIN_CLINIC,
   GET_APPOINTMENT_TYPES, GET_APPOINTMENT_CHECK, POST_APPOINTMENT, GET_APPOINTMENTS,
   GET_HALLS, SEARCH_HALLS, DELETE_HALL, ADD_HALL, EDIT_HALL,
   GET_PATIENTS, GET_PATIENT, PUT_PATIENT, SEARCH_PATIENTS,
   GET_TYPES, SEARCH_TYPES, DELETE_TYPE, ADD_TYPE, EDIT_TYPE,
   GET_REQUESTS, RESOLVE_REQUEST, GET_PROFILE, EDIT_PROFILE, SCHEDULE_APPOINTMENT, CREATE_REQUEST,
-  GET_CLINIC_REPORTS, GET_INCOME
+  GET_CLINIC_REPORTS, GET_INCOME, GET_ADMIN_CLINIC
 } from '../actions/ActionTypes';
 import { userLogin, userRegister, userLogout, userChangePass, profileGet, profileEdit } from './AuthSagas';
 import { doctorsGet, doctorDelete, doctorAdd } from './DoctorSagas';
-import { clinicsGet } from './ClinicSagas';
+import { clinicsGet, adminClinicGet, adminClinicEdit } from './ClinicSagas';
 import { appointmentTypesGet, appointmentChecking, appointmentPost, appointmentsGet, appointmentSchedule } from './AppointmentSagas';
 import { hallsGet, hallsSearch, hallDelete, hallAdd, hallEdit } from './HallSaga'
 import { typesGet, typesSearch, typeDelete, typeAdd, typeEdit } from './AppointmentTypeSagas'
@@ -34,6 +34,8 @@ export default function* rootSaga() {
     takeLatest(ADD_DOCTOR, doctorAdd),
 
     takeLatest(GET_CLINICS, clinicsGet),
+    takeLatest(GET_ADMIN_CLINIC, adminClinicGet),
+    takeLatest(EDIT_ADMIN_CLINIC, adminClinicEdit),
     takeLatest(GET_APPOINTMENTS, appointmentsGet),
     takeLatest(GET_APPOINTMENT_TYPES, appointmentTypesGet),
     takeLatest(GET_APPOINTMENT_CHECK, appointmentChecking),

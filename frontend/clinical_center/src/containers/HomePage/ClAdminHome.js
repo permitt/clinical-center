@@ -11,6 +11,7 @@ import DeleteIcon from '@material-ui/icons/Delete';
 import ListIcon from '@material-ui/icons/List';
 import PersonIcon from '@material-ui/icons/Person';
 import TimelineIcon from '@material-ui/icons/Timeline';
+import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
 
 import HallSearchBar from '../../containers/SearchBar/HallSearchBar'
 import Sidebar from "../../components/Sidebar/Sidebar"
@@ -31,6 +32,8 @@ import WorkOffIcon from '@material-ui/icons/WorkOff';
 import HolidayRequestList from '../HolidayRequestList/HolidayRequestList';
 import { EDIT_PROFILE } from '../../routes';
 import ReportsPage from '../ReportsPage/ReportsPage'
+import Clinic from '../Clinic/Clinic'
+
 
 const useStyles = makeStyles(styles);
 
@@ -41,7 +44,12 @@ function ClAdminHome(props) {
   const classes = useStyles();
   const [modal, setModal] = React.useState({open: false, data: {}});
   const [table, setTable] = React.useState({render: false, type: ''})
-  const [ renderTable, setRenderTable] = React.useState({ 'type': false, 'requests': false, 'reports': true })
+  const [ renderTable, setRenderTable] = React.useState({ 
+    'type': false, 
+    'requests': false, 
+    'reports': true, 
+    'clinic':false 
+  })
   const [tableData, setTableData] = React.useState({ data: [], title:'', columns:[], form:null})
   const [errorDialogOpen, setErrorDialogOpen] = React.useState(props.error)
 
@@ -57,20 +65,26 @@ function ClAdminHome(props) {
     setModal({open: false, data: {}});
   };
 
+  const showClinicInfo = () => {
+    setTable({render: false, type: ''})
+    setRenderTable({ 'types': false, 'requests': false,  reports:false, clinic:true })
+    props.getTypes()
+  }
+
   const showAppTypes = () => {
     setTable({render: false, type: ''})
-    setRenderTable({ 'types': true, 'requests': false,  reports:true})
+    setRenderTable({ 'types': true, 'requests': false,  reports:false, clinic:false })
     props.getTypes()
   }
 
   const showRequests = () => {
     setTable({render: false, type: ''})
-    setRenderTable({ 'types': false, 'requests': true,  reports:true })
+    setRenderTable({ 'types': false, 'requests': true,  reports:false, clinic:false  })
     props.getRequests()
   }
   const showReports = () => {
     setTable({render: false, type: ''})
-    setRenderTable({ 'types': false, 'requests': false, reports:true })
+    setRenderTable({ 'types': false, 'requests': false, reports:true, clinic:false  })
     props.getRequests()
   }
   
@@ -169,6 +183,12 @@ function ClAdminHome(props) {
       
     },
     {
+      name: 'Clinic info',
+      onClick: showClinicInfo,
+      icon: LocalHospitalIcon
+      
+    },
+    {
       name: 'Profile',
       onClick: () => props.history.push(EDIT_PROFILE),
       icon: PersonIcon
@@ -206,6 +226,7 @@ function ClAdminHome(props) {
             {renderTable['types'] && <PriceList data={props.types} delete={props.deleteType}/>}
             {renderTable['requests'] && <HolidayRequestList data={props.requests} delete={props.deleteType}/>}
             {renderTable['reports'] && <ReportsPage />}
+            {renderTable['clinic'] && <Clinic />}
           </div>
         </div>
         <Modal
