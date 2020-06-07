@@ -9,7 +9,6 @@ router.register('appointment-type', views.AppointmentTypeView)
 
 urlpatterns = [
         path('clinic/', views.ClinicListView.as_view()),
-
         path('appointment/check/', views.appointmentCheck),
         *router.urls
     ]

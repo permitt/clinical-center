@@ -1,7 +1,8 @@
-import { SET_APPOINTMENT_TYPES, GET_APPOINTMENT_CHECK, SET_APPOINTMENT_TERMS } from '../actions/ActionTypes';
+import { SET_APPOINTMENT_TYPES, SET_APPOINTMENT_TERMS, SET_APPOINTMENTS } from '../actions/ActionTypes';
 
 const initialState = {
-    types: []
+    types: [],
+    all: [],
 };
 const appointmetReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -9,6 +10,8 @@ const appointmetReducer = (state = initialState, action) => {
             return { ...state, types: action.payload }
         case SET_APPOINTMENT_TERMS:
             return { ...state, availableTerms: action.payload }
+        case SET_APPOINTMENTS:
+            return { ...state, all: action.payload }
         default:
             return state;
     }

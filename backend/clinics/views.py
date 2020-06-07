@@ -88,6 +88,11 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentSerializer
     queryset = Appointment.objects.all()
 
+    def get_queryset(self):
+        if hasattr(self.request.user, 'patient'):
+            return Appointment.objects.filter(patient=self.request.user.patient,date__lt=datetime.datetime.now())
+
+        return Appointment.objects.all()
 
 class AppointmentTypeView(viewsets.ModelViewSet):
     queryset = AppointmentType.objects.all()
@@ -165,7 +170,6 @@ def appointmentCheck(request):
         #duration = AppointmentType.objects.get(typeName=appointmentType).duration
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':"Invalid parameters."})
-
     try:
         schedule = Schedule.objects.filter(employee_id = OuterRef('email'), day=dateDay)
         appTypes = AppointmentType.objects.filter(clinic = OuterRef('employedAt'), typeName=appointmentType)

@@ -21,7 +21,7 @@ import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
 import { getClinics } from '../../store/actions/ClinicActions';
-import { getAppointmentTypes, checkAppointmentAvailable, setAppointmentTerms, postAppointment } from '../../store/actions/AppointmentActions';
+import { getAppointmentTypes, checkAppointmentAvailable, getAppointments, postAppointment } from '../../store/actions/AppointmentActions';
 import { Typography } from '@material-ui/core';
 
 import CardList from '../../components/CardList/CardList';
@@ -48,6 +48,7 @@ function PatientHome(props) {
     const [appointmentType, setAppointmentType] = React.useState('');
     const [renderAppointmentClinics, setRenderAppointmentClinics] = React.useState(false);
     const [renderAppointmentDoctors, setRenderAppointmentDoctors] = React.useState(false);
+    const [renderMedicalHistory, setRenderMedicalHistory] = React.useState(false);
     const orderByOptions = ['name', 'address', 'city', 'country'];
 
     const showClinicalCenters = () => {
@@ -55,8 +56,16 @@ function PatientHome(props) {
         setRenderClinicsTable(true);
         setRenderAppointmentClinics(false);
         setRenderAppointmentDoctors(false);
+        setRenderMedicalHistory(false);
     }
 
+    const showMedicalHistory = () => {
+        props.getAppointments();
+        setRenderClinicsTable(false);
+        setRenderAppointmentClinics(false);
+        setRenderAppointmentDoctors(false);
+        setRenderMedicalHistory(true);
+    };
     const handleCheckClick = (e) => {
         if (appointmentType === "") {
             alert("NE MOZE PRAZNO");
@@ -76,6 +85,8 @@ function PatientHome(props) {
         setRenderClinicsTable(false);
         setRenderAppointmentDoctors(true);
         setRenderAppointmentClinics(false);
+        setRenderMedicalHistory(false);
+
     }
 
     const handleReserveClick = id => {
@@ -94,9 +105,23 @@ function PatientHome(props) {
         }
 
         props.postAppointment(data);
-        alert("RESERVED GOOD JOB")
+        alert("Reserved an appointment!")
     }
 
+    const prepareAppointmentsData = () => {
+        console.log("OVO SU APP", props.appointments);
+        return props.appointments.map(app => {
+            return {
+                title: app.doctor + ' ' + app.date + ' - ' + app.time,
+                id: app.patient,
+                subHeading: '',
+                rating: 0,
+                description: '',
+                detail: app.operatingRoom,
+                button: 'RESERVE',
+            }
+        })
+    }
 
     const prepareDoctorData = () => {
 
@@ -141,7 +166,7 @@ function PatientHome(props) {
         },
         {
             name: 'Medical History',
-            onClick: showClinicalCenters,
+            onClick: showMedicalHistory,
             icon: Healing
         },
         {
@@ -216,6 +241,10 @@ function PatientHome(props) {
                         {renderAppointmentDoctors &&
                             <CardList sortOptions={['haha']} data={prepareDoctorData()} action={(doctor) => handleReserveClick(doctor)} />
                         }
+
+                        {renderMedicalHistory &&
+                            <CardList sortOptions={['haha']} data={prepareAppointmentsData()} action={(doctor) => handleReserveClick(doctor)} />
+                        }
                     </div>
 
                 </div>
@@ -242,6 +271,7 @@ const mapStateToProps = state => {
     return {
         clinics: state.clinic.all,
         availableClinics: state.clinic.available,
+        appointments: state.appointment.all,
         appointmentTypes: state.appointment.types,
         appointmentTerms: state.appointment.availableTerms,
         doctors: state.doctor.all,
@@ -254,6 +284,7 @@ const mapDispatchToProps = {
     getAppointmentTypes,
     checkAppointmentAvailable,
     postAppointment,
+    getAppointments,
 };
 
 export default withRouter(

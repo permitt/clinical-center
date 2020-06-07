@@ -3,7 +3,7 @@ import {
   LOGIN, LOGOUT, REGISTER,
   GET_DOCTORS, DELETE_DOCTOR, ADD_DOCTOR,
   GET_CLINICS,
-  GET_APPOINTMENT_TYPES, GET_APPOINTMENT_CHECK, POST_APPOINTMENT,
+  GET_APPOINTMENT_TYPES, GET_APPOINTMENT_CHECK, POST_APPOINTMENT, GET_APPOINTMENTS,
   GET_HALLS, SEARCH_HALLS, DELETE_HALL, ADD_HALL, EDIT_HALL,
   GET_PATIENTS, GET_PATIENT, PUT_PATIENT,
   GET_TYPES, SEARCH_TYPES, DELETE_TYPE, ADD_TYPE, EDIT_TYPE,
@@ -11,7 +11,7 @@ import {
 import { userLogin, userRegister, userLogout } from './AuthSagas';
 import { doctorsGet, doctorDelete, doctorAdd } from './DoctorSagas';
 import { clinicsGet } from './ClinicSagas';
-import { appointmentTypesGet, appointmentChecking, appointmentPost } from './AppointmentSagas';
+import { appointmentTypesGet, appointmentChecking, appointmentPost, appointmentsGet } from './AppointmentSagas';
 import { hallsGet, hallsSearch, hallDelete, hallAdd, hallEdit } from './HallSaga'
 import { typesGet, typesSearch, typeDelete, typeAdd, typeEdit } from './AppointmentTypeSagas'
 import { patientsGet, patientGet, patientPut } from './PatientSagas'
@@ -25,6 +25,7 @@ export default function* rootSaga() {
     takeLatest(DELETE_DOCTOR, doctorDelete),
     takeLatest(ADD_DOCTOR, doctorAdd),
     takeLatest(GET_CLINICS, clinicsGet),
+    takeLatest(GET_APPOINTMENTS, appointmentsGet),
     takeLatest(GET_APPOINTMENT_TYPES, appointmentTypesGet),
     takeLatest(GET_APPOINTMENT_CHECK, appointmentChecking),
     takeLatest(POST_APPOINTMENT, appointmentPost),
