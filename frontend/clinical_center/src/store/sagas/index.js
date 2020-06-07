@@ -13,7 +13,6 @@ import {
 import { userLogin, userRegister, userLogout, userChangePass, profileGet, profileEdit } from './AuthSagas';
 import { doctorsGet, doctorDelete, doctorAdd } from './DoctorSagas';
 import { clinicsGet } from './ClinicSagas';
-import { appointmentTypesGet, appointmentChecking, appointmentPost, } from './AppointmentSagas';
 import { appointmentTypesGet, appointmentChecking, appointmentPost, appointmentsGet, appointmentSchedule } from './AppointmentSagas';
 import { hallsGet, hallsSearch, hallDelete, hallAdd, hallEdit } from './HallSaga'
 import { typesGet, typesSearch, typeDelete, typeAdd, typeEdit } from './AppointmentTypeSagas'

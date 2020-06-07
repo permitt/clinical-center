@@ -11,7 +11,7 @@ const clinicReducer = (state = initialState, action) => {
         case SET_CLINICS:
             return { ...state, all: action.payload }
         case SET_AVAILABLE_CLINICS:
-            return { ...state, available: action.payload }
+            return { ...state, available: action.payload.length === 0 ? 'empty' : action.payload }
         default:
             return state;
     }

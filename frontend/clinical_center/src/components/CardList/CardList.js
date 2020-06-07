@@ -176,39 +176,39 @@ export default function SimpleTable(props) {
                 changeSortBy={props.changeSortBy}
                 search={search} />
 
-            {props.data.length == 0 ?
-                <Typography variant="h5" component="h2">
-                    Searching...
-                </Typography>
-                : props.data.map(cl => (
-                    <Card className={classes.root} style={{ margin: 10 }}>
-                        <CardContent>
 
-                            <Typography variant="h5" component="h2">
-                                {cl.title}
-                            </Typography>
-                            <Typography className={classes.pos} color="textSecondary">
-                                {cl.subHeading}
-                            </Typography>
-                            <Typography variant="body2" component="p">
-                                {cl.description}
+            <Typography variant="h5" component="h2">
+                {props.data.length === 0 ? "Searching..." : props.data === false ? "Nothing found :("
 
-                            </Typography>
+                    : props.data.map(cl => (
+                        <Card className={classes.root} style={{ margin: 10 }}>
+                            <CardContent>
 
-                            <Typography variant="body2" component="p">
-                                {cl.detail}
+                                <Typography variant="h5" component="h2">
+                                    {cl.title}
+                                </Typography>
+                                <Typography className={classes.pos} color="textSecondary">
+                                    {cl.subHeading}
+                                </Typography>
+                                <Typography variant="body2" component="p">
+                                    {cl.description}
 
-                            </Typography>
-                            <Typography variant="body2" component="p"><br />
-                                <Rating size="medium" value={cl.rating} name="half-rating-read" precision={0.5} readOnly />  <span style={{ fontSize: 16, fontVariant: "bold" }}>{cl.rating}</span>
-                            </Typography>
-                        </CardContent>
-                        <CardActions>
-                            <Button onClick={(e) => props.action(cl.id)} size="medium">{cl.button}</Button>
-                        </CardActions>
-                    </Card>
-                ))}
+                                </Typography>
 
+                                <Typography variant="body2" component="p">
+                                    {cl.detail}
+
+                                </Typography>
+                                <Typography variant="body2" component="p"><br />
+                                    <Rating size="medium" value={cl.rating} name="half-rating-read" precision={0.5} readOnly />  <span style={{ fontSize: 16, fontVariant: "bold" }}>{cl.rating}</span>
+                                </Typography>
+                            </CardContent>
+                            <CardActions>
+                                <Button onClick={(e) => props.action(cl.id)} size="medium">{cl.button}</Button>
+                            </CardActions>
+                        </Card>
+                    ))}
+            </Typography>
 
         </Paper>
     );

@@ -2,7 +2,6 @@ import { call, put, select } from 'redux-saga/effects';
 import { push, go } from 'connected-react-router'
 import { appointmentService } from '../../services/AppointmentService';
 import { setAppointmentTypes, setAppointmentTerms, setAppointments, setScheduledAppointment } from '../actions/AppointmentActions';
-import { setAppointmentTypes, setAppointmentTerms, } from '../actions/AppointmentActions';
 import { setDoctors } from '../actions/DoctorActions';
 import { setAvailableClinics } from '../actions/ClinicActions';
 import { DASHBOARD } from '../../routes';

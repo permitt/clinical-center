@@ -67,8 +67,9 @@ function PatientHome(props) {
         setRenderMedicalHistory(true);
     };
     const handleCheckClick = (e) => {
+
         if (appointmentType === "") {
-            alert("NE MOZE PRAZNO");
+            alert("Must select type!");
             return;
         }
 
@@ -254,6 +255,9 @@ function PatientHome(props) {
 }
 
 const prepareClinicsData = (data) => {
+    if (data === 'empty')
+        return false;
+
     return data.map(unit => (
         {
             title: unit.name,
