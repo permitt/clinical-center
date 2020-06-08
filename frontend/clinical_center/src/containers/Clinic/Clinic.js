@@ -23,6 +23,7 @@ import { getAdminClinic, editAdminClinic } from '../../store/actions/ClinicActio
 import { withFormikField } from '../../utils/withFormikField'
 import { formStyle, submitButton } from '../../assets/jss/material-dashboard-react/components/FormStyle';
 import AvailableTermsTable from './AvailableTermsTable'
+import MapContainer from './Map'
 
 const useStyles = makeStyles(styles);
 const FormikTextField = withFormikField(TextField);
@@ -33,9 +34,11 @@ export function Clinic(props) {
     const [success, setSucces] = React.useState(false);
 
     let name = props.clinic? props.clinic.name : '';
-   let description = props.clinic? props.clinic.description: '';
-   let address = props.clinic? props.clinic.address: ''
-   let rating = props.clinic? props.clinic.rating : 0;  
+    let description = props.clinic? props.clinic.description: '';
+    let address = props.clinic? props.clinic.address: ''
+    let city = props.clinic? props.clinic.city: ''
+    let country = props.clinic? props.clinic.country: ''
+    let rating = props.clinic? props.clinic.rating : 0;  
 
     React.useEffect(() => {
         props.getAdminClinic();
@@ -50,93 +53,118 @@ export function Clinic(props) {
     const submit = values => {
         values['id'] = props.clinic.id
         props.editAdminClinic(values);
-        console.log(values)
         setSucces(true)
     };
 
     return (
     <>
-    <Container component="main" >
-    <Paper style={paper} elevation={3}>
-    <Avatar style={avatar}>
-        <LocalHospitalIcon />
-    </Avatar>
-    <Typography component="h1" variant="h5" style={{margin:10}}>
-       Clinic {name}
-    </Typography>
-    <Rating name="read-only" value={rating} readOnly />
-        <Grid container justify="center" >
-        <Divider />
-            {loading ?
-                <CircularProgress />
-                :
-                <Formik
-                    onSubmit={submit}
-                    style={formStyle}
-                    initialValues={{
-                       name : name,
-                       description: description,
-                       address: address
-                    }}>
-                    <Form style={{textAlign:'center'}}>
-                        <Grid container spacing={2}>
-                            <Grid item xs={12}>
-                                <Field
-                                    component={FormikTextField}
-                                    type="text"
-                                    name="name"
-                                    variant="outlined"
-                                    fullWidth
-                                    label="Name"
-                                    required
-                                />
+        <Container>
+            <Paper style={paper} elevation={3} >
+                <Avatar style={avatar}>
+                    <LocalHospitalIcon />
+                </Avatar>
+            <Typography component="h1" variant="h5" style={{margin:10}}>
+                Clinic {name}
+            </Typography>
+            <Rating name="read-only" value={parseFloat(rating)} readOnly />
+            {loading ? <CircularProgress /> :
+                <Grid container >
+                    <Divider />
+                    <Formik
+                        onSubmit={submit}
+                        style={formStyle}
+                        initialValues={{
+                            name : name,
+                            description: description,
+                            address: address,
+                            city: city,
+                            country: country
+                        }}>
+                        <Form style={{textAlign:'center'}}>
+                            <Grid container spacing={2}>
+                                <Grid item xs={12}>
+                                    <Field
+                                        component={FormikTextField}
+                                        type="text"
+                                        name="name"
+                                        variant="outlined"
+                                        fullWidth
+                                        label="Name"
+                                        required
+                                    />
+                                </Grid>
+                                <Grid item xs={12}>
+                                    <Field
+                                        component={FormikTextField}
+                                        type="text"
+                                        name="description"
+                                        variant="outlined"
+                                        rows={4}
+                                        fullWidth
+                                        label="Description"
+                                        multiline
+                                    />
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Field
+                                        component={FormikTextField}
+                                        type="text"
+                                        name="address"
+                                        variant="outlined"
+                                        fullWidth
+                                        label="Address"
+                                        required
+                                    />
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Field
+                                        component={FormikTextField}
+                                        type="text"
+                                        name="city"
+                                        variant="outlined"
+                                        fullWidth
+                                        label="City"
+                                        required
+                                    />
+                                </Grid>
+                                <Grid item xs={4}>
+                                    <Field
+                                        component={FormikTextField}
+                                        type="text"
+                                        name="country"
+                                        variant="outlined"
+                                        fullWidth
+                                        label="Country"
+                                        required
+                                    />
+                                </Grid>
+                                {success &&
+                                <Grid item xs={12}>
+                                    <Alert severity="success">Clinic data successfully changed</Alert>
+                                </Grid>
+                                }
                             </Grid>
-                            <Grid item xs={12}>
-                                <Field
-                                    component={FormikTextField}
-                                    type="text"
-                                    name="description"
-                                    variant="outlined"
-                                    rows={4}
-                                    fullWidth
-                                    label="Description"
-                                    multiline
-                                />
-                            </Grid>
-                            <Grid item xs={12}>
-                                <Field
-                                    component={FormikTextField}
-                                    type="text"
-                                    name="address"
-                                    variant="outlined"
-                                    fullWidth
-                                    label="Address"
-                                    required
-                                />
-                            </Grid>
-                            {success &&
-                            <Grid item xs={12}>
-                                <Alert severity="success">Clinic data successfully changed</Alert>
-                            </Grid>
-                            }
-                        </Grid>
-                        <Button
-                            type="submit"   
-                            size="large"
-                            variant="contained"
-                            color="primary"
-                            style={submitButton}
-                        >
-                            Change data
-                        </Button>
-                    </Form>
-                </Formik>}
-            </Grid>
+                            <Button
+                                type="submit"   
+                                size="large"
+                                variant="contained"
+                                color="primary"
+                                style={submitButton}
+                            >
+                                Change data
+                            </Button>
+                        </Form>
+                </Formik>
+            </Grid>}
+            {/* {!loading && <MapContainer street={props.clinic.address} city={props.clinic.city} country={props.clinic.country}/>} */}
+
         </Paper>
+        {!loading && <MapContainer street={props.clinic.address} city={props.clinic.city} country={props.clinic.country}/>}
+
     </Container>
-        {/* <AvailableTermsTable /> */}
-    </>
-    )
+    {/* <AvailableTermsTable /> */}
+</>
+)
 }
 
 const mapStateToProps = state => {

@@ -42,8 +42,8 @@ function Calendar(props) {
             </Grid>
             </Grid>
             </Paper>
-            {hours.time.map(el => 
-            <Paper elevation={3}  style={{maxWidth: '250px'}}>
+            {hours.time.map((el,index) => 
+            <Paper elevation={3}  style={{maxWidth: '250px'}} key={index}>
              <Grid container spacing={2}>
               <Grid item xs={6} align="center">
                 {el.time.slice(0, -3)}
