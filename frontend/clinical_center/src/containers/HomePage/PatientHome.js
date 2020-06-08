@@ -25,6 +25,7 @@ import { getAppointmentTypes, checkAppointmentAvailable, getAppointments, postAp
 import { Typography } from '@material-ui/core';
 
 import CardList from '../../components/CardList/CardList';
+import PatientHistoryCardList from '../../components/CardList/PatientHistoryCardList';
 
 const useStyles = makeStyles(styles);
 
@@ -61,6 +62,8 @@ function PatientHome(props) {
 
     const showMedicalHistory = () => {
         props.getAppointments();
+        props.getDoctorRatings();
+        props.getClinicRatings();
         setRenderClinicsTable(false);
         setRenderAppointmentClinics(false);
         setRenderAppointmentDoctors(false);
@@ -109,21 +112,6 @@ function PatientHome(props) {
         alert("Reserved an appointment!")
     }
 
-    const prepareAppointmentsData = () => {
-        console.log("OVO SU APP", props.appointments);
-        return props.appointments.map(app => {
-            return {
-                title: app.doctor + ' ' + app.date + ' - ' + app.time,
-                id: app.patient,
-                subHeading: '',
-                rating: 0,
-                description: '',
-                detail: app.operatingRoom,
-                button: 'RESERVE',
-            }
-        })
-    }
-
     const prepareDoctorData = () => {
 
         return props.doctors.filter(doc => doc.employedAt === chosenClinic).map(doctor => {
@@ -144,6 +132,25 @@ function PatientHome(props) {
                 button: 'RESERVE',
             }
         });
+    }
+
+    const prepareHistoryData = () => {
+        if (props.appointments === 'empty' && props.operations === 'empty')
+            return false;
+
+        let data = [];
+
+        props.appointments.map(app => ({
+            type: 'appointment',
+            ...app
+        })).forEach(el => data.push(el));
+
+        props.operations.map(op => ({
+            type: 'operation',
+            ...op
+        })).forEach(el => data.push(el));
+
+        return data;
     }
 
 
@@ -244,7 +251,7 @@ function PatientHome(props) {
                         }
 
                         {renderMedicalHistory &&
-                            <CardList sortOptions={['haha']} data={prepareAppointmentsData()} action={(doctor) => handleReserveClick(doctor)} />
+                            <PatientHistoryCardList sortOptions={['haha']} data={prepareHistoryData()} action={(doctor) => handleReserveClick(doctor)} />
                         }
                     </div>
 
@@ -276,6 +283,7 @@ const mapStateToProps = state => {
         clinics: state.clinic.all,
         availableClinics: state.clinic.available,
         appointments: state.appointment.all,
+        operations: state.appointment.all,
         appointmentTypes: state.appointment.types,
         appointmentTerms: state.appointment.availableTerms,
         doctors: state.doctor.all,

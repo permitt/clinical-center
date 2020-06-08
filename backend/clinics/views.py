@@ -311,6 +311,26 @@ class OperationView(viewsets.ModelViewSet):
 
         return Operation.objects.all()
 
+class DoctorRatingView(viewsets.ModelViewSet):
+    serializer_class = DoctorRatingSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'patient'):
+            return DoctorRating.objects.filter(patient=self.request.user.patient)
+
+        return Operation.objects.all()
+
+class ClinicRatingView(viewsets.ModelViewSet):
+    serializer_class = ClinicRatingSerializer
+    permission_classes = [permissions.IsAuthenticated]
+
+    def get_queryset(self):
+        if hasattr(self.request.user, 'patient'):
+            return Operation.objects.filter(patient=self.request.user.patient)
+
+        return Operation.objects.all()
+
 @api_view(["POST"])
 def scheduleAppointment(request):
     user = request.user
