@@ -1,8 +1,9 @@
-import { GET_APPOINTMENT_CHECK, SET_CLINICS, SET_AVAILABLE_CLINICS } from '../actions/ActionTypes';
+import { GET_APPOINTMENT_CHECK, SET_CLINICS, SET_AVAILABLE_CLINICS, SET_ADMIN_CLINIC } from '../actions/ActionTypes';
 
 const initialState = {
     all: [],
     available: [],
+    adminClinic: null
 };
 const clinicReducer = (state = initialState, action) => {
     switch (action.type) {
@@ -12,6 +13,9 @@ const clinicReducer = (state = initialState, action) => {
             return { ...state, all: action.payload }
         case SET_AVAILABLE_CLINICS:
             return { ...state, available: action.payload.length === 0 ? 'empty' : action.payload }
+        case SET_ADMIN_CLINIC:
+            console.log(action.payload, 'reducer')
+            return { ...state, adminClinic: action.payload }
         default:
             return state;
     }

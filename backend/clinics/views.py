@@ -17,7 +17,7 @@ from django.db.models.functions import Concat
 from django.db import IntegrityError
 from django.db.models import Avg
 
-class ClinicListView(generics.ListAPIView):
+class ClinicListView(viewsets.ModelViewSet):
     serializer_class = ClinicSerializer
     permission_classes = [permissions.IsAuthenticated]
     filter_backends = [filters.SearchFilter, filters.OrderingFilter]
@@ -416,3 +416,20 @@ def reports(request):
     doctorSerializer = DoctorSerializer(clinic.doctors.annotate(rating=Avg('ratings__rating')), many=True)
 
     return Response(status=status.HTTP_200_OK, data={'clinic': clinicSerializer.data, "doctors": doctorSerializer.data})
+
+@api_view(["GET"])
+def adminClinic(request):
+    user = request.user
+    if (not user):
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    if (not hasattr(user,'adminAccount')):
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    clinic = Clinic.objects\
+        .annotate(rating=Avg('ratings__rating')) \
+        .get(id=user.adminAccount.employedAt.id)
+
+    clinicSerializer = ClinicSerializer(clinic, many=False)
+
+    return Response(status=status.HTTP_200_OK, data={'clinic': clinicSerializer.data})
