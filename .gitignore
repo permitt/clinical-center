@@ -21,6 +21,7 @@ media
 *$py.class
 secrets.json
 
+
 # C extensions
 *.so
 

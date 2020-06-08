@@ -25,6 +25,7 @@ import { getAppointmentTypes, checkAppointmentAvailable, getAppointments, postAp
 import { Typography } from '@material-ui/core';
 
 import CardList from '../../components/CardList/CardList';
+import PatientHistoryCardList from '../../components/CardList/PatientHistoryCardList';
 
 const useStyles = makeStyles(styles);
 
@@ -146,6 +147,25 @@ function PatientHome(props) {
         });
     }
 
+    const prepareHistoryData = () => {
+        if (props.appointments === 'empty' && props.operations === 'empty')
+            return false;
+
+        let data = [];
+
+        props.appointments.map(app => ({
+            type: 'appointment',
+            ...app
+        })).forEach(el => data.push(el));
+
+        props.operations.map(op => ({
+            type: 'operation',
+            ...op
+        })).forEach(el => data.push(el));
+
+        return data;
+    }
+
 
     React.useEffect(() => { props.getAppointmentTypes() }, []);
 
@@ -244,7 +264,7 @@ function PatientHome(props) {
                         }
 
                         {renderMedicalHistory &&
-                            <CardList sortOptions={['haha']} data={prepareAppointmentsData()} action={(doctor) => handleReserveClick(doctor)} />
+                            <PatientHistoryCardList sortOptions={['haha']} data={prepareHistoryData()} action={(doctor) => handleReserveClick(doctor)} />
                         }
                     </div>
 
@@ -276,6 +296,7 @@ const mapStateToProps = state => {
         clinics: state.clinic.all,
         availableClinics: state.clinic.available,
         appointments: state.appointment.all,
+        operations: state.appointment.all,
         appointmentTypes: state.appointment.types,
         appointmentTerms: state.appointment.availableTerms,
         doctors: state.doctor.all,
