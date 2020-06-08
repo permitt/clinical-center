@@ -8,8 +8,10 @@ router.register('operatingroom', views.OperatingRoomView, basename="operatingroo
 router.register('appointment-type', views.AppointmentTypeView, basename="appointmenttype")
 router.register('holiday', views.HolidayRequestView, basename="holiday")
 router.register('healthcard', views.HealthCardView, basename="healthcard")
-router.register('operation', views.OperationView, basename="opeartion")
+router.register('operation', views.OperationView, basename="operation")
 router.register('clinic', views.ClinicListView)
+router.register('doctor-rating', views.DoctorRatingView, basename='doctor-rating')
+router.register('clinic-rating', views.ClinicRatingView, basename='clinic-rating')
 
 urlpatterns = [
         path('appointment/check/', views.appointmentCheck),

@@ -116,6 +116,8 @@ export default function SimpleTable(props) {
     const rows = props.data
     const [filteredData, setFilteredData] = React.useState(rows)
     const columns = props.columns
+    const [clinicRating, setClinicRating] = React.useState({ 1: 5 });
+    const [doctorRating, setDoctorRating] = React.useState({ "marko@marko.com": 3 });
 
     useEffect(() => {
         setFilteredData(rows)
@@ -179,9 +181,8 @@ export default function SimpleTable(props) {
                                         <Typography variant="body2" component="p">
                                             Leave a rating for the doctor:
                                         </Typography>
-                                        <Typography variant="body2" component="p"><br />
-                                            <Rating size="medium" name="half-rating-read" precision={0.5} />
-                                        </Typography>
+                                        <Rating size="medium" value={doctorRating[cl.doctor]} name={'doc-' + cl.date + cl.time} precision={0.5} onChange={(event, val) => { setDoctorRating({ ...doctorRating, [cl.doctor]: val }) }} />
+
                                         <Typography variant="body2" component="p">
                                             Price: {cl.price}.00$
 
@@ -199,13 +200,13 @@ export default function SimpleTable(props) {
                                             Leave a rating for the clinic:
                                         </Typography>
 
-                                        <Typography variant="body2" component="p"><br />
-                                            <Rating size="medium" name="moj" precision={0.5} />
-                                        </Typography>
+
+                                        <Rating size="medium" value={clinicRating[cl.clinic]} name={'clin-' + cl.date + cl.time} precision={0.5} onChange={(event, val) => { setClinicRating({ ...clinicRating, [cl.clinic]: val }) }} />
+
                                     </CardContent>
-                                    <CardActions>
+                                    {/* <CardActions>
                                         <Button onClick={(e) => props.action(cl.id)} size="medium">{cl.button}</Button>
-                                    </CardActions>
+                                    </CardActions> */}
                                 </Card>
                             );
                         }

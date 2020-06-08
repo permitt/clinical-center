@@ -62,6 +62,8 @@ function PatientHome(props) {
 
     const showMedicalHistory = () => {
         props.getAppointments();
+        props.getDoctorRatings();
+        props.getClinicRatings();
         setRenderClinicsTable(false);
         setRenderAppointmentClinics(false);
         setRenderAppointmentDoctors(false);
@@ -108,21 +110,6 @@ function PatientHome(props) {
 
         props.postAppointment(data);
         alert("Reserved an appointment!")
-    }
-
-    const prepareAppointmentsData = () => {
-        console.log("OVO SU APP", props.appointments);
-        return props.appointments.map(app => {
-            return {
-                title: app.doctor + ' ' + app.date + ' - ' + app.time,
-                id: app.patient,
-                subHeading: '',
-                rating: 0,
-                description: '',
-                detail: app.operatingRoom,
-                button: 'RESERVE',
-            }
-        })
     }
 
     const prepareDoctorData = () => {
