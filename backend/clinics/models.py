@@ -98,7 +98,8 @@ class Appointment(models.Model):
     operatingRoom = models.ForeignKey(to=OperatingRoom, on_delete=models.CASCADE, null=True)
     # if the patient is null => the appointment was set inAdvance
     patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE, related_name='appointments', null=True)
-
+    created = models.DateField(null=True, blank=True)
+    
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['clinic', 'date', 'time', 'doctor'], name='unique doctor date time for a clinic')
