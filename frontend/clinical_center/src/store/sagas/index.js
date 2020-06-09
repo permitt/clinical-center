@@ -7,8 +7,11 @@ import {
   GET_HALLS, SEARCH_HALLS, DELETE_HALL, ADD_HALL, EDIT_HALL,
   GET_PATIENTS, GET_PATIENT, PUT_PATIENT, SEARCH_PATIENTS,
   GET_TYPES, SEARCH_TYPES, DELETE_TYPE, ADD_TYPE, EDIT_TYPE,
-  GET_REQUESTS, RESOLVE_REQUEST, GET_PROFILE, EDIT_PROFILE, SCHEDULE_APPOINTMENT,DELETE_APPOINTMENT, CREATE_REQUEST,
-  GET_CLINIC_REPORTS, GET_INCOME, GET_ADMIN_CLINIC, GET_AVAILABLE_APPOINTMENTS, SEARCH_DOCTORS, ADD_APPOINTMENT_TERM
+
+  GET_REQUESTS, RESOLVE_REQUEST, GET_PROFILE, EDIT_PROFILE, SCHEDULE_APPOINTMENT, DELETE_APPOINTMENT, CREATE_REQUEST,
+  GET_CLINIC_REPORTS, GET_INCOME, GET_ADMIN_CLINIC, GET_AVAILABLE_APPOINTMENTS, SEARCH_DOCTORS, ADD_APPOINTMENT_TERM,
+  GET_DOCTOR_RATINGS, GET_CLINIC_RATINGS, POST_CLINIC_RATING, POST_DOCTOR_RATING, PUT_DOCTOR_RATING, PUT_CLINIC_RATING
+
 } from '../actions/ActionTypes';
 import { userLogin, userRegister, userLogout, userChangePass, profileGet, profileEdit } from './AuthSagas';
 import { doctorsGet, doctorDelete, doctorAdd, doctorSearch } from './DoctorSagas';
@@ -19,6 +22,8 @@ import { typesGet, typesSearch, typeDelete, typeAdd, typeEdit } from './Appointm
 import { patientsGet, patientGet, patientPut, patientsSearch } from './PatientSagas'
 import { requestResolve, requestsGet, requestCreate } from './HolidayRequestSagas'
 import { clinicReportsGet, incomeGet } from './ReportSagas'
+import { clinicRatingsGet, doctorRatingsGet, putClinicRating, putDoctorRating, postClinicRating, postDoctorRating } from './RatingSagas'
+
 
 export default function* rootSaga() {
   yield all([
@@ -68,6 +73,16 @@ export default function* rootSaga() {
     takeLatest(CREATE_REQUEST, requestCreate),
 
     takeLatest(GET_CLINIC_REPORTS, clinicReportsGet),
-    takeLatest(GET_INCOME, incomeGet)
+    takeLatest(GET_INCOME, incomeGet),
+
+
+    takeLatest(GET_DOCTOR_RATINGS, doctorRatingsGet),
+    takeLatest(GET_CLINIC_RATINGS, clinicRatingsGet),
+    takeLatest(POST_DOCTOR_RATING, postDoctorRating),
+    takeLatest(POST_CLINIC_RATING, postClinicRating),
+    takeLatest(PUT_DOCTOR_RATING, putDoctorRating),
+    takeLatest(PUT_CLINIC_RATING, putClinicRating),
+
+
   ]);
 }

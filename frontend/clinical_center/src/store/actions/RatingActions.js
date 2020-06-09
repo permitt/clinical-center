@@ -6,7 +6,9 @@ import {
     POST_CLINIC_RATING,
     POST_DOCTOR_RATING,
     PUT_CLINIC_RATING,
-    PUT_DOCTOR_RATING
+    PUT_DOCTOR_RATING,
+    SET_CLINIC_RATING,
+    SET_DOCTOR_RATING,
 } from './ActionTypes';
 
 export const getDoctorRatings = () => {
@@ -28,7 +30,7 @@ export const setDoctorRatings = payload => {
     };
 };
 
-export const setClinicRatings = payload => {
+export const setClinicRatings = (payload) => {
     return {
         type: SET_CLINIC_RATINGS,
         payload
@@ -59,6 +61,21 @@ export const putDoctorRating = payload => {
 export const putClinicRating = payload => {
     return {
         type: PUT_CLINIC_RATING,
+        payload
+    }
+};
+
+export const setClinicRating = payload => {
+    return {
+        type: SET_CLINIC_RATING,
+        payload
+    }
+};
+
+
+export const setDoctorRating = payload => {
+    return {
+        type: SET_DOCTOR_RATING,
         payload
     }
 };

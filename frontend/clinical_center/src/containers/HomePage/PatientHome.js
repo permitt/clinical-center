@@ -22,6 +22,8 @@ import Select from '@material-ui/core/Select';
 import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
 import { getClinics } from '../../store/actions/ClinicActions';
 import { getAppointmentTypes, checkAppointmentAvailable, getAppointments, postAppointment } from '../../store/actions/AppointmentActions';
+import { getDoctorRatings, getClinicRatings, postDoctorRating, postClinicRating, putDoctorRating, putClinicRating } from '../../store/actions/RatingActions';
+
 import { Typography } from '@material-ui/core';
 
 import CardList from '../../components/CardList/CardList';
@@ -140,18 +142,63 @@ function PatientHome(props) {
 
         let data = [];
 
+
+
         props.appointments.map(app => ({
             type: 'appointment',
             ...app
-        })).forEach(el => data.push(el));
+        })).forEach(el => {
+            let foundDR = false;
+            let foundCL = false;
+
+            props.doctorRatings.forEach(dr => {
+                if (dr.doctor === el.doctor) {
+                    el.doctorRating = dr;
+                    foundDR = true;
+                }
+
+            });
+
+            props.clinicRatings.forEach(cl => {
+                if (cl.clinic === el.clinic) {
+                    el.clinicRating = cl;
+                    foundCL = true;
+                }
+
+            });
+
+            if (!foundDR)
+                el.doctorRating = { "id": "-1", "rating": 0 };
+            if (!foundCL)
+                el.clinicRating = { "id": "-1", "rating": 0 };
+
+            data.push(el);
+        });
 
         props.operations.map(op => ({
             type: 'operation',
             ...op
-        })).forEach(el => data.push(el));
+        })).forEach(el => {
+            data.push(el);
+        });
 
         return data;
     }
+
+    const leaveRating = (arg) => {
+        if (arg.ratingId == "-1") {
+            if (arg.type === "doctorRating")
+                props.postDoctorRating({ "doctor": arg.id, "patient": props.email, rating: arg.rating });
+            else
+                props.postClinicRating({ "clinic": arg.id, "patient": props.email, rating: arg.rating });
+        } else {
+            if (arg.type === "doctorRating")
+                props.putDoctorRating({ id: arg.ratingId, "patient": props.email, rating: arg.rating, doctor: arg.id });
+            else
+                props.putClinicRating({ id: arg.ratingId, "patient": props.email, rating: arg.rating, clinic: arg.id });
+        }
+    }
+
 
 
     React.useEffect(() => { props.getAppointmentTypes() }, []);
@@ -251,7 +298,7 @@ function PatientHome(props) {
                         }
 
                         {renderMedicalHistory &&
-                            <PatientHistoryCardList sortOptions={['haha']} data={prepareHistoryData()} action={(doctor) => handleReserveClick(doctor)} />
+                            <PatientHistoryCardList sortOptions={['haha']} data={prepareHistoryData()} rate={(payload) => leaveRating({ ...payload })} clinicRatings={props.clinicRatings} doctorRatings={props.doctorRatings} />
                         }
                     </div>
 
@@ -288,6 +335,8 @@ const mapStateToProps = state => {
         appointmentTerms: state.appointment.availableTerms,
         doctors: state.doctor.all,
         email: state.authUser.email,
+        doctorRatings: state.rating.doctorRatings,
+        clinicRatings: state.rating.clinicRatings,
     };
 };
 
@@ -297,6 +346,13 @@ const mapDispatchToProps = {
     checkAppointmentAvailable,
     postAppointment,
     getAppointments,
+    getClinicRatings,
+    getDoctorRatings,
+    postClinicRating,
+    postDoctorRating,
+    putClinicRating,
+    putDoctorRating,
+
 };
 
 export default withRouter(
