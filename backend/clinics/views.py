@@ -310,7 +310,11 @@ class OperationView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if hasattr(self.request.user, 'patient'):
-            return Operation.objects.filter(patient=self.request.user.patient,date__lt=datetime.datetime.now())
+            return Operation.objects.filter(patient=self.request.user.patient,date__lt=datetime.datetime.now())\
+                            .annotate(
+                            operatingRoom_name=F("operatingRoom__name"),
+                            clinic_name=F("clinic__name"),
+            )
 
         return Operation.objects.all()
 

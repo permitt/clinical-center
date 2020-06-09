@@ -186,6 +186,16 @@ class HealthCardSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 class OperationSerializer(serializers.ModelSerializer):
+    operatingRoom_name = serializers.SerializerMethodField('get_room_name')
+    clinic_name = serializers.SerializerMethodField('get_clinic_name')
+
+    def get_room_name(self, obj):
+        return getattr(obj, "operatingRoom_name", None)
+
+    def get_clinic_name(self, obj):
+        return getattr(obj, "clinic_name", None)
+
+
     class Meta:
         model = Operation
         fields = '__all__'

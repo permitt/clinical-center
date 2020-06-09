@@ -21,6 +21,7 @@ import Button from '@material-ui/core/Button';
 import Select from '@material-ui/core/Select';
 import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
 import { getClinics } from '../../store/actions/ClinicActions';
+import { getOperations } from '../../store/actions/OperationActions';
 import { getAppointmentTypes, checkAppointmentAvailable, getAppointments, postAppointment } from '../../store/actions/AppointmentActions';
 import { getDoctorRatings, getClinicRatings, postDoctorRating, postClinicRating, putDoctorRating, putClinicRating } from '../../store/actions/RatingActions';
 
@@ -64,6 +65,7 @@ function PatientHome(props) {
 
     const showMedicalHistory = () => {
         props.getAppointments();
+        props.getOperations();
         props.getDoctorRatings();
         props.getClinicRatings();
         setRenderClinicsTable(false);
@@ -174,11 +176,45 @@ function PatientHome(props) {
 
             data.push(el);
         });
-
+        console.log("MOJE OPP OP OP ", props.operations);
         props.operations.map(op => ({
             type: 'operation',
             ...op
         })).forEach(el => {
+
+
+
+
+            let foundCL = false;
+            el.doctorRatings = {};
+
+            el.doctors.forEach(doc => {
+                let foundDR = false;
+
+                props.doctorRatings.forEach(dr => {
+                    if (dr.doctor === doc) {
+                        el.doctorRatings[dr.doctor] = dr;
+                        foundDR = true;
+                    }
+
+                });
+
+                if (!foundDR)
+                    el.doctorRatings[doc] = { "id": "-1", "rating": 0 };
+
+            });
+
+            props.clinicRatings.forEach(cl => {
+                if (cl.clinic === el.clinic) {
+                    el.clinicRating = cl;
+                    foundCL = true;
+                }
+
+            });
+
+            if (!foundCL)
+                el.clinicRating = { "id": "-1", "rating": 0 };
+
             data.push(el);
         });
 
@@ -330,7 +366,7 @@ const mapStateToProps = state => {
         clinics: state.clinic.all,
         availableClinics: state.clinic.available,
         appointments: state.appointment.all,
-        operations: state.appointment.all,
+        operations: state.operation.all,
         appointmentTypes: state.appointment.types,
         appointmentTerms: state.appointment.availableTerms,
         doctors: state.doctor.all,
@@ -346,6 +382,7 @@ const mapDispatchToProps = {
     checkAppointmentAvailable,
     postAppointment,
     getAppointments,
+    getOperations,
     getClinicRatings,
     getDoctorRatings,
     postClinicRating,

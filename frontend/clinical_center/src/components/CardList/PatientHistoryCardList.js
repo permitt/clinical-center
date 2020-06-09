@@ -202,20 +202,67 @@ export default function SimpleTable(props) {
                                         <Typography variant="body2" component="p">
                                             Leave a rating for the clinic:
                                         </Typography>
-
-
                                         <Rating size="medium" value={cl.clinicRating.rating} name={'clin-' + cl.date + cl.time} onChange={(event, val) => { props.rate({ "ratingId": cl.clinicRating.id, "type": "clinicRating", "id": cl.clinic, "rating": val }) }} />
+                                        <Typography variant="body2" component="p">
+                                            Operating Room: {cl.operatingRoom_name}
 
+                                        </Typography>
                                     </CardContent>
-                                    {/* <CardActions>
-                                        <Button onClick={(e) => props.action(cl.id)} size="medium">{cl.button}</Button>
-                                    </CardActions> */}
                                 </Card>
                             );
                         }
                         else {
                             return (
-                                <Card></Card>
+                                <Card className={classes.root} style={{ margin: 10 }}>
+                                    <CardContent>
+
+                                        <Typography variant="h5" component="h2">
+                                            Operation
+                                        </Typography>
+                                        <Typography className={classes.pos} color="textSecondary">
+                                            {cl.date} {cl.time}
+                                        </Typography>
+
+                                        {cl.doctors.map(doctor => (
+                                            <div>
+
+                                                <Typography variant="body2" component="p">
+                                                    Doctor's email: {doctor}
+
+                                                </Typography>
+                                                <Typography variant="body2" component="p">
+                                                    Leave a rating for the doctor:
+                                                </Typography>
+                                                <Rating size="medium" value={cl.doctorRatings[doctor].rating} name={'doc-' + cl.date + cl.time + doctor} onChange={(event, val) => { props.rate({ "ratingId": cl.doctorRatings[doctor].id, "type": "doctorRating", "id": doctor, "rating": val }) }} />
+
+                                            </div>
+
+                                        ))}
+
+
+
+                                        <Typography variant="body2" component="p">
+                                            Clinic: {cl.clinic_name}
+
+                                        </Typography>
+
+
+                                        <Typography variant="body2" component="p">
+                                            Leave a rating for the clinic:
+                                        </Typography>
+                                        <Rating size="medium" value={cl.clinicRating.rating} name={'clin-' + cl.date + cl.time} onChange={(event, val) => { props.rate({ "ratingId": cl.clinicRating.id, "type": "clinicRating", "id": cl.clinic, "rating": val }) }} />
+
+                                        <Typography variant="body2" component="p">
+                                            Duration: {cl.duration} minutes
+
+                                        </Typography>
+
+                                        <Typography variant="body2" component="p">
+                                            Operating Room: {cl.operatingRoom_name}
+
+                                        </Typography>
+                                    </CardContent>
+                                </Card>
                             );
                         }
 

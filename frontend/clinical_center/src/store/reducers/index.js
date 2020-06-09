@@ -12,6 +12,7 @@ import typeReducer from './AppointmentTypeReducer'
 import requestReducer from './HolidayRequestReducer';
 import reportReducer from './ReportReducer'
 import ratingReducer from './RatingReducer';
+import operationReducer from './OperationReducer';
 
 export default history =>
   combineReducers({
@@ -21,6 +22,7 @@ export default history =>
     doctor: doctorReducer,
     clinic: clinicReducer,
     appointment: appointmetReducer,
+    operation: operationReducer,
     patient: patientReducer,
     type: typeReducer,
     router: connectRouter(history),

@@ -10,7 +10,8 @@ import {
 
   GET_REQUESTS, RESOLVE_REQUEST, GET_PROFILE, EDIT_PROFILE, SCHEDULE_APPOINTMENT, DELETE_APPOINTMENT, CREATE_REQUEST,
   GET_CLINIC_REPORTS, GET_INCOME, GET_ADMIN_CLINIC, GET_AVAILABLE_APPOINTMENTS, SEARCH_DOCTORS, ADD_APPOINTMENT_TERM,
-  GET_DOCTOR_RATINGS, GET_CLINIC_RATINGS, POST_CLINIC_RATING, POST_DOCTOR_RATING, PUT_DOCTOR_RATING, PUT_CLINIC_RATING
+  GET_DOCTOR_RATINGS, GET_CLINIC_RATINGS, POST_CLINIC_RATING, POST_DOCTOR_RATING, PUT_DOCTOR_RATING, PUT_CLINIC_RATING,
+  GET_OPERATIONS
 
 } from '../actions/ActionTypes';
 import { userLogin, userRegister, userLogout, userChangePass, profileGet, profileEdit } from './AuthSagas';
@@ -23,7 +24,7 @@ import { patientsGet, patientGet, patientPut, patientsSearch } from './PatientSa
 import { requestResolve, requestsGet, requestCreate } from './HolidayRequestSagas'
 import { clinicReportsGet, incomeGet } from './ReportSagas'
 import { clinicRatingsGet, doctorRatingsGet, putClinicRating, putDoctorRating, postClinicRating, postDoctorRating } from './RatingSagas'
-
+import { operationsGet } from './OperationSagas';
 
 export default function* rootSaga() {
   yield all([
@@ -83,6 +84,7 @@ export default function* rootSaga() {
     takeLatest(PUT_DOCTOR_RATING, putDoctorRating),
     takeLatest(PUT_CLINIC_RATING, putClinicRating),
 
+    takeLatest(GET_OPERATIONS, operationsGet),
 
   ]);
 }
