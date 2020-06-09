@@ -97,7 +97,7 @@ class Appointment(models.Model):
     # if the operatingRoom is Null => this is a request for the ClinicAdmin to approve
     operatingRoom = models.ForeignKey(to=OperatingRoom, on_delete=models.CASCADE, null=True)
     # if the patient is null => the appointment was set inAdvance
-    patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE, related_name='appointments', null=True)
+    patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE, related_name='appointments', null=True, blank=True)
     created = models.DateField(null=True, blank=True)
     
     class Meta:
