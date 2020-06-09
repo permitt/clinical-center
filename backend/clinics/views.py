@@ -327,9 +327,9 @@ class ClinicRatingView(viewsets.ModelViewSet):
 
     def get_queryset(self):
         if hasattr(self.request.user, 'patient'):
-            return Operation.objects.filter(patient=self.request.user.patient)
+            return ClinicRating.objects.filter(patient=self.request.user.patient)
 
-        return Operation.objects.all()
+        return ClinicRating.objects.all()
 
 @api_view(["POST"])
 def scheduleAppointment(request):

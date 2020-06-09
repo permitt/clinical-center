@@ -116,8 +116,6 @@ export default function SimpleTable(props) {
     const rows = props.data
     const [filteredData, setFilteredData] = React.useState(rows)
     const columns = props.columns
-    const [clinicRating, setClinicRating] = React.useState({ 1: 5 });
-    const [doctorRating, setDoctorRating] = React.useState({ "marko@marko.com": 3 });
 
     useEffect(() => {
         setFilteredData(rows)
@@ -181,8 +179,11 @@ export default function SimpleTable(props) {
                                         <Typography variant="body2" component="p">
                                             Leave a rating for the doctor:
                                         </Typography>
-                                        <Rating size="medium" value={doctorRating[cl.doctor]} name={'doc-' + cl.date + cl.time} precision={0.5} onChange={(event, val) => { setDoctorRating({ ...doctorRating, [cl.doctor]: val }) }} />
+                                        <Rating size="medium" value={cl.doctorRating.rating} name={'doc-' + cl.date + cl.time} onChange={(event, val) => { props.rate({ "ratingId": cl.doctorRating.id, "type": "doctorRating", "id": cl.doctor, "rating": val }) }} />
+                                        <Typography variant="body2" component="p">
+                                            Appointment Type: {cl.type_name}
 
+                                        </Typography>
                                         <Typography variant="body2" component="p">
                                             Price: {cl.price}.00$
 
@@ -196,12 +197,14 @@ export default function SimpleTable(props) {
                                             Clinic: {cl.clinic_name}
 
                                         </Typography>
+
+
                                         <Typography variant="body2" component="p">
                                             Leave a rating for the clinic:
                                         </Typography>
 
 
-                                        <Rating size="medium" value={clinicRating[cl.clinic]} name={'clin-' + cl.date + cl.time} precision={0.5} onChange={(event, val) => { setClinicRating({ ...clinicRating, [cl.clinic]: val }) }} />
+                                        <Rating size="medium" value={cl.clinicRating.rating} name={'clin-' + cl.date + cl.time} onChange={(event, val) => { props.rate({ "ratingId": cl.clinicRating.id, "type": "clinicRating", "id": cl.clinic, "rating": val }) }} />
 
                                     </CardContent>
                                     {/* <CardActions>
