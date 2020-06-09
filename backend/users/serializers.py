@@ -31,6 +31,13 @@ class PatientSerializer(serializers.ModelSerializer):
 
     def update(self, instance, validated_data):
         # Will send an email when updated to approved
+        if instance.password != validated_data['password']:
+            user = User.objects.get(email=instance.email)
+            print("PW ", validated_data['password'])
+            user.set_password(validated_data['password'])
+            user.save()
+
+
         if instance.approved :
             send_mail(ACTIVATION_TITLE,
                       ACTIVATION_BODY % (
