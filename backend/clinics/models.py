@@ -24,6 +24,9 @@ class Clinic(models.Model):
 class HealthCard(models.Model):
     patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE, related_name="health_card")
 
+    def __str__(self):
+        return f'{self.patient.firstName} {self.patient.lastName} health card'
+
 class DiagnosisReport(models.Model):
     description = models.TextField()
     type = models.CharField(max_length=30)

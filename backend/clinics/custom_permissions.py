@@ -31,6 +31,9 @@ class HealthCardPermissions(permissions.BasePermission):
     def has_permission(self, request, view):
 
         if request.method == 'GET':
+            if hasattr(request.user, 'patient'):
+                return True
+
             user = request.user
             try:
                 patient = request.query_params['patient']

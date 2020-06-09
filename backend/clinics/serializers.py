@@ -180,9 +180,17 @@ class HolidaySerializer(serializers.ModelSerializer):
 
         return holiday
 
+class DiagnosisReportSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = DiagnosisReport
+        fields = '__all__'
+
 class HealthCardSerializer(serializers.ModelSerializer):
+    reports = DiagnosisReportSerializer(read_only=True, many=True)
+
     class Meta:
         model = HealthCard
+
         fields = '__all__'
 
 class OperationSerializer(serializers.ModelSerializer):

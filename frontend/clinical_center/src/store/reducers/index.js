@@ -13,6 +13,8 @@ import requestReducer from './HolidayRequestReducer';
 import reportReducer from './ReportReducer'
 import ratingReducer from './RatingReducer';
 import operationReducer from './OperationReducer';
+import healthCardReducer from './HealthCardReducer';
+
 
 export default history =>
   combineReducers({
@@ -28,5 +30,6 @@ export default history =>
     router: connectRouter(history),
     request: requestReducer,
     report: reportReducer,
-    rating: ratingReducer
+    rating: ratingReducer,
+    healthCard: healthCardReducer
   });

@@ -25,24 +25,12 @@ class ClinicListView(viewsets.ModelViewSet):
     queryset = Clinic.objects.annotate(rating=Avg('ratings__rating')).all()
 
 class HealthCardView(viewsets.ModelViewSet):
-    queryset = HealthCard.objects
     serializer_class = HealthCardSerializer
     permission_classes = [HealthCardPermissions]
 
-
-    def list(self, request):
-        queryset = self.get_queryset()
-        patient = "pacijent@gmail.com"
-        queryset = queryset.filter(patient_id=patient)
-
-        print(request.body)
-
-
-        serializer = HealthCardSerializer(queryset, many=True)
-
-
-
-        return Response(status=status.HTTP_200_OK, data={'healthCard':serializer.data}, content_type='application/json')
+    def get_queryset(self):
+        if hasattr(self.request.user, 'patient'):
+            return HealthCard.objects.filter(patient=self.request.user.patient)
 
 
 class OperatingRoomView(viewsets.ModelViewSet):

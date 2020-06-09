@@ -24,11 +24,13 @@ import { getClinics } from '../../store/actions/ClinicActions';
 import { getOperations } from '../../store/actions/OperationActions';
 import { getAppointmentTypes, checkAppointmentAvailable, getAppointments, postAppointment } from '../../store/actions/AppointmentActions';
 import { getDoctorRatings, getClinicRatings, postDoctorRating, postClinicRating, putDoctorRating, putClinicRating } from '../../store/actions/RatingActions';
+import { getHealthCard } from '../../store/actions/HealthCardActions';
 
 import { Typography } from '@material-ui/core';
 
 import CardList from '../../components/CardList/CardList';
 import PatientHistoryCardList from '../../components/CardList/PatientHistoryCardList';
+import PatientHealthCardList from '../../components/CardList/PatientHealthCardList';
 
 const useStyles = makeStyles(styles);
 
@@ -53,6 +55,7 @@ function PatientHome(props) {
     const [renderAppointmentClinics, setRenderAppointmentClinics] = React.useState(false);
     const [renderAppointmentDoctors, setRenderAppointmentDoctors] = React.useState(false);
     const [renderMedicalHistory, setRenderMedicalHistory] = React.useState(false);
+    const [renderHealthCard, setRenderHealthCard] = React.useState(false);
     const orderByOptions = ['name', 'address', 'city', 'country'];
 
     const showClinicalCenters = () => {
@@ -61,8 +64,17 @@ function PatientHome(props) {
         setRenderAppointmentClinics(false);
         setRenderAppointmentDoctors(false);
         setRenderMedicalHistory(false);
-    }
+        setRenderHealthCard(false);
 
+    }
+    const showHealthCard = () => {
+        props.getHealthCard();
+        setRenderClinicsTable(false);
+        setRenderAppointmentClinics(false);
+        setRenderAppointmentDoctors(false);
+        setRenderMedicalHistory(false);
+        setRenderHealthCard(true);
+    }
     const showMedicalHistory = () => {
         props.getAppointments();
         props.getOperations();
@@ -71,6 +83,7 @@ function PatientHome(props) {
         setRenderClinicsTable(false);
         setRenderAppointmentClinics(false);
         setRenderAppointmentDoctors(false);
+        setRenderHealthCard(false);
         setRenderMedicalHistory(true);
     };
     const handleCheckClick = (e) => {
@@ -92,6 +105,7 @@ function PatientHome(props) {
         setChosenClinic(id);
         setRenderClinicsTable(false);
         setRenderAppointmentDoctors(true);
+        setRenderHealthCard(false);
         setRenderAppointmentClinics(false);
         setRenderMedicalHistory(false);
 
@@ -252,7 +266,7 @@ function PatientHome(props) {
         },
         {
             name: 'Health Card',
-            onClick: showClinicalCenters,
+            onClick: showHealthCard,
             icon: Favorite
         },
         {
@@ -336,6 +350,10 @@ function PatientHome(props) {
                         {renderMedicalHistory &&
                             <PatientHistoryCardList sortOptions={['haha']} data={prepareHistoryData()} rate={(payload) => leaveRating({ ...payload })} clinicRatings={props.clinicRatings} doctorRatings={props.doctorRatings} />
                         }
+
+                        {renderHealthCard &&
+                            <PatientHealthCardList data={props.healthCard} />
+                        }
                     </div>
 
                 </div>
@@ -373,6 +391,7 @@ const mapStateToProps = state => {
         email: state.authUser.email,
         doctorRatings: state.rating.doctorRatings,
         clinicRatings: state.rating.clinicRatings,
+        healthCard: state.healthCard.current
     };
 };
 
@@ -389,6 +408,7 @@ const mapDispatchToProps = {
     postDoctorRating,
     putClinicRating,
     putDoctorRating,
+    getHealthCard,
 
 };
 
