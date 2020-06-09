@@ -219,8 +219,6 @@ def resolveRequest(request,pk):
 
 
 def time_add(time, duration):
-    print (time)
-    print(duration)
     start = datetime.datetime(
         2000, 1, 1,
         hour=time.hour, minute=time.minute, second=time.second)

@@ -15,24 +15,24 @@ import { withFormikField } from '../../utils/withFormikField'
 const FormikTextField = withFormikField(TextField);
 
 class LoginForm extends Component {
-  
+
   submit = (values) => {
     this.props.logIn(values);
   };
 
   render() {
     return (
-        <Formik 
-          initialValues={{
-            username: '',
-            password: ''
-          }}
-          validationSchema={loginSchema}
-          onSubmit={this.submit}
-          style={formStyle}>
-          <Form>
-            <Grid container spacing={2}>
-              <Grid item xs={12}>
+      <Formik
+        initialValues={{
+          username: '',
+          password: ''
+        }}
+        validationSchema={loginSchema}
+        onSubmit={this.submit}
+        style={formStyle}>
+        <Form>
+          <Grid container spacing={2}>
+            <Grid item xs={12}>
               <Field
                 component={FormikTextField}
                 type="text"
@@ -40,8 +40,8 @@ class LoginForm extends Component {
                 variant="outlined"
                 required
                 fullWidth
-                label="Username"
-              />  
+                label="Email"
+              />
             </Grid>
             <Grid item xs={12}>
               <Field
@@ -51,11 +51,11 @@ class LoginForm extends Component {
                 variant="outlined"
                 required
                 fullWidth
-                label="Password" 
+                label="Password"
               />
             </Grid>
           </Grid>
-        {this.props.loginError && <Alert severity="error" style={{marginTop:'10px'}}>Username or password not valid!</Alert>}
+          {this.props.loginError && <Alert severity="error" style={{ marginTop: '10px' }}>Email or password not valid!</Alert>}
           <Button
             type="submit"
             fullWidth
@@ -63,7 +63,7 @@ class LoginForm extends Component {
             color="primary"
             style={submitButton}
           >
-           Logi in
+            Logi in
         </Button>
         </Form>
       </Formik>
@@ -72,18 +72,18 @@ class LoginForm extends Component {
 }
 
 const mapStateToProps = state => {
-    return {
-      loginError: state.error.loginError
-    };
+  return {
+    loginError: state.error.loginError
   };
-  
-  const mapDispatchToProps = {
-    logIn
-  };
-  
-  export default withRouter(
-    connect(
-      mapStateToProps,
-      mapDispatchToProps
-    )(LoginForm)
-  );
+};
+
+const mapDispatchToProps = {
+  logIn
+};
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    mapDispatchToProps
+  )(LoginForm)
+);
