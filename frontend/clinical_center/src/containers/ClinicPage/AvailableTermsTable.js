@@ -1,5 +1,7 @@
 import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -21,6 +23,7 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 
 import { toolBarstyle, tableStyle } from "../../assets/jss/material-dashboard-react/components/patientListStyle.js";
 import AvailableTermsForm from './AvailableTermsForm'
+import { getAvailableAppointments, deleteAppointment } from '../../store/actions/AppointmentActions'
 
 const headCells = [
   { id: 'date', numeric: false, label: 'Date' },
@@ -92,12 +95,16 @@ const EnhancedTableToolbar =  (props) => {
 
 const useStyles = makeStyles(tableStyle);
 
-export default function AvailableTermsTable(props) {
-  const data = [{date:'1', time:'1', hall:1,doctor:1,price:1, duration:1}]
+function AvailableTermsTable(props) {
   const classes = useStyles();
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   
+
+  useEffect(() => {
+    console.log("OVDEEEEEEEEe")
+    props.getAvailableAppointments()
+  },[])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -108,7 +115,7 @@ export default function AvailableTermsTable(props) {
     setPage(0);
   };
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, data.length - page * rowsPerPage);
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.data.length - page * rowsPerPage);
 
   return (
     <div className={classes.root}>
@@ -125,7 +132,7 @@ export default function AvailableTermsTable(props) {
               classes={classes}
             />
             <TableBody>
-              {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              {props.data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
 
@@ -133,7 +140,7 @@ export default function AvailableTermsTable(props) {
                     <TableRow
                       hover
                       tabIndex={-1}
-                      key={row.date}
+                      key={row.id}
                     >
                     <TableCell align="left">{row.date}</TableCell>
                     <TableCell  align="left">{row.time}</TableCell>
@@ -142,7 +149,11 @@ export default function AvailableTermsTable(props) {
                       <TableCell align="left">{row.hall}</TableCell>
                       <TableCell align="left">{row.doctor}</TableCell>
                       <TableCell align="left">{row.price}</TableCell>
-                      <TableCell align="left"><IconButton><DeleteIcon /></IconButton></TableCell>
+                      <TableCell align="left">
+                        <IconButton onClick={() => props.deleteAppointment(row.id)}>
+                          <DeleteIcon />
+                        </IconButton>
+                      </TableCell>
                     </TableRow>
                   );
                 })}
@@ -157,7 +168,7 @@ export default function AvailableTermsTable(props) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={data.length}
+          count={props.data.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
@@ -167,3 +178,20 @@ export default function AvailableTermsTable(props) {
     </div>
   );
 }
+const mapStateToProps = state => {
+  return {
+       data: state.appointment.available || []
+  };
+};
+
+
+const mapDispatchToProps = {
+  getAvailableAppointments, deleteAppointment
+ };
+ 
+ export default withRouter(
+   connect(
+     mapStateToProps,
+     mapDispatchToProps
+   )(AvailableTermsTable)
+ );

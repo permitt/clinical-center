@@ -13,6 +13,7 @@ const hallReducer = (state = initialState, action) => {
       const { halls, reservedDates } = action.payload
       const arr = halls.map(el => {
         const reserved = reservedDates[el.name] || []
+        console.log("MILENA", reserved)
         const availableDate = reserved.length === 0 ? formatDate(new Date()) : findAvailable(reserved)
         el['available'] = availableDate
         return el
@@ -59,10 +60,9 @@ const findAvailable = reserved =>  {
     return new Date(a.date) - new Date(b.date);
   });
 
-  while (!found) {
+  while (!found && i < reserved.length) {
     const day = new Date(reserved[i].date)
     if (available < day) {
-      available = formatDate(available)
       found = true
     }
     else {
@@ -75,7 +75,7 @@ const findAvailable = reserved =>  {
     }
   }
 
-  return available
+  return formatDate(available)
 }
 
 export default hallReducer;

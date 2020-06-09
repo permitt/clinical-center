@@ -24,6 +24,17 @@ class DoctorService extends ApiService {
 
     return data
   }
+
+  searchDoctors = async (query) => {
+    let queryString = ''
+    for (let [key, value] of Object.entries(query)) {
+      queryString += `${key}=${value}&`
+    }
+    queryString = queryString.slice(0,-1)
+    const { data } = await this.apiClient.get(ENDPOINTS.DOCTORS + `?${queryString}`)
+
+    return data;
+  }
 }
 
 export const doctorService = new DoctorService();

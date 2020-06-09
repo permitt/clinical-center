@@ -1,7 +1,8 @@
-import { SET_DOCTORS, SET_DOCTOR, SET_DELETED_DOCTOR } from '../actions/ActionTypes';
+import { SET_DOCTORS, SET_DOCTOR, SET_DELETED_DOCTOR, SET_AVAILABLE_DOCTORS } from '../actions/ActionTypes';
 
 const initialState = {
-  all: []
+  all: [],
+  available: []
 };
 const doctorReducer = (state = initialState, action) => {
   let changedArr;
@@ -18,6 +19,9 @@ const doctorReducer = (state = initialState, action) => {
       changedArr.push(action.payload)
 
       return {...state, all: changedArr }
+    case SET_AVAILABLE_DOCTORS:
+
+      return {...state, available: action.payload }
     default:
       return state;
   }

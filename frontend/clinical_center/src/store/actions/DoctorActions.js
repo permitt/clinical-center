@@ -4,7 +4,9 @@ import {
     DELETE_DOCTOR, 
     SET_DOCTOR,
     ADD_DOCTOR,
-    SET_DELETED_DOCTOR
+    SET_DELETED_DOCTOR,
+    SEARCH_DOCTORS,
+    SET_AVAILABLE_DOCTORS
    } from './ActionTypes';
   
   export const getDoctors = () => {
@@ -47,6 +49,20 @@ import {
 
     return {
       type: ADD_DOCTOR,
+      payload
+    };
+  };
+
+  export const searchDoctors = payload => {
+    return {
+      type: SEARCH_DOCTORS,
+      payload
+    };
+  };
+  
+  export const setAvailableDoctors = payload => {
+    return {
+      type: SET_AVAILABLE_DOCTORS,
       payload
     };
   };
