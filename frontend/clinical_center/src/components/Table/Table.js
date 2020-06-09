@@ -60,14 +60,6 @@ const TableToolbar = props => {
 
   }
 
-  // useEffect(() => {
-  //  
-  //   if ()
-  //   setOpen(false);
-  //   setSortByOpen(false);
-  // }, [props])
-
-
   return (
     <Toolbar className={classes.root}>
       <Typography className={classes.title} variant="h6" id="tableTitle" component="div">

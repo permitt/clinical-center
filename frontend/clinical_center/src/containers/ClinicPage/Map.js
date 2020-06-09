@@ -30,7 +30,7 @@ export function MapContainer(props) {
         })
         .catch(err => console.log(err))
 
-    },[props])
+    },[props.street,props.city,props.country])
 ;
     return (
       <Map

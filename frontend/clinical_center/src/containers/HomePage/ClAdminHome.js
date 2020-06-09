@@ -32,7 +32,7 @@ import WorkOffIcon from '@material-ui/icons/WorkOff';
 import HolidayRequestList from '../HolidayRequestList/HolidayRequestList';
 import { EDIT_PROFILE } from '../../routes';
 import ReportsPage from '../ReportsPage/ReportsPage'
-import Clinic from '../Clinic/Clinic'
+import Clinic from '../ClinicPage/Clinic'
 
 
 const useStyles = makeStyles(styles);

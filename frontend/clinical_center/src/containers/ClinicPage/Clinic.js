@@ -16,6 +16,8 @@ import Button from '@material-ui/core/Button';
 import { Formik, Form, Field } from 'formik';
 import TextField from '@material-ui/core/TextField';
 import Alert from '@material-ui/lab/Alert';
+import AddIcon from '@material-ui/icons/Add';
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
 
 import { paper, avatar } from '../../assets/jss/material-dashboard-react/components/FormStyle';
 import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
@@ -32,6 +34,7 @@ export function Clinic(props) {
     const classes = useStyles();
     const [loading, setLoading] = React.useState(true);
     const [success, setSucces] = React.useState(false);
+    const [showTable, setShowTable] = React.useState(false);
 
     let name = props.clinic? props.clinic.name : '';
     let description = props.clinic? props.clinic.description: '';
@@ -58,7 +61,18 @@ export function Clinic(props) {
 
     return (
     <>
-        <Container>
+        <Button
+            type="submit"   
+            size="large"
+            variant="outlined"
+            color="primary"
+            style={{position: 'absolute', top:10, right:10}}
+            startIcon={showTable? <ArrowBackIcon />: <AddIcon />}
+            onClick={() => setShowTable(!showTable)}
+        >
+            {showTable? 'Back': 'Add available terms'}
+        </Button>
+       {!showTable? <Container>
             <Paper style={paper} elevation={3} >
                 <Avatar style={avatar}>
                     <LocalHospitalIcon />
@@ -156,13 +170,10 @@ export function Clinic(props) {
                         </Form>
                 </Formik>
             </Grid>}
-            {/* {!loading && <MapContainer street={props.clinic.address} city={props.clinic.city} country={props.clinic.country}/>} */}
-
         </Paper>
         {!loading && <MapContainer street={props.clinic.address} city={props.clinic.city} country={props.clinic.country}/>}
-
     </Container>
-    {/* <AvailableTermsTable /> */}
+    :     <AvailableTermsTable />}
 </>
 )
 }

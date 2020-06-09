@@ -4,18 +4,23 @@ import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
+import Container from '@material-ui/core/Container';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableHead from '@material-ui/core/TableHead';
 import TablePagination from '@material-ui/core/TablePagination';
 import TableRow from '@material-ui/core/TableRow';
-import TableSortLabel from '@material-ui/core/TableSortLabel';
+import Modal from '@material-ui/core/Modal';
+import Backdrop from '@material-ui/core/Backdrop';
+import Fade from '@material-ui/core/Fade';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
+import AddBoxIcon from '@material-ui/icons/AddBox';
 
 import { toolBarstyle, tableStyle } from "../../assets/jss/material-dashboard-react/components/patientListStyle.js";
+import AvailableTermsForm from './AvailableTermsForm'
 
 const headCells = [
   { id: 'date', numeric: false, label: 'Date' },
@@ -30,6 +35,7 @@ const headCells = [
 
 function EnhancedTableHead(props) {
   const { classes, order, orderBy } = props;
+
 
   return (
     <TableHead>
@@ -53,12 +59,33 @@ const useToolbarStyles = makeStyles(toolBarstyle);
 
 const EnhancedTableToolbar =  (props) => {
   const classes = useToolbarStyles();
+  const [open, setOpen] = React.useState(false);
+
   return (
 
     <Toolbar className={classes.root}>
         <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
             Available appointment terms
         </Typography>
+        <IconButton aria-label="filter list" onClick={() => setOpen(true)}>
+          <AddBoxIcon />
+      </IconButton>
+      <Modal
+        aria-labelledby="transition-modal-title"
+        aria-describedby="transition-modal-description"
+        className={classes.modal}
+        open={open}
+        onClose={() => setOpen(false)}
+        closeAfterTransition
+        BackdropComponent={Backdrop}
+        BackdropProps={{
+          timeout: 500,
+        }}
+      >
+        <Fade in={open}>
+         <AvailableTermsForm />
+        </Fade>
+      </Modal>
     </Toolbar>
   );
 }
