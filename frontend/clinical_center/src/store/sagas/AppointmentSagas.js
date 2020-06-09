@@ -1,7 +1,7 @@
 import { call, put, select } from 'redux-saga/effects';
 import { push, go } from 'connected-react-router'
 import { appointmentService } from '../../services/AppointmentService';
-import { setAppointmentTypes, setAppointmentTerms, setAppointments, setScheduledAppointment } from '../actions/AppointmentActions';
+import { setAppointmentTypes, setAppointmentTerms, addAvailableAppointment, setAppointments, setScheduledAppointment, setAvailableAppointments } from '../actions/AppointmentActions';
 import { setDoctors } from '../actions/DoctorActions';
 import { setAvailableClinics } from '../actions/ClinicActions';
 import { DASHBOARD } from '../../routes';
@@ -55,5 +55,31 @@ export function* appointmentSchedule(action) {
     } catch (error) {
         const msg = error.response ? error.response.data.msg : 'Can not schedule'
         yield put(setScheduledAppointment({ show: true, success: false, msg }))
+    }
+}
+
+export function* appointmentDelete(action) {
+    try {
+        const resp = yield call(() => appointmentService.deleteAppointment(action.payload));
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export function* availableAppointmentsGet(action) {
+    try {
+        const resp = yield call(() => appointmentService.getAvailableAppointments());
+        yield put(setAvailableAppointments(resp))
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+export function* availableAppointmentCreate(action) {
+    try {
+        const resp = yield call(() => appointmentService.createAvailableAppointment(action.payload));
+        yield put(addAvailableAppointment(resp))
+    } catch (error) {
+        console.log(error)
     }
 }

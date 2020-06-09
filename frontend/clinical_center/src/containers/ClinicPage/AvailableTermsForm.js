@@ -29,11 +29,10 @@ import {
 } from '@material-ui/pickers';
 
 import { paper } from '../../assets/jss/material-dashboard-react/components/FormStyle';
-import { getPatients } from '../../store/actions/PatientsActions'
 import { getTypes } from '../../store/actions/AppointmentTypeActions'
-import { scheduleAppointment } from '../../store/actions/AppointmentActions'
-import { getDoctors } from '../../store/actions/DoctorActions'
-import { convertTime, formatDate } from '../../utils/utils'
+import { addAvailableAppointment } from '../../store/actions/AppointmentActions'
+import { searchHalls } from '../../store/actions/HallActions'
+import { searchDoctors } from '../../store/actions/DoctorActions'
 
 const ITEM_HEIGHT = 48;
 const ITEM_PADDING_TOP = 8;
@@ -70,23 +69,61 @@ const useStyles = makeStyles((theme) => ({
       },
   }));
 
-function ScheduleForm(props) {
+function AvailableTermsForm(props) {
 const classes = useStyles();
 const [selectedDate, setSelectedDate] = React.useState();
-const [selectedTime, setSelectedTime] = React.useState();
-const [error, setError] = React.useState(props.scheduled.show)
-const [selectedAppType, setSelectedAppType] = React.useState('')
+const [error, setError] = React.useState()
+const [selectedAppType, setSelectedAppType] = React.useState()
 const [data,setData] = React.useState({price: '', duration:''})
-const [hall, selectedHall] = React.useState()
-const [doctor, selectedDoctor] = React.useState()
+const [selectedHall, setSelectedHall] = React.useState()
+const [selectedDoctor, setSelectedDoctor] = React.useState()
 
 
 const handleDateChange = (date) => {
   setSelectedDate(date);
-};
-const handleTimeChange = (time) => {
-    setSelectedTime(time);
-  };
+}
+
+const handleDoctorChange = e => {
+  setSelectedDoctor(e.target.value)
+}
+
+useEffect(() => {
+  console.log(selectedDate)
+  if (!selectedDate)
+    return;
+  const dateTime = selectedDate.split('T')
+  let query = {}
+  try {
+      query['date'] = dateTime[0]
+      query['time'] = dateTime[1]
+  } catch (error) {
+      console.log(error)
+  }
+  
+    console.log(query)
+    props.searchHalls(query)
+}, [selectedDate])
+
+useEffect(() => {
+  console.log(selectedDate)
+  if (!selectedDate || !selectedAppType)
+    return;
+  const dateTime = selectedDate.split('T')
+  let query = {}
+  try {
+      query['date'] = dateTime[0]
+      query['time'] = dateTime[1]
+  } catch (error) {
+      console.log(error)
+  }
+  
+    query['type'] = selectedAppType
+    props.searchDoctors(query)
+}, [selectedAppType])
+
+const handleHallChange = e => {
+  setSelectedHall(e.target.value)
+}
 
 const handleChangeAppType = (event) => {
     const index = event.target.value
@@ -97,21 +134,20 @@ const handleChangeAppType = (event) => {
 
 
 
-const schedule = () => {
-//   let values = {
-//     date: formatDate(selectedDate), 
-//     time: convertTime(selectedTime.toLocaleTimeString()), 
-//     doctors: selectedDoctors,
-//     typeApp: selectedAppType
-//   }
-//   values['patient'] = choosenPatient
-//   props.scheduleAppointment(values)
-// }
+const save = () => {
+ 
+  if (!selectedDate || !selectedDoctor || !selectedHall || !selectedAppType)
+    return;
+  const dateTime = selectedDate.split('T')
+  let values = {
+    date: dateTime[0], 
+    time: dateTime[1], 
+    doctor: selectedDoctor,
+    type: selectedAppType,
+    hall: selectedHall,
+  }
+  props.addAvailableAppointment(values)
 }
-
-// useEffect(() => {
-//   setError(props.scheduled.show)
-//  },[props.scheduled])
 
 useEffect(() => {
   props.getTypes()
@@ -135,36 +171,19 @@ return (
                 Select date and time:
             </Typography>
           </Grid>
-          <Grid item xs={3}>
-            <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardDatePicker
-                margin="normal"
-                id="date-picker-dialog"
-                label="Date"
-                format="MM/dd/yyyy"
-                value={selectedDate}
-                onChange={handleDateChange}
-                KeyboardButtonProps={{
-                    'aria-label': 'change date',
-                }}
+          <Grid item xs={6}  align="center"  style={{marginBottom:'20px'}}>
+                <TextField
+                    id="datetime-local"
+                    label="Select date and time"
+                    type="datetime-local"
+                    defaultValue={selectedDate}
+                    onChange={e => handleDateChange(e.target.value)}
+                    InputLabelProps={{
+                    shrink: true,
+                    }}
                 />
-            </MuiPickersUtilsProvider>
-        </Grid>
-        <Grid item xs={3}>
-          <MuiPickersUtilsProvider utils={DateFnsUtils}>
-                <KeyboardTimePicker
-                margin="normal"
-                id="time-picker"
-                label="Time"
-                value={selectedTime}
-                onChange={handleTimeChange}
-                KeyboardButtonProps={{
-                    'aria-label': 'change time',
-                }}
-                />
-            </MuiPickersUtilsProvider>
-        </Grid>
-        {selectedDate && selectedTime && <>
+                </Grid>
+        {selectedDate  && <>
         <Grid item xs={3}>
             <Typography component="h6" variant="h6">
                 Available halls: 
@@ -172,15 +191,15 @@ return (
         </Grid>
         <Grid item xs={9}>
         <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel id="demo-simple-select-outlined-label">Halls</InputLabel>
+            <InputLabel id="ademo-simple-select-outlined-label">Halls</InputLabel>
             <Select
                 labelId="selecte-type"
                 id="demo-simple-select-outlined-type"
-                value={selectedAppType}
-                onChange={handleChangeAppType}
+                value={selectedHall}
+                onChange={handleHallChange}
                 label="Type of"
             >
-                {props.types.map((type,index) => <MenuItem key={index} value={type.id}>{type.typeName}</MenuItem> )}
+                {props.halls.map((hall,index) => <MenuItem key={index} value={hall.id}>{hall.name}</MenuItem> )}
             </Select>
             </FormControl>
         </Grid>
@@ -192,7 +211,7 @@ return (
           </Grid>
         <Grid item xs={3}>
             <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel id="demo-simple-select-outlined-label">Type of</InputLabel>
+            <InputLabel id="aademo-simple-select-outlined-label">Type of</InputLabel>
             <Select
                 labelId="selecte-type"
                 id="demo-simple-select-outlined-type"
@@ -224,11 +243,11 @@ return (
             <Select
                 labelId="selecte-type"
                 id="demo-simple-select-outlined-type"
-                value={selectedAppType}
-                onChange={handleChangeAppType}
+                value={selectedDoctor}
+                onChange={handleDoctorChange}
                 label="Type of"
             >
-                {props.types.map((type,index) => <MenuItem key={index} value={type.id}>{type.typeName}</MenuItem> )}
+                {props.doctors.map((doc,index) => <MenuItem key={index} value={doc.email}>{doc.firstName + ' ' + doc.lastName}</MenuItem> )}
             </Select>
             </FormControl>
         </Grid></>)}
@@ -240,7 +259,7 @@ return (
         )
         }
         <Grid item xs={3}>
-          <Button variant="contained" color="primary"  size="large" startIcon={<SaveIcon />} onClick={schedule}>
+          <Button variant="contained" color="primary"  size="large" startIcon={<SaveIcon />} onClick={save}>
             Save
          </Button>
         </Grid>
@@ -252,21 +271,19 @@ return (
 
 const mapStateToProps = state => {
   return {
-    patients: state.patient.all,
-    doctors: state.doctor.all,
-    doctorEmail: state.authUser.email,
-    scheduled: state.appointment.scheduled,
+    halls: state.hall.all,
+    doctors: state.doctor.available,
     types: state.type.all
   };
 };
 
 const mapDispatchToProps = {
- scheduleAppointment, getDoctors, getPatients, getTypes
+  searchDoctors, searchHalls, getTypes, addAvailableAppointment
 };
 
 export default withRouter(
   connect(
     mapStateToProps,
     mapDispatchToProps
-  )(ScheduleForm)
+  )(AvailableTermsForm)
 );

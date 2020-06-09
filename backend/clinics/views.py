@@ -122,6 +122,9 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 clinic_name=F("clinic__name"),
                 price=F("typeOf__prices__price")
                 )
+        if hasattr(self.request.user, 'adminAccount'):
+            return Appointment.objects \
+                .filter(patient=None,clinic=self.request.user.adminAccount.employedAt,)
 
         return Appointment.objects.all()
     permission_classes = [permissions.IsAuthenticated]

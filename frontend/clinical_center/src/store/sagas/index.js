@@ -7,13 +7,13 @@ import {
   GET_HALLS, SEARCH_HALLS, DELETE_HALL, ADD_HALL, EDIT_HALL,
   GET_PATIENTS, GET_PATIENT, PUT_PATIENT, SEARCH_PATIENTS,
   GET_TYPES, SEARCH_TYPES, DELETE_TYPE, ADD_TYPE, EDIT_TYPE,
-  GET_REQUESTS, RESOLVE_REQUEST, GET_PROFILE, EDIT_PROFILE, SCHEDULE_APPOINTMENT, CREATE_REQUEST,
-  GET_CLINIC_REPORTS, GET_INCOME, GET_ADMIN_CLINIC
+  GET_REQUESTS, RESOLVE_REQUEST, GET_PROFILE, EDIT_PROFILE, SCHEDULE_APPOINTMENT,DELETE_APPOINTMENT, CREATE_REQUEST,
+  GET_CLINIC_REPORTS, GET_INCOME, GET_ADMIN_CLINIC, GET_AVAILABLE_APPOINTMENTS, SEARCH_DOCTORS, ADD_APPOINTMENT_TERM
 } from '../actions/ActionTypes';
 import { userLogin, userRegister, userLogout, userChangePass, profileGet, profileEdit } from './AuthSagas';
-import { doctorsGet, doctorDelete, doctorAdd } from './DoctorSagas';
+import { doctorsGet, doctorDelete, doctorAdd, doctorSearch } from './DoctorSagas';
 import { clinicsGet, adminClinicGet, adminClinicEdit } from './ClinicSagas';
-import { appointmentTypesGet, appointmentChecking, appointmentPost, appointmentsGet, appointmentSchedule } from './AppointmentSagas';
+import { appointmentTypesGet, appointmentChecking, appointmentPost, appointmentsGet, appointmentSchedule, availableAppointmentsGet, appointmentDelete, availableAppointmentCreate } from './AppointmentSagas';
 import { hallsGet, hallsSearch, hallDelete, hallAdd, hallEdit } from './HallSaga'
 import { typesGet, typesSearch, typeDelete, typeAdd, typeEdit } from './AppointmentTypeSagas'
 import { patientsGet, patientGet, patientPut, patientsSearch } from './PatientSagas'
@@ -32,6 +32,7 @@ export default function* rootSaga() {
     takeLatest(GET_DOCTORS, doctorsGet),
     takeLatest(DELETE_DOCTOR, doctorDelete),
     takeLatest(ADD_DOCTOR, doctorAdd),
+    takeLatest(SEARCH_DOCTORS, doctorSearch),
 
     takeLatest(GET_CLINICS, clinicsGet),
     takeLatest(GET_ADMIN_CLINIC, adminClinicGet),
@@ -41,6 +42,9 @@ export default function* rootSaga() {
     takeLatest(GET_APPOINTMENT_CHECK, appointmentChecking),
     takeLatest(POST_APPOINTMENT, appointmentPost),
     takeLatest(SCHEDULE_APPOINTMENT, appointmentSchedule),
+    takeLatest(GET_AVAILABLE_APPOINTMENTS, availableAppointmentsGet),
+    takeLatest(DELETE_APPOINTMENT, appointmentDelete),
+    takeLatest(ADD_APPOINTMENT_TERM, availableAppointmentCreate),
 
     takeLatest(GET_HALLS, hallsGet),
     takeLatest(SEARCH_HALLS, hallsSearch),
