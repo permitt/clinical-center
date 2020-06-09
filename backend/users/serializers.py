@@ -3,7 +3,7 @@ import hashlib
 
 from django.conf import settings
 from django.contrib.auth.models import User
-from clinics.models import Specialization
+from clinics.models import Specialization, HealthCard
 from django.core.mail import send_mail
 from rest_framework import serializers
 from rest_framework_simplejwt.serializers import TokenObtainPairSerializer
@@ -26,6 +26,7 @@ class PatientSerializer(serializers.ModelSerializer):
         patient = Patient(**validated_data)
         patient.activation_link = generate_link(user.email, datetime.datetime.now())
         patient.user = user
+        HealthCard.objects.create(patient=patient)
         patient.save()
         return patient
 
@@ -33,7 +34,6 @@ class PatientSerializer(serializers.ModelSerializer):
         # Will send an email when updated to approved
         if instance.password != validated_data['password']:
             user = User.objects.get(email=instance.email)
-            print("PW ", validated_data['password'])
             user.set_password(validated_data['password'])
             user.save()
 

@@ -20,29 +20,14 @@ class Clinic(models.Model):
     def __str__(self):
         return self.name
 
-class Diagnosis(models.Model):
-    description = models.TextField()
-    code = models.IntegerField()
-
-class AppointmentReport(models.Model):
-    diagnosis = models.ForeignKey(to=Diagnosis, on_delete=models.CASCADE)
-
 
 class HealthCard(models.Model):
     patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE, related_name="health_card")
 
-    # istorija bolesti   sifrarnik dijagnoze
-    # recepte iz spiska koje na kraju pregleda med sestra mora da ovjeri???
-    # dijagnoze kao npr : dioptrija, alergija
-    # izvjestaj o pregledu
-    """
-    Izveštaje o pregledu može da unosi
-    samo lekar koji je izvršio taj pregled i medicinske sestre. Izmena izveštaja starih
-    pregleda je moguća isključivo od strane lekara koji je taj pregled izvršio
-    
-     WUT, posle koliko  
-    """
-
+class DiagnosisReport(models.Model):
+    description = models.TextField()
+    type = models.CharField(max_length=30)
+    health_card = models.ForeignKey(to=HealthCard, on_delete=models.CASCADE, related_name='reports')
 
 class OperatingRoom(models.Model):
     clinic = models.ForeignKey(to=Clinic, on_delete=models.CASCADE, related_name='operating_rooms')
