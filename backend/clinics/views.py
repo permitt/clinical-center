@@ -253,7 +253,6 @@ def appointmentCheck(request):
         date = datetime.datetime.strptime(request.data['appointmentDate'], '%Y-%m-%d')
         dateDay = date.weekday()
         appointmentType = request.data['appointmentType']
-        #duration = AppointmentType.objects.get(typeName=appointmentType).duration
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':"Invalid parameters."})
     try:
@@ -269,15 +268,14 @@ def appointmentCheck(request):
             .filter(specializations__typeOf__typeName=appointmentType, busyHours__lte=((F('endTime')-F('startTime'))/60000000)-F('duration')).distinct()
 
         priceList = PriceList.objects.filter(clinic=OuterRef('id'), appointmentType__typeName=appointmentType)
-        clinics = Clinic.objects. \
-            annotate(rating=Avg('ratings__rating'), appointmentPrice=Subquery(priceList.values('price'))). \
-            filter(doctors__in=doctors).distinct()
-
-        docSer = DoctorSerializer(doctors, many=True)
-        clinicSer = ClinicSerializer(clinics, many=True)
         appointments = []
+        docs_on_holiday = []
 
         for doc in doctors:
+            holiday = Holiday.objects.filter(employee=doc.user, startDate__lte=date, endDate__gte=date, approved=True,
+                                             resolved=True)
+            if len(holiday) > 0:
+                docs_on_holiday.append(doc.email)
 
             doctorElement = {'doctor':doc.email, 'time':[]}
             time = doc.startTime
@@ -305,6 +303,15 @@ def appointmentCheck(request):
                 time = time_add(time, duration)
 
             appointments.append(doctorElement)
+
+        doctors = doctors.exclude(email__in=docs_on_holiday)
+        clinics = Clinic.objects. \
+            annotate(rating=Avg('ratings__rating'), appointmentPrice=Subquery(priceList.values('price'))). \
+            filter(doctors__in=doctors).distinct()
+
+        docSer = DoctorSerializer(doctors, many=True)
+        clinicSer = ClinicSerializer(clinics, many=True)
+
         return Response(status=status.HTTP_200_OK, data={"doctors": docSer.data, "clinics": clinicSer.data, "availableTerms":appointments}, content_type='application/json')
     except Exception as inst:
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':'Cannot book an appointment.'})

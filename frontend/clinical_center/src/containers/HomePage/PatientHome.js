@@ -66,6 +66,7 @@ function PatientHome(props) {
         setRenderMedicalHistory(false);
         setRenderHealthCard(false);
 
+
     }
     const showHealthCard = () => {
         props.getHealthCard();
@@ -99,6 +100,9 @@ function PatientHome(props) {
         setRenderAppointmentDoctors(false);
         setAppointmentTime('');
         setRenderAppointmentClinics(true);
+        setRenderMedicalHistory(false);
+        setRenderHealthCard(false);
+
     }
 
     const handleClinicClick = (id) => {
@@ -108,6 +112,7 @@ function PatientHome(props) {
         setRenderHealthCard(false);
         setRenderAppointmentClinics(false);
         setRenderMedicalHistory(false);
+
 
     }
 
