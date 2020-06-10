@@ -17,14 +17,15 @@ const FormikTextField = withFormikField(TextField);
 class LoginForm extends Component {
 
   submit = (values) => {
-    this.props.logIn(values);
+
+    this.props.logIn({ username: values.email, password: values.password });
   };
 
   render() {
     return (
       <Formik
         initialValues={{
-          username: '',
+          email: '',
           password: ''
         }}
         validationSchema={loginSchema}
@@ -36,7 +37,7 @@ class LoginForm extends Component {
               <Field
                 component={FormikTextField}
                 type="text"
-                name="username"
+                name="email"
                 variant="outlined"
                 required
                 fullWidth
@@ -63,7 +64,7 @@ class LoginForm extends Component {
             color="primary"
             style={submitButton}
           >
-            Logi in
+            Login
         </Button>
         </Form>
       </Formik>
