@@ -1,7 +1,7 @@
 import { call, put, select } from 'redux-saga/effects';
 import { push, go } from 'connected-react-router'
 import { appointmentService } from '../../services/AppointmentService';
-import { setAppointmentTypes, setAppointmentTerms, addAvailableAppointment, setAppointments, setScheduledAppointment, setAvailableAppointments } from '../actions/AppointmentActions';
+import { setAppointmentTypes, setAppointmentTerms, setAppointments, setScheduledAppointment, setAvailableAppointments, setAddedAvailableAppointment } from '../actions/AppointmentActions';
 import { setDoctors } from '../actions/DoctorActions';
 import { setAvailableClinics } from '../actions/ClinicActions';
 import { DASHBOARD } from '../../routes';
@@ -78,7 +78,8 @@ export function* availableAppointmentsGet(action) {
 export function* availableAppointmentCreate(action) {
     try {
         const resp = yield call(() => appointmentService.createAvailableAppointment(action.payload));
-        yield put(addAvailableAppointment(resp))
+        console.log(resp)
+        yield put(setAddedAvailableAppointment(resp.app))
     } catch (error) {
         console.log(error)
     }

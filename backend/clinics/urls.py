@@ -20,5 +20,6 @@ urlpatterns = [
         path('clinicreports/', views.reports),
         path('income/', views.income),
         path('adminclinic/', views.adminClinic),
+        path('appointment/appterm/', views.appTerm),
         *router.urls
     ]

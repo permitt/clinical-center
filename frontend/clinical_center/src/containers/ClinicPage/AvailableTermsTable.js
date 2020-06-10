@@ -24,6 +24,8 @@ import AddBoxIcon from '@material-ui/icons/AddBox';
 import { toolBarstyle, tableStyle } from "../../assets/jss/material-dashboard-react/components/patientListStyle.js";
 import AvailableTermsForm from './AvailableTermsForm'
 import { getAvailableAppointments, deleteAppointment } from '../../store/actions/AppointmentActions'
+import { formatHours } from '../../utils/utils'
+
 
 const headCells = [
   { id: 'date', numeric: false, label: 'Date' },
@@ -64,6 +66,11 @@ const EnhancedTableToolbar =  (props) => {
   const classes = useToolbarStyles();
   const [open, setOpen] = React.useState(false);
 
+
+  useEffect(()=> {
+    setOpen(false)
+  }, [props])
+
   return (
 
     <Toolbar className={classes.root}>
@@ -102,7 +109,6 @@ function AvailableTermsTable(props) {
   
 
   useEffect(() => {
-    console.log("OVDEEEEEEEEe")
     props.getAvailableAppointments()
   },[])
 
@@ -135,20 +141,19 @@ function AvailableTermsTable(props) {
               {props.data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
-
                   return (
                     <TableRow
                       hover
                       tabIndex={-1}
-                      key={row.id}
+                      key={index}
                     >
                     <TableCell align="left">{row.date}</TableCell>
-                    <TableCell  align="left">{row.time}</TableCell>
-                      <TableCell align="left">{row.type}</TableCell>
-                      <TableCell align="left">{row.duration}</TableCell>
-                      <TableCell align="left">{row.hall}</TableCell>
-                      <TableCell align="left">{row.doctor}</TableCell>
-                      <TableCell align="left">{row.price}</TableCell>
+                    <TableCell  align="left">{row.time.slice(0,-3)}</TableCell>
+                      <TableCell align="left">{row.type_name}</TableCell>
+                      <TableCell align="left">{formatHours(row.duration)}</TableCell>
+                      <TableCell align="left">{row.operatinRoom_name}</TableCell>
+                      <TableCell align="left">{row.doctor_name}</TableCell>
+                      <TableCell align="left">{row.price} $</TableCell>
                       <TableCell align="left">
                         <IconButton onClick={() => props.deleteAppointment(row.id)}>
                           <DeleteIcon />

@@ -11,8 +11,8 @@ import {
     DELETE_APPOINTMENT,
     SET_AVAILABLE_APPOINTMENTS,
     GET_AVAILABLE_APPOINTMENTS,
-    CREATE_APPOINTMENT_TERM,
-    ADD_APPOINTMENT_TERM
+    ADD_APPOINTMENT_TERM,
+    SET_ADDED_APPOINTMENT_TERM
 } from './ActionTypes';
 
 export const getAppointmentTypes = () => {
@@ -68,14 +68,6 @@ export const scheduleAppointment = payload => {
     };
 }
 
-export const createAppointmentTerm = payload => {
-    return {
-        type: CREATE_APPOINTMENT_TERM,
-        payload
-    };
-}
-
-
 export const setScheduledAppointment = payload => {
     return {
         type: SET_SCHEDULED_APPOINTMENT,
@@ -107,6 +99,13 @@ export const setAvailableAppointments = payload => {
 export const addAvailableAppointment = payload => {
     return {
         type: ADD_APPOINTMENT_TERM,
+        payload
+    };
+}
+
+export const setAddedAvailableAppointment = payload => {
+    return {
+        type: SET_ADDED_APPOINTMENT_TERM,
         payload
     };
 }

@@ -132,8 +132,27 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 price=F("typeOf__prices__price")
                 )
         if hasattr(self.request.user, 'adminAccount'):
-            return Appointment.objects \
-                .filter(patient=None,clinic=self.request.user.adminAccount.employedAt,)
+            if 'all' in self.request.query_params :
+                return Appointment.objects \
+                    .filter(clinic=self.request.user.adminAccount.employedAt, ).exclude(patient__isnull=True).annotate(
+                    type_name=F("typeOf__typeName"),
+                    operatinRoom_name=F("operatingRoom__name"),
+                    doctor_name=F("doctor__firstName"),
+                    price=F("typeOf__prices__price"),
+                    duration=F("typeOf__duration")
+                )
+
+            else:
+                print(Appointment.objects.all())
+                return Appointment.objects \
+                    .filter(patient=None, clinic=self.request.user.adminAccount.employedAt).annotate(
+                    type_name=F("typeOf__typeName"),
+                    operatinRoom_name=F("operatingRoom__name"),
+                    doctor_name=Concat(F('doctor__firstName'), V(' '), F('doctor__lastName'), output_field=CharField()),
+                    price=F("typeOf__prices__price"),
+                    duration=F("typeOf__duration")
+                )
+
 
         return Appointment.objects.all()
     permission_classes = [permissions.IsAuthenticated]
@@ -474,3 +493,35 @@ def adminClinic(request):
     clinicSerializer = ClinicSerializer(clinic, many=False)
 
     return Response(status=status.HTTP_200_OK, data={'clinic': clinicSerializer.data})
+
+@api_view(["POST"])
+def appTerm(request):
+    user = request.user
+    if (not user):
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    try:
+        doctor = request.data['doctor']
+        time = request.data['time']
+        date = request.data['date']
+        type = request.data['type']
+        hall = request.data['hall']
+
+        #appointment.save()
+
+
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST, data= {'msg':"InvalidParameters"})
+
+    appointment = Appointment.objects.create(date=date, time=time, typeOf_id=int(type), operatingRoom_id=int(hall),
+                              doctor_id=doctor, clinic=request.user.adminAccount.employedAt)
+
+    app = Appointment.objects.annotate(
+                    type_name=F("typeOf__typeName"),
+                    operatinRoom_name=F("operatingRoom__name"),
+                    doctor_name=Concat(F('doctor__firstName'), V(' '), F('doctor__lastName'), output_field=CharField()),
+                    price=F("typeOf__prices__price"),
+                    duration=F("typeOf__duration")
+                ).get(pk=appointment.pk)
+
+    return Response(status=status.HTTP_200_OK,data={'app': AppointmentSerializer(app,many=False).data})
