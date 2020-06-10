@@ -8,7 +8,9 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import *
 from rest_framework.decorators import api_view
 from . import custom_permissions
-from django.db.models import Avg
+from django.db.models import Avg, Q, Count, Exists, OuterRef
+from clinics.models import Holiday, Appointment, Operation, AppointmentType
+from clinics.views import time_add
 
 class PatientViewset(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
@@ -82,11 +84,66 @@ class DoctorViewset(viewsets.ModelViewSet):
 
     def list(self, request, *args, **kwargs):
         user = request.user
+        print(request.query_params)
         if (hasattr(user,'adminAccount')):
             query = Doctor.objects.filter(employedAt=user.adminAccount.employedAt).annotate(rating=Avg('ratings__rating'))
+
+            if 'date' in request.query_params and 'type' in request.query_params and 'time' in request.query_params:
+                time = datetime.datetime.strptime(request.query_params['time'],'%H:%M').time()
+                date = datetime.datetime.strptime(request.query_params['date'],'%Y-%m-%d')
+                print('datum', date)
+                type = request.query_params['type']
+                query = query.filter(specializations__typeOf__pk=type)
+
+                #check if doctor is on holiday
+                query = query.exclude(Exists(Holiday.objects.filter(
+                    employee=OuterRef('user'),
+                    approved=True,
+                    startDate__lte=date,
+                    endDate__gte=date
+                )))
+                #check if doctor works that day in that time
+                typeObject = AppointmentType.objects.get(id=type)
+                query = query.filter(Exists(Schedule.objects.filter(
+                    employee__pk=OuterRef('pk'),
+                    day=date.weekday(),
+                    startTime__lte=time,
+                    endTime__gt=time_add(time,typeObject.duration)
+                )))
+
+                #check if doctor has another appointment in choosen time
+                query = list(query)
+                for doc in query:
+                    print(doc)
+                    date = date.date()
+                    for app in doc.appointments.all():
+                        if (not(app.date == date)):
+                            continue
+                        choosenEndTime = time_add(time, typeObject.duration)
+                        endsBefore = choosenEndTime < app.time
+                        startsAfter = time > time_add(app.time, app.typeOf.duration)
+                        if (not (endsBefore or startsAfter)):
+                            query.remove(doc)
+                            break
+
+                    # check if doctor has another operation in choosen time
+                    for operation in doc.operations.all():
+                        if (not (operation.date == date)):
+                            continue
+                        choosenEndTime = time_add(time, typeObject.duration)
+                        endsBefore = choosenEndTime < operation.time
+                        startsAfter = time > time_add(app.time, operation.duration)
+                        if (not (endsBefore or startsAfter)):
+                            query.remove(doc)
+                            break
+
+
+
         if (hasattr(user,'docAccount')):
             query = Doctor.objects.filter(employedAt=user.docAccount.employedAt).annotate(rating=Avg('ratings__rating'))
+
         serializer = self.get_serializer(query, many=True)
+
 
         return Response(serializer.data)
 
