@@ -44,9 +44,30 @@ class OperatingRoomView(viewsets.ModelViewSet):
             queryset = queryset.filter(name__startswith=request.query_params['name'])
         if 'number' in request.query_params:
             queryset = queryset.filter(number=request.query_params['number'])
-        if 'date' in request.query_params and 'time' in request.query_params:
+        if 'date' in request.query_params and 'time' in request.query_params and 'duration' in request.query_params:
+            try:
+                duration = int(request.query_params['duration'])
+            except:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
             queryset = queryset.exclude(appointment__date=request.query_params['date'], appointment__time=request.query_params['time'])
-        serializer = OperatingRoomSerializer(queryset, many=True)
+
+            hall_list = list(queryset)
+            for hall in hall_list:
+                for app in hall.appointment_set.all():
+                    choosenStartTime = datetime.datetime.strptime(request.query_params['time'], '%H:%M').time()
+                    choosenEndTime = time_add(choosenStartTime, duration)
+                    endsBefore = choosenEndTime < app.time
+                    startsAfter = choosenStartTime > time_add(app.time, app.typeOf.duration)
+
+                    if (not (endsBefore or startsAfter)):
+                        hall_list.remove(hall)
+                        break
+        else:
+            hall_list = list(queryset)
+
+
+        serializer = OperatingRoomSerializer(hall_list, many=True)
         appTypeSerializer = AppointmentTypeSerializer
         dates = {}
         for hall in queryset :
