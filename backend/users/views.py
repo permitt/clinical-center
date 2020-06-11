@@ -91,7 +91,6 @@ class DoctorViewset(viewsets.ModelViewSet):
             if 'date' in request.query_params and 'type' in request.query_params and 'time' in request.query_params:
                 time = datetime.datetime.strptime(request.query_params['time'],'%H:%M').time()
                 date = datetime.datetime.strptime(request.query_params['date'],'%Y-%m-%d')
-                print('datum', date)
                 type = request.query_params['type']
                 query = query.filter(specializations__typeOf__pk=type)
 
@@ -111,7 +110,7 @@ class DoctorViewset(viewsets.ModelViewSet):
                     endTime__gt=time_add(time,typeObject.duration)
                 )))
 
-                #check if doctor has another appointment in choosen time
+                #check if doctor has another appointment or operation in choosen time
                 query = list(query)
                 for doc in query:
                     print(doc)
@@ -136,8 +135,6 @@ class DoctorViewset(viewsets.ModelViewSet):
                         if (not (endsBefore or startsAfter)):
                             query.remove(doc)
                             break
-
-
 
         if (hasattr(user,'docAccount')):
             query = Doctor.objects.filter(employedAt=user.docAccount.employedAt).annotate(rating=Avg('ratings__rating'))
