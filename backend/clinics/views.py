@@ -69,12 +69,15 @@ class OperatingRoomView(viewsets.ModelViewSet):
 
         serializer = OperatingRoomSerializer(hall_list, many=True)
         appTypeSerializer = AppointmentTypeSerializer
+        operationSerializer = OperationSerializer
         dates = {}
         for hall in queryset :
             dates[hall.name] = []
             for app in hall.appointment_set.all() :
                 dates[hall.name].append({'date': app.date, 'time': app.time, 'type': appTypeSerializer(app.typeOf).data })
-
+            for operation in hall.operation_set.all():
+                dates[hall.name].append(
+                    {'date': operation.date, 'time': operation.time, 'type': 'operation'})
         return Response(status=status.HTTP_200_OK, data={"halls": serializer.data , "reservedDates": dates}, content_type='application/json')
 
     def get_queryset(self):

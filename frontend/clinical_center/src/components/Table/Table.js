@@ -60,6 +60,11 @@ const TableToolbar = props => {
 
   }
 
+    useEffect(() => {
+    setOpen(false)
+  },[props])
+
+
   return (
     <Toolbar className={classes.root}>
       <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
@@ -141,6 +146,10 @@ export default function SimpleTable(props) {
     // setEdit({openModal:false, selected: {}})
     
   }, [props])
+
+  useEffect(() => {
+    setEdit({openModal: false, selected: {}})
+  },[props])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);

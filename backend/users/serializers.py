@@ -85,6 +85,7 @@ class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Doctor
         exclude = ['user']
+        read_only_fields = ['email']
 
     def create(self, validated_data):
         requestBody = self.context['request'].data
