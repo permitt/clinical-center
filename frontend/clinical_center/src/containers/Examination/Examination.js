@@ -29,7 +29,6 @@ import {
 import { paper } from '../../assets/jss/material-dashboard-react/components/FormStyle';
 import { getPatient, getPatients } from '../../store/actions/PatientsActions'
 import { scheduleAppointment } from '../../store/actions/AppointmentActions'
-import { getDoctors } from '../../store/actions/DoctorActions'
 import { convertTime, formatDate } from '../../utils/utils'
 import { getTypes } from '../../store/actions/AppointmentTypeActions'
 
@@ -74,7 +73,8 @@ const classes = useStyles();
 const [selectedDate, setSelectedDate] = React.useState(new Date());
 const [selectedTime, setSelectedTime] = React.useState(new Date());
 const [selectedType, setSelectedType] = React.useState('appointment');
-const [selectedDoctors, setSelectedDoctors] = React.useState([props.doctorEmail]);
+const [selectedDoctor, setSelectedDoctor] = React.useState(props.doctorEmail);
+const [duration, setDuration] = React.useState()
 const [error, setError] = React.useState(props.scheduled.show)
 const [choosenPatient, setChoosenPatient] = React.useState('')
 const [selectedAppType, setSelectedAppType] = React.useState('')
@@ -85,9 +85,6 @@ const handleChangeAppType = (event) => {
 
 const handleChange = (event) => {
   setSelectedType(event.target.value);
-};
-const handleChangeDoctors = (event) => {
-  setSelectedDoctors(event.target.value);
 };
 
 const handleDateChange = (date) => {
@@ -102,12 +99,12 @@ const schedule = () => {
       date: formatDate(selectedDate), 
       time: convertTime(selectedTime.toLocaleTimeString()), 
       type : selectedType,
-      doctors: selectedDoctors,
+      doctor: selectedDoctor,
       typeApp: selectedAppType
     }
-    
     values['patient'] = choosen ? email : choosenPatient
-    console.log(values)
+    if(duration)
+      values['duration'] = duration
     props.scheduleAppointment(values)
 }
 
@@ -115,10 +112,6 @@ const handleChangePatient = (event) => {
   setChoosenPatient(event.target.value)
 };
 
-useEffect(() => {
-  if(selectedType === 'operation')
-   props.getDoctors() 
-},[selectedType])
 
 useEffect(() => {
  setError(false)
@@ -220,28 +213,7 @@ return (
         </Select>
       </FormControl>
           </Grid>
-          {selectedType === 'operation' ? (
-            <Grid item xs={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-outlined-label">Doctors</InputLabel>
-              <Select
-                labelId="demo-mutiple-checkbox-label"
-                id="demo-mutiple-checkbox"
-                multiple
-                value={selectedDoctors}
-                onChange={handleChangeDoctors}
-                input={<Input />}
-                renderValue={(selected) => selected.join(', ')}
-                MenuProps={MenuProps}
-                >
-                {props.doctors.map(doctor => (
-                  <MenuItem key={doctor.email} value={doctor.email}>
-                    <Checkbox checked={selectedDoctors.indexOf(doctor.email) > -1} />
-                      <ListItemText primary={doctor.firstName + ' ' + doctor.lastName} />
-                    </MenuItem>))}
-              </Select>
-              </FormControl>
-            </Grid>): (
+          {selectedType === 'appointment' ?
                 <Grid item xs={6}>
                  <FormControl variant="outlined" className={classes.formControl}>
                   <InputLabel id="demo-simple-select-outlined-label">Type of</InputLabel>
@@ -256,7 +228,16 @@ return (
                     </Select>
                   </FormControl>
                 </Grid>
-              )}
+             : <Grid item xs={6}> 
+             <TextField 
+                 id="outlined-basic"
+                 label="Insert duration [min]" 
+                 type="number"
+                 variant="outlined" 
+                 required
+                 onChange={e => setDuration(e.target.value)}
+                 />
+          </Grid> }
           <Grid item xs={3}>
             <Typography component="h6" variant="h6">
                 Date:
@@ -325,7 +306,7 @@ const mapStateToProps = state => {
 };
 
 const mapDispatchToProps = {
- getPatient, scheduleAppointment, getDoctors, getPatients, getTypes
+ getPatient, scheduleAppointment, getPatients, getTypes
 };
 
 export default withRouter(

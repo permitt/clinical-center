@@ -50,6 +50,7 @@ export default function* rootSaga() {
     takeLatest(GET_APPOINTMENT_CHECK, appointmentChecking),
     takeLatest(POST_APPOINTMENT, appointmentPost),
     takeLatest(SCHEDULE_APPOINTMENT, appointmentSchedule),
+    
     takeLatest(GET_AVAILABLE_APPOINTMENTS, availableAppointmentsGet),
     takeLatest(DELETE_APPOINTMENT, appointmentDelete),
     takeLatest(ADD_APPOINTMENT_TERM, availableAppointmentCreate),

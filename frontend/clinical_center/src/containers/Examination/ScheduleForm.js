@@ -73,16 +73,14 @@ const classes = useStyles();
 const [selectedDate, setSelectedDate] = React.useState(new Date());
 const [selectedTime, setSelectedTime] = React.useState(new Date());
 const [selectedType, setSelectedType] = React.useState('appointment');
-const [selectedDoctors, setSelectedDoctors] = React.useState([props.doctorEmail]);
+const [selectedDoctor, setSelectedDoctor] = React.useState(props.doctorEmail);
+const [duration, setDuration] = React.useState()
 const [error, setError] = React.useState(props.scheduled.show)
 const [choosenPatient, setChoosenPatient] = React.useState('')
 const [selectedAppType, setSelectedAppType] = React.useState('')
 
 const handleChange = (event) => {
   setSelectedType(event.target.value);
-};
-const handleChangeDoctors = (event) => {
-  setSelectedDoctors(event.target.value);
 };
 
 const handleDateChange = (date) => {
@@ -105,10 +103,12 @@ const schedule = () => {
     date: formatDate(selectedDate), 
     time: convertTime(selectedTime.toLocaleTimeString()), 
     type : selectedType,
-    doctors: selectedDoctors,
+    doctor: selectedDoctor,
     typeApp: selectedAppType
   }
   values['patient'] = choosenPatient
+  if(duration)
+    values['duration'] = duration
   props.scheduleAppointment(values)
 }
 
@@ -190,27 +190,16 @@ return (
       </FormControl>
           </Grid>
           {selectedType === 'operation'? (
-            <Grid item xs={6}>
-            <FormControl variant="outlined" className={classes.formControl}>
-              <InputLabel id="demo-simple-select-outlined-label">Doctors</InputLabel>
-              <Select
-                labelId="demo-mutiple-checkbox-label"
-                id="demo-mutiple-checkbox"
-                multiple
-                value={selectedDoctors}
-                onChange={handleChangeDoctors}
-                input={<Input />}
-                renderValue={(selected) => selected.join(', ')}
-                MenuProps={MenuProps}
-                >
-                {props.doctors.map(doctor => (
-                  <MenuItem key={doctor.email} value={doctor.email}>
-                    <Checkbox checked={selectedDoctors.indexOf(doctor.email) > -1} />
-                      <ListItemText primary={doctor.firstName + ' ' + doctor.lastName} />
-                    </MenuItem>))}
-              </Select>
-              </FormControl>
-            </Grid>) : (
+            <Grid item xs={6}> 
+            <TextField 
+                id="outlined-basic"
+                label="Insert duration [min]" 
+                type="number"
+                variant="outlined" 
+                required
+                onChange={e => setDuration(e.target.value)}
+                />
+         </Grid>) : (
               <Grid item xs={6}>
                <FormControl variant="outlined" className={classes.formControl}>
                 <InputLabel id="demo-simple-select-outlined-label">Type of</InputLabel>

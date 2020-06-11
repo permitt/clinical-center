@@ -1,26 +1,26 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom'
-import { makeStyles } from "@material-ui/core/styles";
+import Select from '@material-ui/core/Select';
+import InputLabel from '@material-ui/core/InputLabel';
 import Grid from '@material-ui/core/Grid';
 import Paper from '@material-ui/core/Paper';
 import Button from '@material-ui/core/Button';
-import DateFnsUtils from '@date-io/date-fns';
 import { Typography } from '@material-ui/core';
-import {
-  MuiPickersUtilsProvider,
-  KeyboardDatePicker,
-} from '@material-ui/pickers';
 import TextField from '@material-ui/core/TextField';
+import MenuItem from '@material-ui/core/MenuItem';
+import FormControl from '@material-ui/core/FormControl'
 
 import { searchHalls } from '../../store/actions/HallActions'
+import { getTypes } from '../../store/actions/AppointmentTypeActions'
 
 const formatDate = date =>  date.getFullYear() + '-' + ('0' + (date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + 'T00:00'
 
 function HallSearchBar(props) {
  const [selectedDate, setSelectedDate] = React.useState(formatDate(new Date()));
- const [name, setName] = React.useState('')
- const [number, setNumber] = React.useState('')
+ const [name, setName] = React.useState()
+ const [number, setNumber] = React.useState()
+ const [selectedType, setSelectedType] = React.useState()
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
@@ -33,17 +33,24 @@ function HallSearchBar(props) {
       if(number) 
         query['number'] = number
 
-    const dateTime = selectedDate.split('T')
+    if (selectedType) {
+        const dateTime = selectedDate.split('T')
     try {
         query['date'] = dateTime[0]
         query['time'] = dateTime[1]
+        query['duration'] = selectedType
     } catch (error) {
         console.log(error)
     }
-    
+
+    }
       console.log(query)
       props.searchHalls(query)
   }
+
+  useEffect(() => {
+    props.getTypes()
+  }, [])
 
 return (
     <Grid container justify="center">
@@ -53,7 +60,7 @@ return (
         </Typography>
             <Grid
                 container
-                spacing={5}
+                spacing={2}
                 justify="center"
             >
                 <Grid item xs={6} align='right' style={{marginTop:'20px'}}> 
@@ -73,7 +80,7 @@ return (
                         onChange={e => setNumber(e.target.value)}
                     />
                 </Grid>
-                <Grid item xs={6}  align="center"  style={{marginBottom:'20px'}}>
+                <Grid item xs={6}  style={{marginBottom:'20px'}}>
                 <TextField
                     id="datetime-local"
                     label="Select date and time"
@@ -85,6 +92,20 @@ return (
                     }}
                 />
                 </Grid>
+                <Grid item xs={6}>
+               <FormControl variant="outlined" style={{minWidth: 120}} >
+                <InputLabel id="demo-simple-select-outlined-label">Type of</InputLabel>
+                  <Select
+                    labelId="selecte-type"
+                    id="demo-simple-select-outlined-type"
+                    value={selectedType}
+                    onChange={e => setSelectedType(e.target.value)}
+                    label="Type of"
+                  >
+                    {props.types.map((type,index) => <MenuItem key={index} value={type.duration}>{type.typeName}</MenuItem> )}
+                  </Select>
+                </FormControl>
+              </Grid>
                 <Grid item align="center">
                 <Button 
                     variant="contained" 
@@ -105,11 +126,11 @@ return (
 
 const mapStateToProps = state => {
     return {
-      
+      types: state.type.all
     };
   };
   
-  const mapDispatchToProps = { searchHalls };
+  const mapDispatchToProps = { searchHalls, getTypes };
   
   export default withRouter(
     connect(

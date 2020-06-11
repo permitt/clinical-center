@@ -49,7 +49,7 @@ function Calendar(props) {
                 {el.time.slice(0, -3)}
               </Grid>
               <Grid item xs={6} align="center">
-              {el.type.typeName}
+              {el.type.typeName? el.type.typeName : el.type}
             </Grid>
            </Grid>
            </Paper>

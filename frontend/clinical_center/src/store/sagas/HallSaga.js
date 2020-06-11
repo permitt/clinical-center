@@ -35,9 +35,8 @@ export function* hallAdd(action) {
   try {
     const response = yield call(() => hallService.addHall(action.payload))
     yield put(setHall(action.payload))
-  } catch (error) {
-    console.log(error)
-    yield put(addError(true))
+  } catch ({response}) {
+    yield put(addError(response.data.msg))
   }
 }
 

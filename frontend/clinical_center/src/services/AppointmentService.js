@@ -4,10 +4,10 @@ const ENDPOINTS = {
     GET_APPOINTMENT_TYPES: '/api/clinics/appointment-type',
     GET_APPOINTMENT_CHECK: '/api/clinics/appointment/check/',
     APPOINTMENT: 'api/clinics/appointment/',
-    DELETE_APPOINTMENT: 'api/clinics/appointment/:id',
+    DELETE_APPOINTMENT: 'api/clinics/appointment/:id/',
     POST_APPOINTMENT: 'api/clinics/appointment/',
     SCHEDULE_APPOINTMENT: 'api/clinics/appointment/schedule',
-    CREATE_APPOINTMENT_TERM: 'api/clinics/appointment/appterm',
+    CREATE_APPOINTMENT_TERM: 'api/clinics/appointment/appterm/',
 };
 
 class appointmentServiceApi extends ApiService {
@@ -29,7 +29,8 @@ class appointmentServiceApi extends ApiService {
     }
 
     getAppointments = async () => {
-        const { data } = await this.apiClient.get(ENDPOINTS.APPOINTMENT);
+        const queryString = 'all=true'
+        const { data } = await this.apiClient.get(ENDPOINTS.APPOINTMENT + `?${queryString}`);
         return data;
     }
     scheduleAppointment = async (payload) => {

@@ -89,23 +89,6 @@ const handleDoctorChange = e => {
 
 useEffect(() => {
   console.log(selectedDate)
-  if (!selectedDate)
-    return;
-  const dateTime = selectedDate.split('T')
-  let query = {}
-  try {
-      query['date'] = dateTime[0]
-      query['time'] = dateTime[1]
-  } catch (error) {
-      console.log(error)
-  }
-  
-    console.log(query)
-    props.searchHalls(query)
-}, [selectedDate])
-
-useEffect(() => {
-  console.log(selectedDate)
   if (!selectedDate || !selectedAppType)
     return;
   const dateTime = selectedDate.split('T')
@@ -119,7 +102,10 @@ useEffect(() => {
   
     query['type'] = selectedAppType
     props.searchDoctors(query)
-}, [selectedAppType])
+
+    query['duration'] = data.duration
+    props.searchHalls(query)
+}, [selectedAppType, selectedDate])
 
 const handleHallChange = e => {
   setSelectedHall(e.target.value)
@@ -136,8 +122,10 @@ const handleChangeAppType = (event) => {
 
 const save = () => {
  
-  if (!selectedDate || !selectedDoctor || !selectedHall || !selectedAppType)
+  if (!selectedDate || !selectedDoctor || !selectedHall || !selectedAppType){
+    alert("Please select all fields")
     return;
+  }
   const dateTime = selectedDate.split('T')
   let values = {
     date: dateTime[0], 
@@ -146,6 +134,7 @@ const save = () => {
     type: selectedAppType,
     hall: selectedHall,
   }
+
   props.addAvailableAppointment(values)
 }
 
@@ -183,27 +172,6 @@ return (
                     }}
                 />
                 </Grid>
-        {selectedDate  && <>
-        <Grid item xs={3}>
-            <Typography component="h6" variant="h6">
-                Available halls: 
-            </Typography>
-        </Grid>
-        <Grid item xs={9}>
-        <FormControl variant="outlined" className={classes.formControl}>
-            <InputLabel id="ademo-simple-select-outlined-label">Halls</InputLabel>
-            <Select
-                labelId="selecte-type"
-                id="demo-simple-select-outlined-type"
-                value={selectedHall}
-                onChange={handleHallChange}
-                label="Type of"
-            >
-                {props.halls.map((hall,index) => <MenuItem key={index} value={hall.id}>{hall.name}</MenuItem> )}
-            </Select>
-            </FormControl>
-        </Grid>
-        </>}
         <Grid item xs={3}>
             <Typography component="h6" variant="h6">
                 Select type:
@@ -231,7 +199,7 @@ return (
             startAdornment: <InputAdornment position="start">$</InputAdornment>,
           }} />
         </Grid>
-        {selectedAppType && (<>
+        {selectedAppType && selectedDate && (<>
         <Grid item xs={3}>
             <Typography component="h6" variant="h6">
                 Available doctors: 
@@ -250,7 +218,28 @@ return (
                 {props.doctors.map((doc,index) => <MenuItem key={index} value={doc.email}>{doc.firstName + ' ' + doc.lastName}</MenuItem> )}
             </Select>
             </FormControl>
-        </Grid></>)}
+        </Grid>
+        <Grid item xs={3}>
+            <Typography component="h6" variant="h6">
+                Available halls: 
+            </Typography>
+          </Grid>
+          <Grid item xs={9}>
+          <FormControl variant="outlined" className={classes.formControl}>
+              <InputLabel id="ademo-simple-select-outlined-label">Halls</InputLabel>
+              <Select
+                  labelId="selecte-type"
+                  id="demo-simple-select-outlined-type"
+                  value={selectedHall}
+                  onChange={handleHallChange}
+                  label="Type of"
+              >
+                  {props.halls.map((hall,index) => <MenuItem key={index} value={hall.id}>{hall.name}</MenuItem> )}
+              </Select>
+              </FormControl>
+          </Grid>
+          </>)
+        }
 
         {error && (
           <Grid item xs={12}>

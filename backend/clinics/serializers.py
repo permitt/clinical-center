@@ -24,10 +24,13 @@ class AppointmentSerializer(serializers.ModelSerializer):
     operating_room_name = serializers.SerializerMethodField('get_room_name')
     clinic_name = serializers.SerializerMethodField('get_clinic_name')
     price = serializers.SerializerMethodField('get_price')
+    doctor_name = serializers.StringRelatedField()
+    duration = serializers.StringRelatedField()
 
 
     def get_type_name(self, obj):
         return getattr(obj, "type_name", None)
+
 
     def get_room_name(self, obj):
         return getattr(obj, "operating_room_name", None)

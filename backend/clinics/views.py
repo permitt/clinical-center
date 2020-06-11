@@ -16,7 +16,7 @@ import datetime
 from users.models import Patient
 from django.db.models.functions import Concat
 from django.db import IntegrityError
-from django.db.models import Avg
+from django.db.models import Avg, Exists
 
 class ClinicListView(viewsets.ModelViewSet):
     serializer_class = ClinicSerializer
@@ -45,16 +45,40 @@ class OperatingRoomView(viewsets.ModelViewSet):
             queryset = queryset.filter(name__startswith=request.query_params['name'])
         if 'number' in request.query_params:
             queryset = queryset.filter(number=request.query_params['number'])
-        if 'date' in request.query_params and 'time' in request.query_params:
+        if 'date' in request.query_params and 'time' in request.query_params and 'duration' in request.query_params:
+            try:
+                duration = int(request.query_params['duration'])
+            except:
+                return Response(status=status.HTTP_400_BAD_REQUEST)
+
             queryset = queryset.exclude(appointment__date=request.query_params['date'], appointment__time=request.query_params['time'])
-        serializer = OperatingRoomSerializer(queryset, many=True)
+
+            hall_list = list(queryset)
+            for hall in hall_list:
+                for app in hall.appointment_set.all():
+                    choosenStartTime = datetime.datetime.strptime(request.query_params['time'], '%H:%M').time()
+                    choosenEndTime = time_add(choosenStartTime, duration)
+                    endsBefore = choosenEndTime < app.time
+                    startsAfter = choosenStartTime > time_add(app.time, app.typeOf.duration)
+
+                    if (not (endsBefore or startsAfter)):
+                        hall_list.remove(hall)
+                        break
+        else:
+            hall_list = list(queryset)
+
+
+        serializer = OperatingRoomSerializer(hall_list, many=True)
         appTypeSerializer = AppointmentTypeSerializer
+        operationSerializer = OperationSerializer
         dates = {}
         for hall in queryset :
             dates[hall.name] = []
             for app in hall.appointment_set.all() :
                 dates[hall.name].append({'date': app.date, 'time': app.time, 'type': appTypeSerializer(app.typeOf).data })
-
+            for operation in hall.operation_set.all():
+                dates[hall.name].append(
+                    {'date': operation.date, 'time': operation.time, 'type': 'operation'})
         return Response(status=status.HTTP_200_OK, data={"halls": serializer.data , "reservedDates": dates}, content_type='application/json')
 
     def get_queryset(self):
@@ -113,8 +137,27 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 price=F("typeOf__prices__price"),
                 )
         if hasattr(self.request.user, 'adminAccount'):
-            return Appointment.objects \
-                .filter(patient=None,clinic=self.request.user.adminAccount.employedAt,)
+            if 'all' in self.request.query_params :
+                return Appointment.objects \
+                    .filter(clinic=self.request.user.adminAccount.employedAt, ).exclude(patient__isnull=True).annotate(
+                    type_name=F("typeOf__typeName"),
+                    operatinRoom_name=F("operatingRoom__name"),
+                    doctor_name=F("doctor__firstName"),
+                    price=F("typeOf__prices__price"),
+                    duration=F("typeOf__duration")
+                )
+
+            else:
+                print(Appointment.objects.all())
+                return Appointment.objects \
+                    .filter(patient=None, clinic=self.request.user.adminAccount.employedAt).annotate(
+                    type_name=F("typeOf__typeName"),
+                    operatinRoom_name=F("operatingRoom__name"),
+                    doctor_name=Concat(F('doctor__firstName'), V(' '), F('doctor__lastName'), output_field=CharField()),
+                    price=F("typeOf__prices__price"),
+                    duration=F("typeOf__duration")
+                )
+
 
         return Appointment.objects.all()
     permission_classes = [permissions.IsAuthenticated]
@@ -336,65 +379,77 @@ class ClinicRatingView(viewsets.ModelViewSet):
 @api_view(["POST"])
 def scheduleAppointment(request):
     user = request.user
-    if (not user):
+    if (not user or not hasattr(user, 'docAccount')):
         return Response(status=status.HTTP_401_UNAUTHORIZED)
     data = request.data
     try:
         patient = Patient.objects.filter(email=data['patient']).get()
         if (not patient):
-            return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Patient doesn't exists."})
-        date = data['date']
-        choosenTime = data['time']
+            raise Exception
+        time = datetime.datetime.strptime(data['time'], '%H:%M').time()
+        date = datetime.datetime.strptime(data['date'], '%Y-%m-%d')
         type = data['type']
         if (type != 'operation' and type != 'appointment'):
             raise Exception
-        if (type == 'operation'):
-            doctorEmails = data['doctors']
-            doctors = Doctor.objects.filter(email__in=doctorEmails)
-            if (len(doctors) == 0):
-                return Response(status=status.HTTP_200_OK, data={'msg': 'Can not schedule operation'})
         if (type == 'appointment'):
             typeApp = data['typeApp']
-            if (not typeApp):
+            typeObject = AppointmentType.objects.get(id=typeApp)
+            if (not typeObject):
                 raise Exception
+        else:
+            duration = int(data['duration'])
     except:
 
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':"Invalid parameters."})
-
     doctor = user.docAccount
+    #check if doctor is specialized for choosen type
+    if (type=='appointment'):
+        duration=typeObject.duration
+        specialized = doctor.specializations.get(typeOf__id=typeApp)
+        if not(specialized):
+            return Response(status=status.HTTP_400_BAD_REQUEST,
+                            data={'msg': 'Doctor is not specialized for choosen type.'})
+    #check if doctor is on holiday
+    holidays = user.holiday.filter(approved=True, startDate__lte=date, endDate__gte=date)
+    if (len(holidays) > 0):
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': 'Doctor is on holiday during choosen date.'})
+    # check if doctor works that day in that time
+    doctorSchedule = doctor.schedule.filter(day=date.weekday(),startTime__lte=time,endTime__gt=time_add(time, duration))
+    if (len(doctorSchedule) == 0):
+        return Response(status=status.HTTP_400_BAD_REQUEST,
+                        data={'msg': 'Choosen time and day is not in working hours of doctor'})
+    # check if doctor has another appointment or operation in choosen time
+    date = date.date()
+    for app in doctor.appointments.all():
+        if (not (app.date == date)):
+            continue
+        choosenEndTime = time_add(time, duration)
+        endsBefore = choosenEndTime < app.time
+        startsAfter = time > time_add(app.time, app.typeOf.duration)
+        if (not (endsBefore or startsAfter)):
+            return Response(status=status.HTTP_400_BAD_REQUEST,
+                            data={'msg': 'Doctor has another appointment in choosen time.'})
+
+        # check if doctor has another operation in choosen time
+        for operation in doctor.operations.all():
+            if (not (operation.date == date)):
+                continue
+            choosenEndTime = time_add(time, duration)
+            endsBefore = choosenEndTime < operation.time
+            startsAfter = time > time_add(app.time, operation.duration)
+            if (not (endsBefore or startsAfter)):
+                return Response(status=status.HTTP_400_BAD_REQUEST,
+                                data={'msg': 'Doctor has another operation in choosen time.'})
+
     if (type == 'appointment'):
-        type = AppointmentType.objects.get(id=typeApp)
-        choosenTime = datetime.datetime.strptime(choosenTime,'%H:%M')
-        choosenTimeEnd = time_add(choosenTime, type.duration)
-
-
-        appointments = Appointment.objects.filter(doctor=doctor,patient=patient,date=date)\
-            .annotate(endTime=ExpressionWrapper(F('time') + datetime.timedelta(minutes=F('typeOf__duration')), output_field=TimeField()))\
-            .exclude(time__gt=choosenTimeEnd)\
-            .exclude(time__lt=choosenTime - F('typeOf__duration') )
-
-#
-
-        print(appointments)
-
-        newAppointment = Appointment(doctor=doctor,patient=patient,time=choosenTime,date=date, clinic=doctor.employedAt, typeOf_id=typeApp)
-        #newAppointment.save()
-
-        return Response(status=status.HTTP_200_OK, data={'msg': 'Successfully scheduled appointment'})
-    if (type == 'operation'):
-        newOperation = Operation(clinic=doctor.employedAt, patient=patient, date=date, time=choosenTime)
-        operations = Operation.objects.filter(time=choosenTime).filter(date=date).filter(doctors__in=doctors).distinct().all()
-
-        if(len(operations) > 0):
-            return Response(status=status.HTTP_200_OK, data={'msg': 'Can not schedule operation'})
+        newAppointment = Appointment(doctor=doctor,patient=patient,time=time,date=date, clinic=doctor.employedAt, typeOf_id=typeApp)
+        newAppointment.save()
+    else :
+        newOperation = Operation(clinic=doctor.employedAt, patient=patient, date=date, time=time, duration=duration)
         newOperation.save()
-        for doc in doctors:
-            newOperation.doctors.add(doc)
+        newOperation.doctors.add(doctor)
 
-        return Response(status=status.HTTP_200_OK, data={'msg': 'Successfully scheduled operation'})
-
-
-    return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':'Cannot schedule an appointment.'})
+    return Response(status=status.HTTP_200_OK, data={'msg': 'Successfully scheduled.'})
 
 
 @api_view(["GET"])
@@ -455,3 +510,31 @@ def adminClinic(request):
     clinicSerializer = ClinicSerializer(clinic, many=False)
 
     return Response(status=status.HTTP_200_OK, data={'clinic': clinicSerializer.data})
+
+@api_view(["POST"])
+def appTerm(request):
+    user = request.user
+    if (not user):
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+    try:
+        doctor = request.data['doctor']
+        time = request.data['time']
+        date = request.data['date']
+        type = request.data['type']
+        hall = request.data['hall']
+        appointment = Appointment.objects.create(date=date, time=time, typeOf_id=int(type), operatingRoom_id=int(hall),
+                                                 doctor_id=doctor, clinic=request.user.adminAccount.employedAt)
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST, data= {'msg':"InvalidParameters"})
+
+
+
+    app = Appointment.objects.annotate(
+                    type_name=F("typeOf__typeName"),
+                    operatinRoom_name=F("operatingRoom__name"),
+                    doctor_name=Concat(F('doctor__firstName'), V(' '), F('doctor__lastName'), output_field=CharField()),
+                    price=F("typeOf__prices__price"),
+                    duration=F("typeOf__duration")
+                ).get(pk=appointment.pk)
+
+    return Response(status=status.HTTP_200_OK,data={'app': AppointmentSerializer(app,many=False).data})
