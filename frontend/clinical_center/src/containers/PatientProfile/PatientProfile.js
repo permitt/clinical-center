@@ -14,6 +14,8 @@ import Favorite from '@material-ui/icons/Favorite';
 
 import { paper } from '../../assets/jss/material-dashboard-react/components/FormStyle';
 import { getPatient } from '../../store/actions/PatientsActions'
+import { getHealthCard } from '../../store/actions/HealthCardActions';
+import PatientHealthCardList from '../../components/CardList/PatientHealthCardList';
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -35,10 +37,17 @@ const useStyles = makeStyles((theme) => ({
 function PatientProfile(props) {
 const { email, patient } = props
 const classes = useStyles();
+const [showHealthCard, setShowHealthCard] = React.useState(false)
 
 useEffect(() => {
     props.getPatient(email)
 },[])
+
+const handleClick = () => {
+  props.getHealthCard({ email: patient.email })
+  setShowHealthCard(true)
+}
+
 return (
     <Container component="main">
     <Paper style={paper} elevation={3}>
@@ -117,7 +126,13 @@ return (
               </Typography>
           </Grid>
           <Grid item xs={3}>
-          <Button variant="contained" color="primary"  size="large" startIcon={<Favorite />}>
+          <Button 
+            variant="contained" 
+            color="primary"  
+            size="large" 
+            onClick={handleClick}
+            startIcon={<Favorite />}
+            >
         See health card
       </Button>
           </Grid>
@@ -133,20 +148,21 @@ return (
       </Button>
           </Grid>
       </Grid>
-      
-    </Paper> 
+      </Paper> 
+      {showHealthCard && <Paper><PatientHealthCardList data={props.healthCard}/></Paper>}
     </Container>
 );
 }
 
 const mapStateToProps = state => {
   return {
-    patient: state.patient.current
+    patient: state.patient.current,
+    healthCard: state.healthCard.current
   };
 };
 
 const mapDispatchToProps = {
- getPatient
+ getPatient, getHealthCard
 };
 
 export default withRouter(

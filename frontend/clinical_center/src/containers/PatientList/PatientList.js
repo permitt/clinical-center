@@ -166,13 +166,18 @@ export default function PatientList(props) {
               {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
-
                   return (
                     <TableRow
                       hover
-                      onClick={() => props.viewPatient(row.email)}
+                      onClick={() => { document.body.style.cursor = "default"; props.viewPatient(row.email)}}
                       tabIndex={-1}
                       key={row.email}
+                      onMouseEnter={() => {
+                        document.body.style.cursor = "pointer";
+                      }}
+                      onMouseLeave={() => {
+                        document.body.style.cursor = "default";
+                      }}
                     >
                       <TableCell  id={labelId} scope="row" align="left">
                         {row.firstName + ' ' + row.lastName}

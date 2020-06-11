@@ -69,6 +69,10 @@ function DoctorForm (props) {
     const from = startTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
     const to = endTime.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit'})
     days.forEach((day, index) => values.schedule.push({day: index, from, to}))
+    if (values.schedule.length === 0 ) {
+      alert("Insert working hours for doctor.")
+      return;
+    }
     values.specialization = specialization
     console.log(values)
     props.addDoctor(values)

@@ -34,7 +34,8 @@ class HealthCardPermissions(permissions.BasePermission):
             if hasattr(request.user, 'patient'):
                 return True
 
-            user = request.user
+            user = request.user.username
+            print(user)
             try:
                 patient = request.query_params['patient']
             except:

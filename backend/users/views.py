@@ -253,7 +253,7 @@ def profile(request):
 
         return Response(status=status.HTTP_200_OK, data={'profile': profile.data })
     if (hasattr(user, 'docAccount')):
-        profile = DoctorSerializer(user.docAccount.annotate(rating=Avg('ratings__rating')), many=False)
+        profile = DoctorSerializer(user.docAccount, many=False)
 
         return Response(status=status.HTTP_200_OK, data={'profile': profile.data})
     if (hasattr(user, 'nurseAccount')):

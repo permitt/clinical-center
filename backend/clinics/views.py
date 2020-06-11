@@ -32,6 +32,8 @@ class HealthCardView(viewsets.ModelViewSet):
     def get_queryset(self):
         if hasattr(self.request.user, 'patient'):
             return HealthCard.objects.filter(patient=self.request.user.patient)
+        if hasattr(self.request.user, 'docAccount') or hasattr(self.request.user, 'nurseAccount'):
+            return HealthCard.objects.filter(patient=self.request.query_params['patient'])
 
 
 class OperatingRoomView(viewsets.ModelViewSet):
@@ -141,7 +143,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 return Appointment.objects \
                     .filter(clinic=self.request.user.adminAccount.employedAt, ).exclude(patient__isnull=True).annotate(
                     type_name=F("typeOf__typeName"),
-                    operatinRoom_name=F("operatingRoom__name"),
+                    operating_room_name=F("operatingRoom__name"),
                     doctor_name=F("doctor__firstName"),
                     price=F("typeOf__prices__price"),
                     duration=F("typeOf__duration")
@@ -152,7 +154,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 return Appointment.objects \
                     .filter(patient=None, clinic=self.request.user.adminAccount.employedAt).annotate(
                     type_name=F("typeOf__typeName"),
-                    operatinRoom_name=F("operatingRoom__name"),
+                    operating_room_name=Concat(F('operatingRoom__name'), V(' '), F('operatingRoom__number'), output_field=CharField()),
                     doctor_name=Concat(F('doctor__firstName'), V(' '), F('doctor__lastName'), output_field=CharField()),
                     price=F("typeOf__prices__price"),
                     duration=F("typeOf__duration")

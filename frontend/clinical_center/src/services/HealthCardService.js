@@ -6,8 +6,9 @@ const ENDPOINTS = {
 
 class HealthCardService extends ApiService {
 
-    getHealthCard = async () => {
-        const { data } = await this.apiClient.get(ENDPOINTS.HEALTH_CARD);
+    getHealthCard = async (patient=null) => {
+        const url = patient ? ENDPOINTS.HEALTH_CARD + `?patient=${patient.email}`: ENDPOINTS.HEALTH_CARD
+        const { data } = await this.apiClient.get(url);
 
         return data;
     }

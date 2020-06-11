@@ -151,7 +151,7 @@ function AvailableTermsTable(props) {
                     <TableCell  align="left">{row.time.slice(0,-3)}</TableCell>
                       <TableCell align="left">{row.type_name}</TableCell>
                       <TableCell align="left">{formatHours(row.duration)}</TableCell>
-                      <TableCell align="left">{row.operatinRoom_name}</TableCell>
+                      <TableCell align="left">{row.operating_room_name}</TableCell>
                       <TableCell align="left">{row.doctor_name}</TableCell>
                       <TableCell align="left">{row.price} $</TableCell>
                       <TableCell align="left">

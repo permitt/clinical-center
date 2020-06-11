@@ -53,17 +53,13 @@ const TableToolbar = props => {
     props.resetError()
   };
 
+
   const handleSortClick = (val) => {
     setSortByOpen(false);
     setSortByAnchor(null);
     props.changeSortBy(val);
 
   }
-
-    useEffect(() => {
-    setOpen(false)
-  },[props])
-
 
   return (
     <Toolbar className={classes.root}>
@@ -208,12 +204,19 @@ export default function SimpleTable(props) {
                   hover role="checkbox"
                   tabIndex={-1}
                   key={index}
+                  onMouseEnter={() => {
+                    if (props.edit)
+                      document.body.style.cursor = "pointer";
+                  }}
+                  onMouseLeave={() => {
+                    document.body.style.cursor = "default";
+                  }}
                 >
                   {columns.map((column, index) => {
                     const value = row[column.id]
                     if (column.id !== 'action')
                       return (
-                        <TableCell key={index} align={column.align} onClick={() => { if (props.edit) handleOpen(row) }}>
+                        <TableCell key={index} align={column.align} onClick={() => { if (props.edit) { document.body.style.cursor = "default"; handleOpen(row) }}}>
                           {column.id === 'firstName' ? value + ' ' + row.lastName : value}
                         </TableCell>
                       );

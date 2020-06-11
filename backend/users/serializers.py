@@ -85,7 +85,6 @@ class DoctorSerializer(serializers.ModelSerializer):
     class Meta:
         model = Doctor
         exclude = ['user']
-        read_only_fields = ['email']
 
     def create(self, validated_data):
         requestBody = self.context['request'].data
@@ -98,8 +97,8 @@ class DoctorSerializer(serializers.ModelSerializer):
         user.save()
         doctor = Doctor(**validated_data)
         doctor.user = user
-        userLogged = ClinicAdmin.objects.filter(email=self.context['request'].user.username).get()
-        clinicId = userLogged.employedAt
+        # userLogged = ClinicAdmin.objects.filter(email=self.context['request'].user.username).get()
+        clinicId = self.context['request'].user.adminAccount.employedAt
         doctor.employedAt = clinicId
         doctor.save()
         try:
