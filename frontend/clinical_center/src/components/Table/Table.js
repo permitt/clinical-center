@@ -95,9 +95,9 @@ const TableToolbar = props => {
           </div>
         ))}
       </Menu>
-      <IconButton aria-label="filter list" onClick={handleOpen}>
+      {props.showAction ? <IconButton aria-label="filter list" onClick={handleOpen}>
         <AddBoxIcon />
-      </IconButton>
+      </IconButton> : ''}
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -123,23 +123,23 @@ export default function SimpleTable(props) {
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   const rows = props.data
-  const [edit, setEdit] = React.useState({openModal:false, selected: {}});
+  const [edit, setEdit] = React.useState({ openModal: false, selected: {} });
   const [filteredData, setFilteredData] = React.useState(rows)
   const columns = props.columns
 
   const handleOpen = row => {
-    setEdit({openModal:true, selected: row});
+    setEdit({ openModal: true, selected: row });
   };
 
   const handleClose = () => {
-    setEdit({openModal:false, selected: {}});
+    setEdit({ openModal: false, selected: {} });
     props.resetError()
   };
 
   useEffect(() => {
     setFilteredData(rows)
     // setEdit({openModal:false, selected: {}})
-    
+
   }, [props])
 
   const handleChangePage = (event, newPage) => {
@@ -173,9 +173,10 @@ export default function SimpleTable(props) {
         form={props.form}
         sortOptions={props.sortOptions}
         changeSortBy={props.changeSortBy}
-        search={search} 
+        search={search}
         resetError={props.resetError}
-        />
+        showAction={props.title !== "Clinics"}
+      />
       <TableContainer className={classes.container} >
         <Table stickyHeader aria-label="sticky table">
           <TableHead>
@@ -194,16 +195,16 @@ export default function SimpleTable(props) {
           <TableBody>
             {filteredData.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
               return (
-                <TableRow 
-                  hover role="checkbox" 
-                  tabIndex={-1} 
-                  key={index} 
-                 >
+                <TableRow
+                  hover role="checkbox"
+                  tabIndex={-1}
+                  key={index}
+                >
                   {columns.map((column, index) => {
                     const value = row[column.id]
                     if (column.id !== 'action')
                       return (
-                        <TableCell key={index} align={column.align}  onClick={() => { if(props.edit) handleOpen(row)}}>
+                        <TableCell key={index} align={column.align} onClick={() => { if (props.edit) handleOpen(row) }}>
                           {column.id === 'firstName' ? value + ' ' + row.lastName : value}
                         </TableCell>
                       );
@@ -214,7 +215,7 @@ export default function SimpleTable(props) {
                             <Button variant="contained" onClick={() => column.action(row)}>
                               {column.icon}
                             </Button>
-                          ):  <column.icon onClick={() => column.action(row[props.id])} />}
+                          ) : <column.icon onClick={() => column.action(row[props.id])} />}
                         </TableCell>
                       )
                   })}
@@ -246,9 +247,9 @@ export default function SimpleTable(props) {
         }}
       >
         <Fade in={edit.openModal}>
-          <FormContainer form={<HallForm selected={edit.selected}/>} title="Edit operationg room" />
+          <FormContainer form={<HallForm selected={edit.selected} />} title="Edit operationg room" />
         </Fade>
-        </Modal>
+      </Modal>
     </Paper>
   );
 }

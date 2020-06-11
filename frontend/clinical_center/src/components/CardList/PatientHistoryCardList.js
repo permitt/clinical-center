@@ -68,18 +68,7 @@ const TableToolbar = props => {
             <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
                 {props.title}
             </Typography>
-            <TextField
-                id="standard-search"
-                type="search"
-                value={searchInput || ""}
-                onChange={handleChange}
-                InputProps={{
-                    startAdornment: (
-                        <InputAdornment position="start">
-                            <SearchIcon />
-                        </InputAdornment>
-                    ),
-                }} />
+
             <IconButton aria-label="sort list" onClick={(e) => { setSortByAnchor(e.currentTarget); setSortByOpen(true) }}>
                 <SortIcon />
             </IconButton>
@@ -130,20 +119,7 @@ export default function SimpleTable(props) {
         setPage(0);
     };
 
-    const search = name => {
-        name = name.toLowerCase()
-        const columnLabels = columns.map(column => column.id.toLowerCase())
-        const data = rows.filter(row => {
-            for (const property in row) {
-                if (!(columnLabels.includes(property.toLowerCase())))
-                    continue;
-                if (String(row[property]).toLowerCase().startsWith(name))
-                    return true
-            }
-            return false
-        })
-        setFilteredData(data)
-    }
+
     const bull = <span className={classes.bullet}>•</span>;
 
     return (
@@ -153,7 +129,7 @@ export default function SimpleTable(props) {
                 form={props.form}
                 sortOptions={props.sortOptions}
                 changeSortBy={props.changeSortBy}
-                search={search} />
+            />
 
 
             <Typography variant="h5" component="h2">
@@ -161,6 +137,7 @@ export default function SimpleTable(props) {
 
                     : props.data.map(cl => {
                         if (cl.type === 'appointment') {
+                            console.log(cl);
                             return (
 
                                 <Card className={classes.root} style={{ margin: 10 }}>
@@ -204,7 +181,7 @@ export default function SimpleTable(props) {
                                         </Typography>
                                         <Rating size="medium" value={cl.clinicRating.rating} name={'clin-' + cl.date + cl.time} onChange={(event, val) => { props.rate({ "ratingId": cl.clinicRating.id, "type": "clinicRating", "id": cl.clinic, "rating": val }) }} />
                                         <Typography variant="body2" component="p">
-                                            Operating Room: {cl.operatingRoom_name}
+                                            Operating Room: {cl.operating_room_name}
 
                                         </Typography>
                                     </CardContent>

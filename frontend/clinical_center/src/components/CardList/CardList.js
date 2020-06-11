@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { makeStyles } from '@material-ui/core/styles';
 import Paper from '@material-ui/core/Paper';
+import Container from '@material-ui/core/Container';
 import TextField from '@material-ui/core/TextField';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
@@ -23,12 +24,22 @@ import CardActions from '@material-ui/core/CardActions';
 import CardContent from '@material-ui/core/CardContent';
 import Button from '@material-ui/core/Button';
 import Rating from '@material-ui/lab/Rating';
-
+import ArrowBackIcon from '@material-ui/icons/ArrowBack';
+import { createMuiTheme } from '@material-ui/core/styles';
 
 
 let useStyles = makeStyles(styles);
 const useToolbarStyles = makeStyles(toolbarStyles)
 
+let theme = createMuiTheme();
+export const paper = {
+    padding: theme.spacing(3, 2),
+    marginTop: theme.spacing(8),
+    marginBottom: theme.spacing(8),
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center'
+};
 
 const TableToolbar = props => {
     const classes = useToolbarStyles();
@@ -71,6 +82,9 @@ const TableToolbar = props => {
             <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
                 {props.title}
             </Typography>
+
+
+
             <TextField
                 id="standard-search"
                 type="search"
@@ -103,26 +117,20 @@ const TableToolbar = props => {
 
 
             </Menu>
-
-            <IconButton aria-label="filter list" onClick={handleOpen}>
-                <AddBoxIcon />
-            </IconButton>
-            <Modal
-                aria-labelledby="transition-modal-title"
-                aria-describedby="transition-modal-description"
-                className={classes.modal}
-                open={open}
-                onClose={handleClose}
-                closeAfterTransition
-                BackdropComponent={Backdrop}
-                BackdropProps={{
-                    timeout: 500,
-                }}
+            {props.showBack ? <Button
+                type="submit"
+                size="large"
+                variant="outlined"
+                color="secondary"
+                style={{ position: 'relative', left: '150', marginLeft: 10 }}
+                startIcon={<ArrowBackIcon />
+                }
+                onClick={() => props.backClicked()}
             >
-                <Fade in={open}>
-                    {props.form}
-                </Fade>
-            </Modal>
+                Back
+                        </Button> : ''}
+
+
         </Toolbar >
     );
 };
@@ -137,6 +145,7 @@ export default function SimpleTable(props) {
     const rows = props.data
     const [filteredData, setFilteredData] = React.useState(rows)
     const columns = props.columns
+    const [modalOpen, setModalOpen] = React.useState(true);
 
     useEffect(() => {
         setFilteredData(rows)
@@ -169,12 +178,16 @@ export default function SimpleTable(props) {
 
     return (
         <Paper style={{ width: 500, marginLeft: 100, padding: 40 }}>
+
+
             <TableToolbar
                 title={props.title}
                 form={props.form}
                 sortOptions={props.sortOptions}
                 changeSortBy={props.changeSortBy}
-                search={search} />
+                search={search}
+                showBack={props.showBack}
+                backClicked={props.backClicked} />
 
 
             <Typography variant="h5" component="h2">
@@ -210,6 +223,35 @@ export default function SimpleTable(props) {
                     ))}
             </Typography>
 
-        </Paper>
+
+            <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                className={classes.modal}
+                open={modalOpen}
+                onClose={() => setModalOpen(false)}
+                closeAfterTransition
+                BackdropComponent={Backdrop}
+                BackdropProps={{
+                    timeout: 500,
+                }}
+            >
+                <Fade in={modalOpen}>
+                    <Paper style={{ width: 300, margin: '0 auto', marginTop: 60, padding: 40 }} elevation={3}>
+                        <Typography variant="h5" component="h2">
+                            Appointment Reservation
+                                </Typography>
+                        <Card><CardContent>
+
+                            <Typography variant="h5" component="h3">
+                                AAAA
+                                </Typography>
+
+                        </CardContent></Card>
+                    </Paper>
+                </Fade>
+            </Modal >
+
+        </Paper >
     );
 }

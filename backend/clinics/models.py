@@ -92,6 +92,7 @@ class Appointment(models.Model):
         constraints = [
             models.UniqueConstraint(fields=['clinic', 'date', 'time', 'doctor'], name='unique doctor date time for a clinic')
         ]
+        ordering = ['typeOf', 'date']
 
     def save(self, *args, **kwargs):
         super(Appointment, self).save(*args, **kwargs)

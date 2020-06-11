@@ -2,7 +2,8 @@ import sys
 from rest_framework import viewsets, generics, filters, permissions, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
-from django.db.models import DateTimeField,Avg,IntegerField, F, Sum, OuterRef, Subquery, When, Case, FilteredRelation, Q, Value as V, CharField, TimeField, ExpressionWrapper
+from django.db.models import DateTimeField, Avg, IntegerField, F, Sum, OuterRef, Subquery, When, Case, FilteredRelation, \
+    Q, Value as V, CharField, TimeField, ExpressionWrapper, Value
 from django.db.models.functions import Coalesce
 from users.models import Doctor, Schedule
 from users.serializers import DoctorSerializer
@@ -100,15 +101,16 @@ class OperatingRoomView(viewsets.ModelViewSet):
 class AppointmentViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentSerializer
     queryset = Appointment.objects.all()
+    ordering_fields = ['typeOf', 'date']
 
     def get_queryset(self):
         if hasattr(self.request.user, 'patient'):
             return Appointment.objects\
-                .filter(patient=self.request.user.patient,date__lt=datetime.datetime.now()).annotate(
+                .filter(patient=self.request.user.patient, date__lt=datetime.datetime.now(), operatingRoom__isnull = False).annotate(
                 type_name=F("typeOf__typeName"),
-                operatinRoom_name=F("operatingRoom__name"),
+                operating_room_name=Concat(F("operatingRoom__name"), Value(' '), F("operatingRoom__number"), output_field=models.CharField()),
                 clinic_name=F("clinic__name"),
-                price=F("typeOf__prices__price")
+                price=F("typeOf__prices__price"),
                 )
         if hasattr(self.request.user, 'adminAccount'):
             return Appointment.objects \
@@ -282,7 +284,7 @@ def appointmentCheck(request):
                 time = time_add(time, duration)
 
             appointments.append(doctorElement)
-
+        print("prije exc ", doctors)
         doctors = doctors.exclude(email__in=docs_on_holiday)
         clinics = Clinic.objects. \
             annotate(rating=Avg('ratings__rating'), appointmentPrice=Subquery(priceList.values('price'))). \

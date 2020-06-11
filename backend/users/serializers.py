@@ -74,7 +74,7 @@ class NurseSerializer(serializers.ModelSerializer):
         exclude = ['user']
 
 class DoctorSerializer(serializers.ModelSerializer):
-    rating = serializers.DecimalField(decimal_places=2, max_digits=4)
+    rating = serializers.DecimalField(decimal_places=2, max_digits=4, read_only=True)
 
     def getClinicId(self, obj):
         user = self.context['request'].user

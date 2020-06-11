@@ -118,10 +118,12 @@ function PatientHome(props) {
 
     const handleReserveClick = id => {
         if (appointmentTime === "") {
-            alert("VRIJEME");
+            alert("Must select the time.");
             return;
         }
-        const appTypeID = props.appointmentTypes.filter(type => type.typeName === appointmentType)[0].id;
+
+        let app = props.appointmentTypes.filter(type => type.typeName === appointmentType)[0];
+        const appTypeID = app.id;
         const data = {
             date: appointmentDate.toISOString().split('T')[0],
             time: appointmentTime,
@@ -130,9 +132,21 @@ function PatientHome(props) {
             doctor: id,
             patient: props.email,
         }
+        let doctor = props.doctors.filter(doc => doc.email == id)[0];
+        let clinic = props.availableClinics.filter(cl => cl.id == chosenClinic)[0];
 
-        props.postAppointment(data);
-        alert("Reserved an appointment!")
+        const showData = {
+            date: appointmentDate.toISOString().split('T')[0],
+            time: appointmentTime,
+            clinic: clinic.name,
+            doctor: doctor.firstName + ' ' + doctor.lastName,
+            appointmentType: app.typeName,
+            price: clinic.appointmentPrice
+        };
+        console.log(showData);
+        //props.postAppointment(data);
+        alert("Reserved an appointment!");
+        props.history.push('/');
     }
 
     const prepareDoctorData = () => {
@@ -195,7 +209,6 @@ function PatientHome(props) {
 
             data.push(el);
         });
-        console.log("MOJE OPP OP OP ", props.operations);
         props.operations.map(op => ({
             type: 'operation',
             ...op
@@ -288,6 +301,8 @@ function PatientHome(props) {
     return (
         <>
 
+
+
             <div className={classes.wrapper}>
                 <Sidebar options={sidebarOptions} />
                 <div className={classes.mainPanel}>
@@ -335,6 +350,7 @@ function PatientHome(props) {
 
 
                     </div>
+
                     <div className={classes.table}>
 
                         {renderClinicsTable && <Table
@@ -346,18 +362,18 @@ function PatientHome(props) {
                             title="Clinics" />
                         }
                         {renderAppointmentClinics &&
-                            <CardList sortOptions={['haha']} data={prepareClinicsData(props.availableClinics)} action={(clinic) => { handleClinicClick(clinic); }} />
+                            <CardList sortOptions={['haha']} showBack={false} data={prepareClinicsData(props.availableClinics)} action={(clinic) => { handleClinicClick(clinic); }} />
                         }
                         {renderAppointmentDoctors &&
-                            <CardList sortOptions={['haha']} data={prepareDoctorData()} action={(doctor) => handleReserveClick(doctor)} />
+                            <CardList sortOptions={['haha']} backClicked={() => { setRenderAppointmentClinics(true); setRenderAppointmentDoctors(false); }} showBack={true} data={prepareDoctorData()} action={(doctor) => handleReserveClick(doctor)} />
                         }
 
                         {renderMedicalHistory &&
-                            <PatientHistoryCardList sortOptions={['haha']} data={prepareHistoryData()} rate={(payload) => leaveRating({ ...payload })} clinicRatings={props.clinicRatings} doctorRatings={props.doctorRatings} />
+                            <PatientHistoryCardList title={'Medical History'} changeSortBy={() => { }} sortOptions={['date', 'type']} data={prepareHistoryData()} rate={(payload) => leaveRating({ ...payload })} clinicRatings={props.clinicRatings} doctorRatings={props.doctorRatings} />
                         }
 
                         {renderHealthCard &&
-                            <PatientHealthCardList data={props.healthCard} />
+                            <PatientHealthCardList title={'Health Card'} data={props.healthCard} />
                         }
                     </div>
 

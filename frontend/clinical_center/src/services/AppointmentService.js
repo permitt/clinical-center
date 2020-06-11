@@ -45,7 +45,7 @@ class appointmentServiceApi extends ApiService {
     }
 
     getAvailableAppointments = async () => {
-        const { data } = await this.apiClient.get(ENDPOINTS.APPOINTMENT, {available: true});
+        const { data } = await this.apiClient.get(ENDPOINTS.APPOINTMENT, { available: true });
         return data;
     }
 

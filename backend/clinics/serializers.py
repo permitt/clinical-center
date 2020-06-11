@@ -21,7 +21,7 @@ class ClinicSerializer(serializers.ModelSerializer):
 
 class AppointmentSerializer(serializers.ModelSerializer):
     type_name = serializers.SerializerMethodField('get_type_name')
-    operatinRoom_name = serializers.SerializerMethodField('get_room_name')
+    operating_room_name = serializers.SerializerMethodField('get_room_name')
     clinic_name = serializers.SerializerMethodField('get_clinic_name')
     price = serializers.SerializerMethodField('get_price')
 
@@ -30,7 +30,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
         return getattr(obj, "type_name", None)
 
     def get_room_name(self, obj):
-        return getattr(obj, "operatingRoom_name", None)
+        return getattr(obj, "operating_room_name", None)
 
     def get_clinic_name(self, obj):
         return getattr(obj, "clinic_name", None)
