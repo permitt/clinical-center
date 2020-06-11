@@ -6,6 +6,7 @@ from django.db.models import DateTimeField, Avg, IntegerField, F, Sum, OuterRef,
     Q, Value as V, CharField, TimeField, ExpressionWrapper, Value
 from django.db.models.functions import Coalesce
 from users.models import Doctor, Schedule
+from django.db.models.functions import TruncMonth, TruncDay, TruncWeek
 from users.serializers import DoctorSerializer
 from rest_framework import viewsets, generics, filters, permissions
 from .custom_permissions import *
@@ -16,7 +17,7 @@ import datetime
 from users.models import Patient
 from django.db.models.functions import Concat
 from django.db import IntegrityError
-from django.db.models import Avg, Exists
+from django.db.models import Avg, Exists, Count
 
 class ClinicListView(viewsets.ModelViewSet):
     serializer_class = ClinicSerializer
@@ -459,26 +460,15 @@ def income(request):
     user = request.user
     if (not user):
         return Response(status=status.HTTP_401_UNAUTHORIZED)
-
     if not('start' in request.query_params and 'end' in request.query_params) :
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':"Invalid parameters."})
-
     start = request.query_params['start']
     end = request.query_params['end']
-
-
-    appointments = Appointment.objects.filter(date__lte=end,date__gte=start)\
+    income = Appointment.objects.filter(date__lte=end,date__gte=start).only('income')\
         .all()\
-        .aggregate(income=Sum('typeOf__prices__price'))\
+        .aggregate(income=Coalesce(Sum('typeOf__prices__price'),0))
 
-    print(appointments)
-
-    # for a in appointments:
-    #     print(a.income)
-
-    #serializer = AppointmentSerializer(appointments, many=True)
-
-    return Response(status=status.HTTP_200_OK, data={'appointments': '', 'income': appointments['income']})
+    return Response(status=status.HTTP_200_OK, data={'income': income})
 
 @api_view(["GET"])
 def reports(request):
@@ -491,10 +481,37 @@ def reports(request):
         .prefetch_related('doctors') \
         .get(id=user.adminAccount.employedAt.id)
 
+    statsMonthly = (Appointment.objects
+             .annotate(month=TruncMonth('date'))
+             .values('month')
+             .annotate(num=Count('id'))
+             .order_by()
+             )
+
+    statsDaily = (Appointment.objects
+             .annotate(day=TruncDay('date'))
+             .values('day')
+             .annotate(num=Count('id'))
+             .order_by()
+             )
+
+    statsWeekly = (Appointment.objects
+                  .annotate(week=TruncWeek('date'))
+                  .values('week')
+                  .annotate(num=Count('id'))
+                  .order_by()
+                  )
+
     clinicSerializer = ClinicSerializer(clinic, many=False)
     doctorSerializer = DoctorSerializer(clinic.doctors.annotate(rating=Avg('ratings__rating')), many=True)
 
-    return Response(status=status.HTTP_200_OK, data={'clinic': clinicSerializer.data, "doctors": doctorSerializer.data})
+    return Response(status=status.HTTP_200_OK, data={
+        'clinic': clinicSerializer.data,
+        "doctors": doctorSerializer.data,
+        "monthly" : statsMonthly,
+        "daily": statsDaily,
+        "weekly": statsWeekly
+    })
 
 @api_view(["GET"])
 def adminClinic(request):

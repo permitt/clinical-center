@@ -47,7 +47,7 @@ function ClAdminHome(props) {
   const [ renderTable, setRenderTable] = React.useState({ 
     'type': false, 
     'requests': false, 
-    'reports': false, 
+    'reports': true, 
     'clinic':false 
   })
   const [tableData, setTableData] = React.useState({ data: [], title:'', columns:[], form:null})

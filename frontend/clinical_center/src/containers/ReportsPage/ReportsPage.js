@@ -45,7 +45,7 @@ function ReportsPage(props) {
           format="MM/dd/yyyy"
           margin="normal"
           id="date-picker-inline"
-          label="Date picker inline"
+          label="Start date"
           value={startDate}
           onChange={handleStartDateChange}
           KeyboardButtonProps={{
@@ -58,7 +58,7 @@ function ReportsPage(props) {
           format="MM/dd/yyyy"
           margin="normal"
           id="date-picker-inline"
-          label="Date picker inline"
+          label="End date"
           value={endDate}
           onChange={handleEndDateChange}
           KeyboardButtonProps={{
