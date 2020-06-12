@@ -63,6 +63,7 @@ function PatientHome(props) {
     const viewClinic = (id) => {
         setRenderClinicsTable(false);
         setClinicInfo(id);
+        setChosenClinic(id);
     }
 
     const columns = [
@@ -117,13 +118,30 @@ function PatientHome(props) {
     };
     const handleCheckClick = (e) => {
         console.log("PARAMS ", queryParams);
+
+        if (queryParams.clinicMinRating > queryParams.clinicMaxRating) {
+            alert('Min rating must be less than max.');
+            return;
+        }
+
+        if (queryParams.doctorMinRating > queryParams.doctorMaxRating) {
+            alert('Min rating must be less than max.')
+            return;
+        }
+
         if (appointmentType === "") {
-            alert("Must select type!");
+            alert("Must select appointment type!");
             return;
         }
 
         const date = appointmentDate.toISOString().split('T')[0];
-        props.checkAppointmentAvailable({ appointmentDate: date, appointmentType });
+        props.checkAppointmentAvailable({ data: { appointmentDate: date, appointmentType }, queryParams });
+
+        if (chosenClinic !== null) {
+            setRenderAppointmentDoctors(true);
+            return;
+        }
+
         setRenderClinicsTable(false);
         setRenderAppointmentDoctors(false);
         setAppointmentTime('');
@@ -132,6 +150,8 @@ function PatientHome(props) {
         setRenderHealthCard(false);
         setClinicInfo(0);
         setRenderAvailableAppointments(false);
+        setQueryParams({ clinicLocation: '', clinicMinRating: '', clinicMaxRating: '', doctorName: '', doctorLastName: '', doctorMinRating: '', doctorMaxRating: '' });
+        setShowFilters(false);
 
     }
 
@@ -196,10 +216,20 @@ function PatientHome(props) {
 
         props.getAvailableAppointments({ clinicId });
         setRenderAvailableAppointments(true);
+        setRenderAppointmentDoctors(false);
 
     }
-    const prepareDoctorData = () => {
 
+    const seeClinicDoctors = (clinicId) => {
+        handleCheckClick();
+
+    }
+
+    const prepareDoctorData = () => {
+        if (props.appointmentTerms[0] === undefined)
+            return [];
+
+        console.log(props.doctors, '   ', chosenClinic);
         return props.doctors.filter(doc => doc.employedAt === chosenClinic).map(doctor => {
             const selector = (<Select displayEmpty value={appointmentTime} onChange={(e) => setAppointmentTime(e.target.value)} >
                 <MenuItem disabled value=""> Select Appointment Time </MenuItem>
@@ -418,13 +448,13 @@ function PatientHome(props) {
                             title="Clinics"
                             id={'id'} />
                         }
-                        {clinicInfo !== 0 ? <ClinicProfile data={props.clinics.filter(cl => cl.id === clinicInfo)[0]} seeDoctors={() => { }} seeAppointments={seeAvailableAppointments} /> : ''}
+                        {clinicInfo !== 0 ? <ClinicProfile data={props.clinics.filter(cl => cl.id === clinicInfo)[0]} seeDoctors={seeClinicDoctors} seeAppointments={seeAvailableAppointments} /> : ''}
                         {renderAvailableAppointments && <AppointmentCardList sortOptions={['haha']} title={'In Advance Appointments'} data={props.appointments} action={reserveAppointment} />}
                         {renderAppointmentClinics &&
-                            <CardList sortOptions={['haha']} showBack={false} data={prepareClinicsData(props.availableClinics)} action={(clinic) => { handleClinicClick(clinic); }} />
+                            <CardList sortOptions={['name']} showBack={false} data={prepareClinicsData(props.availableClinics)} action={(clinic) => { handleClinicClick(clinic); }} />
                         }
                         {renderAppointmentDoctors &&
-                            <CardList sortOptions={['haha']} backClicked={() => { setRenderAppointmentClinics(true); setRenderAppointmentDoctors(false); }} showBack={true} data={prepareDoctorData()} action={(doctor) => handleReserveClick(doctor)} modalOpen={modal} setModalOpen={setModal} modalData={appointmentData} confirm={confirmReservation} />
+                            <CardList sortOptions={['firstName', 'lastName']} backClicked={() => { setRenderAppointmentClinics(true); setRenderAppointmentDoctors(false); }} showBack={clinicInfo !== 0 ? false : true} data={prepareDoctorData()} action={(doctor) => handleReserveClick(doctor)} modalOpen={modal} setModalOpen={setModal} modalData={appointmentData} confirm={confirmReservation} />
                         }
 
                         {renderMedicalHistory &&

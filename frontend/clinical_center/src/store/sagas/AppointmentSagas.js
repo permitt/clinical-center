@@ -27,7 +27,7 @@ export function* appointmentsGet(action) {
 }
 export function* appointmentChecking(action) {
     try {
-        const resp = yield call(() => appointmentService.getAppointmentCheck(action.payload));
+        let resp = yield call(() => appointmentService.getAppointmentCheck(action.payload));
         console.log("APP CHECKING : ", resp);
         yield put(setDoctors(resp.doctors));
         yield put(setAvailableClinics(resp.clinics));

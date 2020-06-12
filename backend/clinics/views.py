@@ -288,9 +288,9 @@ def time_add(time, duration):
 def appointmentCheck(request):
 
     try:
-        date = datetime.datetime.strptime(request.data['appointmentDate'], '%Y-%m-%d')
+        date = datetime.datetime.strptime(request.data['data']['appointmentDate'], '%Y-%m-%d')
         dateDay = date.weekday()
-        appointmentType = request.data['appointmentType']
+        appointmentType = request.data['data']['appointmentType']
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':"Invalid parameters."})
     try:
@@ -345,7 +345,25 @@ def appointmentCheck(request):
         clinics = Clinic.objects. \
             annotate(rating=Avg('ratings__rating'), appointmentPrice=Subquery(priceList.values('price'))). \
             filter(doctors__in=doctors).distinct()
+        print(request.data)
+        if request.data['queryParams']['clinicLocation'] != '':
+            clinics = clinics.filter(address=request.data['queryParams']['clinicLocation'])
+        if request.data['queryParams']['clinicMinRating'] != '':
+            clinics = clinics.filter(rating__gte=request.data['queryParams']['clinicMinRating'])
+        if request.data['queryParams']['clinicMaxRating'] != '':
+            clinics = clinics.filter(rating__lte=request.data['queryParams']['clinicMaxRating'])
 
+        if request.data['queryParams']['doctorName'] != '':
+            doctors = doctors.filter(firstName__startswith=request.data['queryParams']['doctorName'])
+        if request.data['queryParams']['doctorLastName'] != '':
+            doctors = doctors.filter(lastName__startswith=request.data['queryParams']['doctorLastName'])
+        if request.data['queryParams']['doctorMinRating'] != '':
+            doctors = doctors.filter(rating__gte=request.data['queryParams']['doctorMinRating'])
+        if request.data['queryParams']['doctorMaxRating'] != '':
+            doctors = doctors.filter(rating__lte=request.data['queryParams']['doctorMaxRating'])
+        print(doctors, clinics)
+
+        clinics = clinics.filter(doctors__in=doctors)
         docSer = DoctorSerializer(doctors, many=True)
         clinicSer = ClinicSerializer(clinics, many=True)
 

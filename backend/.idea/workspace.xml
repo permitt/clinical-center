@@ -3,8 +3,8 @@
   <component name="ChangeListManager">
     <list default="true" id="f40022a6-8402-42b1-be22-8388f659e6f0" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/components/CardList/PatientHistoryCardList.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/components/CardList/PatientHistoryCardList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/HomePage/PatientHome.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/HomePage/PatientHome.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/clinics/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinics/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/views.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -68,11 +68,17 @@
       <option name="presentableId" value="Default" />
       <updated>1591948422051</updated>
       <workItem from="1591948423785" duration="1176000" />
-      <workItem from="1591949635867" duration="1433000" />
+      <workItem from="1591949635867" duration="4516000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="2" />
+  </component>
+  <component name="WindowStateProjectService">
+    <state x="303" y="10" width="672" height="678" key="search.everywhere.popup" timestamp="1591959022816">
+      <screen x="0" y="0" width="1280" height="689" />
+    </state>
+    <state x="303" y="10" width="672" height="678" key="search.everywhere.popup/0.0.1280.689@0.0.1280.689" timestamp="1591959022816" />
   </component>
 </project>

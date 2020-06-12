@@ -2,7 +2,7 @@ import ApiService from './ApiService';
 
 const ENDPOINTS = {
     GET_APPOINTMENT_TYPES: '/api/clinics/appointment-type',
-    GET_APPOINTMENT_CHECK: '/api/clinics/appointment/check/',
+    POST_APPOINTMENT_CHECK: '/api/clinics/appointment/check/',
     APPOINTMENT: 'api/clinics/appointment/',
     DELETE_APPOINTMENT: 'api/clinics/appointment/:id/',
     POST_APPOINTMENT: 'api/clinics/appointment/',
@@ -19,7 +19,7 @@ class appointmentServiceApi extends ApiService {
     }
 
     getAppointmentCheck = async (payload) => {
-        const { data } = await this.apiClient.post(ENDPOINTS.GET_APPOINTMENT_CHECK, payload);
+        const { data } = await this.apiClient.post(ENDPOINTS.POST_APPOINTMENT_CHECK, payload);
         return data;
     }
 

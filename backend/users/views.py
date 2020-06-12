@@ -100,6 +100,13 @@ class DoctorViewset(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         user = request.user
         print(request.query_params)
+        if hasattr(user,'patient'):
+            try:
+                Doctor.objects.filter(employedAt=1)
+            except:
+                return Response('bad request')
+
+
         if (hasattr(user,'adminAccount')):
             query = Doctor.objects.filter(employedAt=user.adminAccount.employedAt).annotate(rating=Avg('ratings__rating'))
 

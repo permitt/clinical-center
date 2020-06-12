@@ -79,6 +79,7 @@ function ClinicDoctorSearchBar(props) {
                             id="outlined-basic"
                             label="Clinic Min rating"
                             type="number"
+
                             variant="outlined"
                             onChange={e => props.setParams({ ...props.paramState, clinicMinRating: e.target.value })}
                         />
@@ -88,6 +89,7 @@ function ClinicDoctorSearchBar(props) {
                             id="outlined-basic"
                             label="Clinic Max rating"
                             type="number"
+
                             variant="outlined"
                             onChange={e => props.setParams({ ...props.paramState, clinicMaxRating: e.target.value })}
                         />
@@ -118,6 +120,7 @@ function ClinicDoctorSearchBar(props) {
                             label="Doctor Min rating"
                             type="number"
                             variant="outlined"
+
                             onChange={e => props.setParams({ ...props.paramState, doctorMinRating: e.target.value })}
                         />
                     </Grid>
@@ -127,6 +130,7 @@ function ClinicDoctorSearchBar(props) {
                             label="Doctor Max rating"
                             type="number"
                             variant="outlined"
+
                             onChange={e => props.setParams({ ...props.paramState, doctorMaxRating: e.target.value })}
                         />
                     </Grid>

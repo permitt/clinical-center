@@ -93,8 +93,8 @@ function ClinicProfile(props) {
                     </Grid>
 
                     <Grid item xs={3}>
-                        <Button variant="contained" color="primary" size="large" startIcon={<GroupIcon />}>
-                            See doctors
+                        <Button variant="contained" color="primary" size="large" onClick={() => props.seeDoctors(props.data.id)} startIcon={<GroupIcon />}>
+                            See Available doctors
       </Button>
                     </Grid>
                     <Grid item xs={3}>

@@ -4,7 +4,8 @@ const initialState = {
     types: [],
     all: [],
     scheduled: { show: false, succes: false, msg: '' },
-    available: []
+    available: [],
+    availableTerms: [],
 };
 const appointmetReducer = (state = initialState, action) => {
     let changedArr;
