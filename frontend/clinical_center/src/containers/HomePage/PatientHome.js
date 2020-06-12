@@ -139,6 +139,7 @@ function PatientHome(props) {
 
         if (chosenClinic !== null) {
             setRenderAppointmentDoctors(true);
+            setRenderAvailableAppointments(false);
             return;
         }
 
@@ -208,6 +209,7 @@ function PatientHome(props) {
     const reserveAppointment = (data) => {
 
         props.putAppointment({ ...data, patient: props.email });
+        console.log('reserved app ', data);
         alert("Reserved an appointment!");
         props.history.push('/');
     }
@@ -428,7 +430,7 @@ function PatientHome(props) {
                                 </Grid>
                                 <Grid item>
 
-                                    {showFilters && <ClinicDoctorSearchBar setParams={setQueryParams} paramState={queryParams} />}
+                                    {showFilters && <ClinicDoctorSearchBar displayClinic={clinicInfo === 0 ? true : false} setParams={setQueryParams} paramState={queryParams} />}
 
                                 </Grid>
                             </Grid>

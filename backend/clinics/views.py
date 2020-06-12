@@ -135,8 +135,9 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     ordering_fields = ['typeOf', 'date']
 
     def get_queryset(self):
+
         if hasattr(self.request.user, 'patient'):
-            if self.request.method == 'PUT':
+            if self.request.method == "PUT":
                 return Appointment.objects.all()
 
             if 'clinic' in self.request.query_params:
@@ -182,6 +183,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 
         return Appointment.objects.all()
     permission_classes = [permissions.IsAuthenticated]
+
 
 class AppointmentTypeView(viewsets.ModelViewSet):
     queryset = AppointmentType.objects.all()

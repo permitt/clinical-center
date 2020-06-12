@@ -4,8 +4,10 @@
     <list default="true" id="718922fe-32ea-43c9-a3ef-49eaaebdcd3a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/clinics/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinics/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/AppointmentList/AppoitnmentList.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/AppointmentList/AppoitnmentList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/HomePage/ClAdminHome.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/HomePage/ClAdminHome.js" afterDir="false" />
+
+      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/HomePage/PatientHome.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/HomePage/PatientHome.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/SearchBar/ClinicDoctorSearchBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/SearchBar/ClinicDoctorSearchBar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/services/AppointmentService.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/services/AppointmentService.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -205,7 +207,7 @@
       <option name="presentableId" value="Default" />
       <updated>1591948422051</updated>
       <workItem from="1591948423785" duration="1176000" />
-      <workItem from="1591949635867" duration="4516000" />
+      <workItem from="1591949635867" duration="6009000" />
     </task>
     <servers />
   </component>
