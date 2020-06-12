@@ -3,7 +3,7 @@ import {
   LOGIN, LOGOUT, REGISTER, CHANGEPASS,
   GET_DOCTORS, DELETE_DOCTOR, ADD_DOCTOR,
   GET_CLINICS, EDIT_ADMIN_CLINIC,
-  GET_APPOINTMENT_TYPES, GET_APPOINTMENT_CHECK, POST_APPOINTMENT, GET_APPOINTMENTS,
+  GET_APPOINTMENT_TYPES, GET_APPOINTMENT_CHECK, POST_APPOINTMENT, GET_APPOINTMENTS, PUT_APPOINTMENT,
   GET_HALLS, SEARCH_HALLS, DELETE_HALL, ADD_HALL, EDIT_HALL,
   GET_PATIENTS, GET_PATIENT, PUT_PATIENT, SEARCH_PATIENTS,
   GET_TYPES, SEARCH_TYPES, DELETE_TYPE, ADD_TYPE, EDIT_TYPE,
@@ -18,7 +18,7 @@ import {
 import { userLogin, userRegister, userLogout, userChangePass, profileGet, profileEdit } from './AuthSagas';
 import { doctorsGet, doctorDelete, doctorAdd, doctorSearch } from './DoctorSagas';
 import { clinicsGet, adminClinicGet, adminClinicEdit } from './ClinicSagas';
-import { appointmentTypesGet, appointmentChecking, appointmentPost, appointmentsGet, appointmentSchedule, availableAppointmentsGet, appointmentDelete, availableAppointmentCreate } from './AppointmentSagas';
+import { appointmentTypesGet, appointmentChecking, appointmentPost, appointmentsGet, appointmentSchedule, availableAppointmentsGet, appointmentDelete, availableAppointmentCreate, appointmentPut } from './AppointmentSagas';
 import { hallsGet, hallsSearch, hallDelete, hallAdd, hallEdit } from './HallSaga'
 import { typesGet, typesSearch, typeDelete, typeAdd, typeEdit } from './AppointmentTypeSagas'
 import { patientsGet, patientGet, patientPut, patientsSearch } from './PatientSagas'
@@ -49,8 +49,9 @@ export default function* rootSaga() {
     takeLatest(GET_APPOINTMENT_TYPES, appointmentTypesGet),
     takeLatest(GET_APPOINTMENT_CHECK, appointmentChecking),
     takeLatest(POST_APPOINTMENT, appointmentPost),
+    takeLatest(PUT_APPOINTMENT, appointmentPut),
     takeLatest(SCHEDULE_APPOINTMENT, appointmentSchedule),
-    
+
     takeLatest(GET_AVAILABLE_APPOINTMENTS, availableAppointmentsGet),
     takeLatest(DELETE_APPOINTMENT, appointmentDelete),
     takeLatest(ADD_APPOINTMENT_TERM, availableAppointmentCreate),

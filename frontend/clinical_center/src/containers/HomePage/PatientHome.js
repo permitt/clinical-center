@@ -6,6 +6,7 @@ import { USER_PROFILE } from '../../routes';
 import LocalHospital from '@material-ui/icons/LocalHospital';
 import Favorite from '@material-ui/icons/Favorite';
 import Healing from '@material-ui/icons/Healing';
+import Info from '@material-ui/icons/Info';
 import Person from '@material-ui/icons/Person';
 import { makeStyles } from "@material-ui/core/styles";
 
@@ -22,26 +23,20 @@ import Select from '@material-ui/core/Select';
 import styles from "../../assets/jss/material-dashboard-react/layouts/homeStyle.js";
 import { getClinics } from '../../store/actions/ClinicActions';
 import { getOperations } from '../../store/actions/OperationActions';
-import { getAppointmentTypes, checkAppointmentAvailable, getAppointments, postAppointment } from '../../store/actions/AppointmentActions';
+import { putAppointment, getAppointmentTypes, checkAppointmentAvailable, getAppointments, postAppointment, getAvailableAppointments } from '../../store/actions/AppointmentActions';
 import { getDoctorRatings, getClinicRatings, postDoctorRating, postClinicRating, putDoctorRating, putClinicRating } from '../../store/actions/RatingActions';
 import { getHealthCard } from '../../store/actions/HealthCardActions';
-
+import ClinicProfile from '../ClinicProfile/ClinicProfile';
 import { Typography } from '@material-ui/core';
 
 import CardList from '../../components/CardList/CardList';
 import PatientHistoryCardList from '../../components/CardList/PatientHistoryCardList';
 import PatientHealthCardList from '../../components/CardList/PatientHealthCardList';
+import AppointmentCardList from '../../components/CardList/AppointmentCardList';
 
 const useStyles = makeStyles(styles);
 
-const columns = [
-    { id: 'name', label: 'Name', minWidth: 100 },
-    { id: 'address', label: 'Address', minWidth: 80 },
-    { id: 'city', label: 'City', minWidth: 80 },
-    { id: 'country', label: 'Country', minWidth: 80 },
-    { id: 'rating', label: 'Rating', minWidth: 80 },
-    { id: 'description', label: 'Description', minWidth: 90 },
-];
+
 
 
 function PatientHome(props) {
@@ -56,7 +51,29 @@ function PatientHome(props) {
     const [renderAppointmentDoctors, setRenderAppointmentDoctors] = React.useState(false);
     const [renderMedicalHistory, setRenderMedicalHistory] = React.useState(false);
     const [renderHealthCard, setRenderHealthCard] = React.useState(false);
+    const [renderAvailableAppointments, setRenderAvailableAppointments] = React.useState(false);
+    const [modal, setModal] = React.useState(false);
+    const [appointmentData, setAppointmentData] = React.useState({ data: '', showData: '' })
+    const [clinicInfo, setClinicInfo] = React.useState(0);
     const orderByOptions = ['name', 'address', 'city', 'country'];
+
+    const viewClinic = (id) => {
+        setRenderClinicsTable(false);
+        setClinicInfo(id);
+    }
+
+    const columns = [
+        { id: 'name', label: 'Name', minWidth: 100 },
+        { id: 'address', label: 'Address', minWidth: 80 },
+        { id: 'city', label: 'City', minWidth: 80 },
+        { id: 'country', label: 'Country', minWidth: 80 },
+        { id: 'rating', label: 'Rating', minWidth: 80 },
+        { id: 'description', label: 'Description', minWidth: 90 },
+        { id: 'action', label: 'View', minWidth: 20, icon: Info, action: viewClinic }];
+
+
+
+
 
     const showClinicalCenters = () => {
         props.getClinics(orderBy);
@@ -65,7 +82,8 @@ function PatientHome(props) {
         setRenderAppointmentDoctors(false);
         setRenderMedicalHistory(false);
         setRenderHealthCard(false);
-
+        setClinicInfo(0);
+        setRenderAvailableAppointments(false);
 
     }
     const showHealthCard = () => {
@@ -75,6 +93,10 @@ function PatientHome(props) {
         setRenderAppointmentDoctors(false);
         setRenderMedicalHistory(false);
         setRenderHealthCard(true);
+        setClinicInfo(0);
+        setRenderAvailableAppointments(false);
+
+
     }
     const showMedicalHistory = () => {
         props.getAppointments();
@@ -86,6 +108,9 @@ function PatientHome(props) {
         setRenderAppointmentDoctors(false);
         setRenderHealthCard(false);
         setRenderMedicalHistory(true);
+        setClinicInfo(0);
+        setRenderAvailableAppointments(false);
+
     };
     const handleCheckClick = (e) => {
 
@@ -102,6 +127,8 @@ function PatientHome(props) {
         setRenderAppointmentClinics(true);
         setRenderMedicalHistory(false);
         setRenderHealthCard(false);
+        setClinicInfo(0);
+        setRenderAvailableAppointments(false);
 
     }
 
@@ -121,6 +148,7 @@ function PatientHome(props) {
             alert("Must select the time.");
             return;
         }
+        setModal(true);
 
         let app = props.appointmentTypes.filter(type => type.typeName === appointmentType)[0];
         const appTypeID = app.id;
@@ -143,12 +171,30 @@ function PatientHome(props) {
             appointmentType: app.typeName,
             price: clinic.appointmentPrice
         };
-        console.log(showData);
-        //props.postAppointment(data);
+
+        setAppointmentData({ showData, data });
+
+    }
+
+    const confirmReservation = (data) => {
+        props.postAppointment(data);
         alert("Reserved an appointment!");
         props.history.push('/');
     }
 
+    const reserveAppointment = (data) => {
+
+        props.putAppointment({ ...data, patient: props.email });
+        alert("Reserved an appointment!");
+        props.history.push('/');
+    }
+
+    const seeAvailableAppointments = (clinicId) => {
+
+        props.getAvailableAppointments({ clinicId });
+        setRenderAvailableAppointments(true);
+
+    }
     const prepareDoctorData = () => {
 
         return props.doctors.filter(doc => doc.employedAt === chosenClinic).map(doctor => {
@@ -172,8 +218,12 @@ function PatientHome(props) {
     }
 
     const prepareHistoryData = () => {
-        if (props.appointments === 'empty' && props.operations === 'empty')
+        console.log("PROV ", props.appointments, '   ', props.operations);
+        if (props.appointments[0] === 'empty' && props.operations[0] === 'empty')
             return false;
+
+        if (props.appointments.length == 0)
+            return [];
 
         let data = [];
 
@@ -356,16 +406,19 @@ function PatientHome(props) {
                         {renderClinicsTable && <Table
                             data={props.clinics}
                             columns={columns}
-                            action={() => { }}
+                            action={() => { }} // na ovo setujes prikaz Klinike da bude true
                             sortOptions={orderByOptions}
                             changeSortBy={val => setOrderBy(val)}
-                            title="Clinics" />
+                            title="Clinics"
+                            id={'id'} />
                         }
+                        {clinicInfo !== 0 ? <ClinicProfile data={props.clinics.filter(cl => cl.id === clinicInfo)[0]} seeDoctors={() => { }} seeAppointments={seeAvailableAppointments} /> : ''}
+                        {renderAvailableAppointments && <AppointmentCardList sortOptions={['haha']} title={'In Advance Appointments'} data={props.appointments} action={reserveAppointment} />}
                         {renderAppointmentClinics &&
                             <CardList sortOptions={['haha']} showBack={false} data={prepareClinicsData(props.availableClinics)} action={(clinic) => { handleClinicClick(clinic); }} />
                         }
                         {renderAppointmentDoctors &&
-                            <CardList sortOptions={['haha']} backClicked={() => { setRenderAppointmentClinics(true); setRenderAppointmentDoctors(false); }} showBack={true} data={prepareDoctorData()} action={(doctor) => handleReserveClick(doctor)} />
+                            <CardList sortOptions={['haha']} backClicked={() => { setRenderAppointmentClinics(true); setRenderAppointmentDoctors(false); }} showBack={true} data={prepareDoctorData()} action={(doctor) => handleReserveClick(doctor)} modalOpen={modal} setModalOpen={setModal} modalData={appointmentData} confirm={confirmReservation} />
                         }
 
                         {renderMedicalHistory &&
@@ -421,7 +474,9 @@ const mapDispatchToProps = {
     getAppointmentTypes,
     checkAppointmentAvailable,
     postAppointment,
+    getAvailableAppointments,
     getAppointments,
+    putAppointment,
     getOperations,
     getClinicRatings,
     getDoctorRatings,

@@ -47,6 +47,15 @@ export function* appointmentPost(action) {
     }
 }
 
+export function* appointmentPut(action) {
+    try {
+        const resp = yield call(() => appointmentService.putAppointment(action.payload));
+        console.log("APP PUT : ", resp);
+    } catch (err) {
+
+    }
+}
+
 export function* appointmentSchedule(action) {
     try {
         const resp = yield call(() => appointmentService.scheduleAppointment(action.payload));
@@ -68,8 +77,11 @@ export function* appointmentDelete(action) {
 
 export function* availableAppointmentsGet(action) {
     try {
-        const resp = yield call(() => appointmentService.getAvailableAppointments());
-        yield put(setAvailableAppointments(resp))
+        const resp = yield call(() => appointmentService.getAvailableAppointments(action.payload));
+        yield put(setAvailableAppointments(resp));
+        if (action.payload.clinicId !== undefined)
+            yield put(setAppointments(resp));
+
     } catch (error) {
         console.log(error)
     }

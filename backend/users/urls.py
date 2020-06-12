@@ -10,6 +10,7 @@ router.register('clinicadmin', views.ClinicAdminViewset)
 router.register('nurse', views.NurseViewset)
 
 urlpatterns = [
+    path('activate/<str:key>/', views.activate),
     path('token/obtain/', views.MyTokenObtainPairView.as_view(), name='token_create'),  # override sjwt stock token
     path('token/refresh/', jwt_views.TokenRefreshView.as_view(), name='token_refresh'),
     path('changepass/', views.changepass),

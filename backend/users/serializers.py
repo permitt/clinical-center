@@ -22,12 +22,21 @@ class PatientSerializer(serializers.ModelSerializer):
         password = validated_data.get("password", None)
         user = User.objects.create(username=email,email=email, is_active=False)
         user.set_password(password)
+
         user.save()
         patient = Patient(**validated_data)
         patient.activation_link = generate_link(user.email, datetime.datetime.now())
         patient.user = user
-        HealthCard.objects.create(patient=patient)
         patient.save()
+
+
+        send_mail(ACTIVATION_TITLE,
+                  ACTIVATION_BODY % (
+                      patient.firstName, patient.lastName, patient.activation_link),
+                  settings.EMAIL_HOST_USER,
+                  [patient.email],
+                  fail_silently=True)
+
         return patient
 
     def update(self, instance, validated_data):
@@ -36,15 +45,6 @@ class PatientSerializer(serializers.ModelSerializer):
             user = User.objects.get(email=instance.email)
             user.set_password(validated_data['password'])
             user.save()
-
-
-        if instance.approved :
-            send_mail(ACTIVATION_TITLE,
-                      ACTIVATION_BODY % (
-                          instance.firstName, instance.lastName, instance.activation_link),
-                      settings.EMAIL_HOST_USER,
-                      [instance.email],
-                      fail_silently=True)
 
         return instance
 

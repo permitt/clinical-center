@@ -4,6 +4,7 @@ import {
     GET_APPOINTMENT_CHECK,
     SET_APPOINTMENT_TERMS,
     POST_APPOINTMENT,
+    PUT_APPOINTMENT,
     GET_APPOINTMENTS,
     SET_APPOINTMENTS,
     SCHEDULE_APPOINTMENT,
@@ -27,6 +28,14 @@ export const setAppointmentTypes = payload => {
         payload
     };
 };
+
+export const putAppointment = payload => {
+    return {
+        type: PUT_APPOINTMENT,
+        payload
+    }
+};
+
 export const setAppointmentTerms = payload => {
     return {
         type: SET_APPOINTMENT_TERMS,
@@ -83,9 +92,10 @@ export const deleteAppointment = payload => {
 }
 
 
-export const getAvailableAppointments = () => {
+export const getAvailableAppointments = (payload) => {
     return {
-        type: GET_AVAILABLE_APPOINTMENTS
+        type: GET_AVAILABLE_APPOINTMENTS,
+        payload
     };
 }
 
