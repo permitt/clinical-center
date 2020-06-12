@@ -66,7 +66,7 @@ function ClinicDoctorSearchBar(props) {
                     spacing={1}
                     justify="center"
                 >
-                    <Grid item xs={6} align='center' style={{ marginTop: '20px', marginLeft: -5 }}>
+                    {props.displayClinic && <><Grid item xs={6} align='center' style={{ marginTop: '20px', marginLeft: -5 }}>
                         <TextField
                             id="outlined-basic"
                             label="Clinic location"
@@ -74,26 +74,26 @@ function ClinicDoctorSearchBar(props) {
                             onChange={e => props.setParams({ ...props.paramState, clinicLocation: e.target.value })}
                         />
                     </Grid>
-                    <Grid item xs={3} style={{ marginTop: '20px', marginLeft: -7 }}>
-                        <TextField
-                            id="outlined-basic"
-                            label="Clinic Min rating"
-                            type="number"
+                        <Grid item xs={3} style={{ marginTop: '20px', marginLeft: -7 }}>
+                            <TextField
+                                id="outlined-basic"
+                                label="Clinic Min rating"
+                                type="number"
 
-                            variant="outlined"
-                            onChange={e => props.setParams({ ...props.paramState, clinicMinRating: e.target.value })}
-                        />
-                    </Grid>
-                    <Grid item xs={3} style={{ marginTop: '20px', marginLeft: -3 }}>
-                        <TextField
-                            id="outlined-basic"
-                            label="Clinic Max rating"
-                            type="number"
+                                variant="outlined"
+                                onChange={e => props.setParams({ ...props.paramState, clinicMinRating: e.target.value })}
+                            />
+                        </Grid>
+                        <Grid item xs={3} style={{ marginTop: '20px', marginLeft: -3 }}>
+                            <TextField
+                                id="outlined-basic"
+                                label="Clinic Max rating"
+                                type="number"
 
-                            variant="outlined"
-                            onChange={e => props.setParams({ ...props.paramState, clinicMaxRating: e.target.value })}
-                        />
-                    </Grid>
+                                variant="outlined"
+                                onChange={e => props.setParams({ ...props.paramState, clinicMaxRating: e.target.value })}
+                            />
+                        </Grid> </>}
 
 
                     <Grid item xs={6} align='center' style={{ marginTop: '20px' }}>
