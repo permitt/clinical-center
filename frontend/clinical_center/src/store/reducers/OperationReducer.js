@@ -7,7 +7,7 @@ const initialState = {
 const operationReducer = (state = initialState, action) => {
     switch (action.type) {
         case SET_OPERATIONS:
-            return { ...state, all: action.payload };
+            return { ...state, all: action.payload.length === 0 ? ['empty'] : action.payload };
         default:
             return state;
     }

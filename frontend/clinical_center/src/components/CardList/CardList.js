@@ -224,33 +224,41 @@ export default function SimpleTable(props) {
             </Typography>
 
 
-            <Modal
+            {props.modalOpen ? <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
                 className={classes.modal}
-                open={modalOpen}
-                onClose={() => setModalOpen(false)}
+                open={props.modalOpen}
+                onClose={() => props.setModalOpen(false)}
                 closeAfterTransition
                 BackdropComponent={Backdrop}
                 BackdropProps={{
                     timeout: 500,
                 }}
             >
-                <Fade in={modalOpen}>
+                <Fade in={props.modalOpen}>
                     <Paper style={{ width: 300, margin: '0 auto', marginTop: 60, padding: 40 }} elevation={3}>
                         <Typography variant="h5" component="h2">
                             Appointment Reservation
                                 </Typography>
                         <Card><CardContent>
 
-                            <Typography variant="h5" component="h3">
-                                AAAA
-                                </Typography>
-
-                        </CardContent></Card>
+                            <Typography>
+                                Date: {props.modalData.showData.date}
+                            </Typography>
+                            <Typography>Time: {props.modalData.showData.time}</Typography>
+                            <Typography>Clinic: {props.modalData.showData.clinic}</Typography>
+                            <Typography>Type: {props.modalData.showData.appointmentType}</Typography>
+                            <Typography>Doctor: {props.modalData.showData.doctor}</Typography>
+                            <Typography>Price: {props.modalData.showData.price}.00$</Typography>
+                        </CardContent>
+                            <CardActions>
+                                <Button color="primary" style={{ margin: '0 auto' }} variant="outlined" onClick={() => props.confirm(props.modalData.data)} size="large">Confirm Reservation</Button>
+                            </CardActions>
+                        </Card>
                     </Paper>
                 </Fade>
-            </Modal >
+            </Modal > : ''}
 
         </Paper >
     );

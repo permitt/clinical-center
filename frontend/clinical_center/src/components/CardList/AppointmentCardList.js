@@ -133,12 +133,13 @@ export default function SimpleTable(props) {
 
 
             <Typography variant="h5" component="h2">
-                {props.data.length === 0 ? "Searching..." : props.data === false ? "You don't have a medical history."
+                {props.data.length === 0 ? "Searching..." : props.data[0] === 'empty' ? "There are no available appointments."
 
                     : props.data.map(cl => {
-                        if (cl.type === 'appointment') {
-                            return (
 
+                        console.log(cl);
+                        return (
+                            <>
                                 <Card className={classes.root} style={{ margin: 10 }}>
                                     <CardContent>
 
@@ -152,10 +153,7 @@ export default function SimpleTable(props) {
                                             Doctor's email: {cl.doctor}
 
                                         </Typography>
-                                        <Typography variant="body2" component="p">
-                                            Leave a rating for the doctor:
-                                        </Typography>
-                                        <Rating size="medium" value={cl.doctorRating.rating} name={'doc-' + cl.date + cl.time} onChange={(event, val) => { props.rate({ "ratingId": cl.doctorRating.id, "type": "doctorRating", "id": cl.doctor, "rating": val }) }} />
+
                                         <Typography variant="body2" component="p">
                                             Appointment Type: {cl.type_name}
 
@@ -175,75 +173,20 @@ export default function SimpleTable(props) {
                                         </Typography>
 
 
-                                        <Typography variant="body2" component="p">
-                                            Leave a rating for the clinic:
-                                        </Typography>
-                                        <Rating size="medium" value={cl.clinicRating.rating} name={'clin-' + cl.date + cl.time} onChange={(event, val) => { props.rate({ "ratingId": cl.clinicRating.id, "type": "clinicRating", "id": cl.clinic, "rating": val }) }} />
+
                                         <Typography variant="body2" component="p">
                                             Operating Room: {cl.operating_room_name}
 
                                         </Typography>
                                     </CardContent>
+                                    <CardActions>
+                                        <Button onClick={(e) => props.action(cl)} size="medium">Reserve</Button>
+                                    </CardActions>
                                 </Card>
-                            );
-                        }
-                        else if (cl.type === 'operation') {
-                            return (
-                                <Card className={classes.root} style={{ margin: 10 }}>
-                                    <CardContent>
-
-                                        <Typography variant="h5" component="h2">
-                                            Operation
-                                        </Typography>
-                                        <Typography className={classes.pos} color="textSecondary">
-                                            {cl.date} {cl.time}
-                                        </Typography>
-
-                                        {cl.doctors.map(doctor => (
-                                            <div>
-
-                                                <Typography variant="body2" component="p">
-                                                    Doctor's email: {doctor}
-
-                                                </Typography>
-                                                <Typography variant="body2" component="p">
-                                                    Leave a rating for the doctor:
-                                                </Typography>
-                                                <Rating size="medium" value={cl.doctorRatings[doctor].rating} name={'doc-' + cl.date + cl.time + doctor} onChange={(event, val) => { props.rate({ "ratingId": cl.doctorRatings[doctor].id, "type": "doctorRating", "id": doctor, "rating": val }) }} />
-
-                                            </div>
-
-                                        ))}
-
-
-
-                                        <Typography variant="body2" component="p">
-                                            Clinic: {cl.clinic_name}
-
-                                        </Typography>
-
-
-                                        <Typography variant="body2" component="p">
-                                            Leave a rating for the clinic:
-                                        </Typography>
-                                        <Rating size="medium" value={cl.clinicRating.rating} name={'clin-' + cl.date + cl.time} onChange={(event, val) => { props.rate({ "ratingId": cl.clinicRating.id, "type": "clinicRating", "id": cl.clinic, "rating": val }) }} />
-
-                                        <Typography variant="body2" component="p">
-                                            Duration: {cl.duration} minutes
-
-                                        </Typography>
-
-                                        <Typography variant="body2" component="p">
-                                            Operating Room: {cl.operatingRoom_name}
-
-                                        </Typography>
-                                    </CardContent>
-                                </Card>
-                            );
-                        }
-
-
+                            </>
+                        );
                     }
+
                     )}
             </Typography>
 

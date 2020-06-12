@@ -27,7 +27,7 @@ export function* appointmentsGet(action) {
 }
 export function* appointmentChecking(action) {
     try {
-        const resp = yield call(() => appointmentService.getAppointmentCheck(action.payload));
+        let resp = yield call(() => appointmentService.getAppointmentCheck(action.payload));
         console.log("APP CHECKING : ", resp);
         yield put(setDoctors(resp.doctors));
         yield put(setAvailableClinics(resp.clinics));
@@ -42,6 +42,15 @@ export function* appointmentPost(action) {
         const resp = yield call(() => appointmentService.postAppointment(action.payload));
         yield put(push(DASHBOARD));
         console.log("APP POSTING : ", resp);
+    } catch (err) {
+
+    }
+}
+
+export function* appointmentPut(action) {
+    try {
+        const resp = yield call(() => appointmentService.putAppointment(action.payload));
+        console.log("APP PUT : ", resp);
     } catch (err) {
 
     }
@@ -68,8 +77,11 @@ export function* appointmentDelete(action) {
 
 export function* availableAppointmentsGet(action) {
     try {
-        const resp = yield call(() => appointmentService.getAvailableAppointments());
-        yield put(setAvailableAppointments(resp))
+        const resp = yield call(() => appointmentService.getAvailableAppointments(action.payload));
+        yield put(setAvailableAppointments(resp));
+        if (action.payload.clinicId !== undefined)
+            yield put(setAppointments(resp));
+
     } catch (error) {
         console.log(error)
     }

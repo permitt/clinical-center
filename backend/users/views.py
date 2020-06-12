@@ -12,6 +12,9 @@ from django.db.models import Avg, Q, Count, Exists, OuterRef
 from clinics.models import Holiday, Appointment, Operation, AppointmentType
 from clinics.views import time_add
 
+from clinics.models import HealthCard
+
+
 class PatientViewset(viewsets.ModelViewSet):
     queryset = Patient.objects.all()
     serializer_class = PatientSerializer
@@ -49,6 +52,18 @@ class PatientViewset(viewsets.ModelViewSet):
         user.delete()
         instance.delete()
 
+def activate(request,key):
+    try:
+        patient = Patient.objects.get(activation_link=key)
+        patient.user.is_active = True
+        patient.approved=True
+        patient.user.save()
+        HealthCard.objects.create(patient=patient)
+
+        return render(request, 'clinical_center/activated.html', context={'success': True})
+    except Patient.DoesNotExist:
+        return render(request, 'clinical_center/activated.html', context={'success': False})
+
 
 class ClinicAdminViewset(viewsets.ModelViewSet):
     queryset = ClinicAdmin.objects.all()
@@ -85,6 +100,13 @@ class DoctorViewset(viewsets.ModelViewSet):
     def list(self, request, *args, **kwargs):
         user = request.user
         print(request.query_params)
+        if hasattr(user,'patient'):
+            try:
+                Doctor.objects.filter(employedAt=1)
+            except:
+                return Response('bad request')
+
+
         if (hasattr(user,'adminAccount')):
             query = Doctor.objects.filter(employedAt=user.adminAccount.employedAt).annotate(rating=Avg('ratings__rating'))
 

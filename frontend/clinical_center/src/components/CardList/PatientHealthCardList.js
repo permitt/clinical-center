@@ -39,9 +39,6 @@ const TableToolbar = props => {
             <Typography className={classes.title} variant="h6" id="tableTitle" component="div">
                 {props.title}
             </Typography>
-
-
-
         </Toolbar >
     );
 };
