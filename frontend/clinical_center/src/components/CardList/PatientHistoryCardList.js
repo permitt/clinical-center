@@ -137,7 +137,6 @@ export default function SimpleTable(props) {
 
                     : props.data.map(cl => {
                         if (cl.type === 'appointment') {
-                            console.log(cl);
                             return (
 
                                 <Card className={classes.root} style={{ margin: 10 }}>

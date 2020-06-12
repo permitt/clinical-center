@@ -28,6 +28,7 @@ import { getDoctorRatings, getClinicRatings, postDoctorRating, postClinicRating,
 import { getHealthCard } from '../../store/actions/HealthCardActions';
 import ClinicProfile from '../ClinicProfile/ClinicProfile';
 import { Typography } from '@material-ui/core';
+import ClinicDoctorSearchBar from '../SearchBar/ClinicDoctorSearchBar';
 
 import CardList from '../../components/CardList/CardList';
 import PatientHistoryCardList from '../../components/CardList/PatientHistoryCardList';
@@ -47,6 +48,7 @@ function PatientHome(props) {
     const [appointmentDate, setAppointmentDate] = React.useState(new Date());
     const [appointmentTime, setAppointmentTime] = React.useState("")
     const [appointmentType, setAppointmentType] = React.useState('');
+    const [queryParams, setQueryParams] = React.useState({ clinicLocation: '', clinicMinRating: '', clinicMaxRating: '', doctorName: '', doctorLastName: '', doctorMinRating: '', doctorMaxRating: '' });
     const [renderAppointmentClinics, setRenderAppointmentClinics] = React.useState(false);
     const [renderAppointmentDoctors, setRenderAppointmentDoctors] = React.useState(false);
     const [renderMedicalHistory, setRenderMedicalHistory] = React.useState(false);
@@ -55,6 +57,7 @@ function PatientHome(props) {
     const [modal, setModal] = React.useState(false);
     const [appointmentData, setAppointmentData] = React.useState({ data: '', showData: '' })
     const [clinicInfo, setClinicInfo] = React.useState(0);
+    const [showFilters, setShowFilters] = React.useState(false);
     const orderByOptions = ['name', 'address', 'city', 'country'];
 
     const viewClinic = (id) => {
@@ -113,7 +116,7 @@ function PatientHome(props) {
 
     };
     const handleCheckClick = (e) => {
-
+        console.log("PARAMS ", queryParams);
         if (appointmentType === "") {
             alert("Must select type!");
             return;
@@ -218,7 +221,6 @@ function PatientHome(props) {
     }
 
     const prepareHistoryData = () => {
-        console.log("PROV ", props.appointments, '   ', props.operations);
         if (props.appointments[0] === 'empty' && props.operations[0] === 'empty')
             return false;
 
@@ -391,10 +393,12 @@ function PatientHome(props) {
 
 
                                     </Select>
+                                    <Button variant="outlined" style={{ marginRight: 3 }} onClick={() => setShowFilters(!showFilters)} color="primary">FILTERS</Button>
                                     <Button variant="contained" onClick={handleCheckClick} color="primary">CHECK</Button>
                                 </Grid>
                                 <Grid item>
 
+                                    {showFilters && <ClinicDoctorSearchBar setParams={setQueryParams} paramState={queryParams} />}
 
                                 </Grid>
                             </Grid>
