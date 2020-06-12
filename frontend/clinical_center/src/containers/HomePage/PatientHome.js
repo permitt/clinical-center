@@ -222,83 +222,85 @@ function PatientHome(props) {
         if (props.appointments[0] === 'empty' && props.operations[0] === 'empty')
             return false;
 
-        if (props.appointments.length == 0)
+        if (props.appointments.length === 0)
             return [];
 
         let data = [];
 
 
-
-        props.appointments.map(app => ({
-            type: 'appointment',
-            ...app
-        })).forEach(el => {
-            let foundDR = false;
-            let foundCL = false;
-
-            props.doctorRatings.forEach(dr => {
-                if (dr.doctor === el.doctor) {
-                    el.doctorRating = dr;
-                    foundDR = true;
-                }
-
-            });
-
-            props.clinicRatings.forEach(cl => {
-                if (cl.clinic === el.clinic) {
-                    el.clinicRating = cl;
-                    foundCL = true;
-                }
-
-            });
-
-            if (!foundDR)
-                el.doctorRating = { "id": "-1", "rating": 0 };
-            if (!foundCL)
-                el.clinicRating = { "id": "-1", "rating": 0 };
-
-            data.push(el);
-        });
-        props.operations.map(op => ({
-            type: 'operation',
-            ...op
-        })).forEach(el => {
-
-
-
-
-            let foundCL = false;
-            el.doctorRatings = {};
-
-            el.doctors.forEach(doc => {
+        if (props.appointments[0] !== 'empty')
+            props.appointments.map(app => ({
+                type: 'appointment',
+                ...app
+            })).forEach(el => {
                 let foundDR = false;
+                let foundCL = false;
 
                 props.doctorRatings.forEach(dr => {
-                    if (dr.doctor === doc) {
-                        el.doctorRatings[dr.doctor] = dr;
+                    if (dr.doctor === el.doctor) {
+                        el.doctorRating = dr;
                         foundDR = true;
                     }
 
                 });
 
+                props.clinicRatings.forEach(cl => {
+                    if (cl.clinic === el.clinic) {
+                        el.clinicRating = cl;
+                        foundCL = true;
+                    }
+
+                });
+
                 if (!foundDR)
-                    el.doctorRatings[doc] = { "id": "-1", "rating": 0 };
+                    el.doctorRating = { "id": "-1", "rating": 0 };
+                if (!foundCL)
+                    el.clinicRating = { "id": "-1", "rating": 0 };
 
+                data.push(el);
             });
 
-            props.clinicRatings.forEach(cl => {
-                if (cl.clinic === el.clinic) {
-                    el.clinicRating = cl;
-                    foundCL = true;
-                }
+        if (props.operations[0] !== 'empty')
+            props.operations.map(op => ({
+                type: 'operation',
+                ...op
+            })).forEach(el => {
 
+
+
+
+                let foundCL = false;
+                el.doctorRatings = {};
+
+                el.doctors.forEach(doc => {
+                    let foundDR = false;
+
+                    props.doctorRatings.forEach(dr => {
+                        if (dr.doctor === doc) {
+                            el.doctorRatings[dr.doctor] = dr;
+                            foundDR = true;
+                        }
+
+                    });
+
+                    if (!foundDR)
+                        el.doctorRatings[doc] = { "id": "-1", "rating": 0 };
+
+                });
+
+                props.clinicRatings.forEach(cl => {
+                    if (cl.clinic === el.clinic) {
+                        el.clinicRating = cl;
+                        foundCL = true;
+                    }
+
+                });
+
+                if (!foundCL)
+                    el.clinicRating = { "id": "-1", "rating": 0 };
+
+                data.push(el);
             });
-
-            if (!foundCL)
-                el.clinicRating = { "id": "-1", "rating": 0 };
-
-            data.push(el);
-        });
 
         return data;
     }

@@ -188,7 +188,7 @@ export default function SimpleTable(props) {
                                 </Card>
                             );
                         }
-                        else {
+                        else if (cl.type === 'operation') {
                             return (
                                 <Card className={classes.root} style={{ margin: 10 }}>
                                     <CardContent>
