@@ -6,6 +6,7 @@ from django.db.models import DateTimeField, Avg, IntegerField, F, Sum, OuterRef,
     Q, Value as V, CharField, TimeField, ExpressionWrapper, Value
 from django.db.models.functions import Coalesce
 from users.models import Doctor, Schedule
+from django.db.models.functions import TruncMonth, TruncDay, TruncWeek
 from users.serializers import DoctorSerializer
 from rest_framework import viewsets, generics, filters, permissions
 from .custom_permissions import *
@@ -16,7 +17,7 @@ import datetime
 from users.models import Patient
 from django.db.models.functions import Concat
 from django.db import IntegrityError
-from django.db.models import Avg, Exists
+from django.db.models import Avg, Exists, Count
 
 class ClinicListView(viewsets.ModelViewSet):
     serializer_class = ClinicSerializer
@@ -32,6 +33,8 @@ class HealthCardView(viewsets.ModelViewSet):
     def get_queryset(self):
         if hasattr(self.request.user, 'patient'):
             return HealthCard.objects.filter(patient=self.request.user.patient)
+        if hasattr(self.request.user, 'docAccount') or hasattr(self.request.user, 'nurseAccount'):
+            return HealthCard.objects.filter(patient=self.request.query_params['patient'])
 
 
 class OperatingRoomView(viewsets.ModelViewSet):
@@ -150,12 +153,11 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                     price=F("typeOf__prices__price"),
                     )
         if hasattr(self.request.user, 'adminAccount'):
-            print(self.request.query_params)
             if 'all' in self.request.query_params :
                 return Appointment.objects \
                     .filter(clinic=self.request.user.adminAccount.employedAt, ).exclude(patient__isnull=True).annotate(
                     type_name=F("typeOf__typeName"),
-                    operatinRoom_name=F("operatingRoom__name"),
+                    operating_room_name=F("operatingRoom__name"),
                     doctor_name=F("doctor__firstName"),
                     price=F("typeOf__prices__price"),
                     duration=F("typeOf__duration")
@@ -166,7 +168,8 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                 return Appointment.objects \
                     .filter(patient=None, clinic=self.request.user.adminAccount.employedAt).annotate(
                     type_name=F("typeOf__typeName"),
-                    operatinRoom_name=F("operatingRoom__name"),
+                    operating_room_name=Concat(F('operatingRoom__name'), V(' '), F('operatingRoom__number'),
+                                               output_field=CharField()),
                     doctor_name=Concat(F('doctor__firstName'), V(' '), F('doctor__lastName'), output_field=CharField()),
                     price=F("typeOf__prices__price"),
                     duration=F("typeOf__duration")
@@ -488,26 +491,16 @@ def income(request):
     user = request.user
     if (not user):
         return Response(status=status.HTTP_401_UNAUTHORIZED)
-
     if not('start' in request.query_params and 'end' in request.query_params) :
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg':"Invalid parameters."})
-
     start = request.query_params['start']
     end = request.query_params['end']
-
-
-    appointments = Appointment.objects.filter(date__lte=end,date__gte=start)\
+    income = Appointment.objects.filter(date__lte=end,date__gte=start).only('income')\
         .all()\
-        .aggregate(income=Sum('typeOf__prices__price'))\
+        .aggregate(income=Coalesce(Sum('typeOf__prices__price'),0))
 
-    print(appointments)
 
-    # for a in appointments:
-    #     print(a.income)
-
-    #serializer = AppointmentSerializer(appointments, many=True)
-
-    return Response(status=status.HTTP_200_OK, data={'appointments': '', 'income': appointments['income']})
+    return Response(status=status.HTTP_200_OK, data=income)
 
 @api_view(["GET"])
 def reports(request):
@@ -520,10 +513,38 @@ def reports(request):
         .prefetch_related('doctors') \
         .get(id=user.adminAccount.employedAt.id)
 
-    clinicSerializer = ClinicSerializer(clinic, many=False)
-    doctorSerializer = DoctorSerializer(clinic.doctors.annotate(rating=Avg('ratings__rating')), many=True)
+    statsMonthly = (Appointment.objects
+             .annotate(month=TruncMonth('date'))
+             .values('month')
+             .annotate(num=Count('id'))
+             .order_by()
+             )
 
-    return Response(status=status.HTTP_200_OK, data={'clinic': clinicSerializer.data, "doctors": doctorSerializer.data})
+    statsDaily = (Appointment.objects
+             .annotate(day=TruncDay('date'))
+             .values('day')
+             .annotate(num=Count('id'))
+             .order_by()
+             )
+
+    statsWeekly = (Appointment.objects
+                  .annotate(week=TruncWeek('date'))
+                  .values('week')
+                  .annotate(num=Count('id'))
+                  .order_by()
+                  )
+
+    clinicSerializer = ClinicSerializer(clinic, many=False)
+    doctorSerializer = DoctorSerializer(clinic.doctors.annotate(rating=Coalesce(Avg('ratings__rating'),0)), many=True)
+
+    return Response(status=status.HTTP_200_OK, data={
+        'clinic': clinicSerializer.data,
+        "doctors": doctorSerializer.data,
+        "monthly" : statsMonthly,
+        "daily": statsDaily,
+        "weekly": statsWeekly
+    })
+
 
 @api_view(["GET"])
 def adminClinic(request):
@@ -562,7 +583,8 @@ def appTerm(request):
 
     app = Appointment.objects.annotate(
                     type_name=F("typeOf__typeName"),
-                    operatinRoom_name=F("operatingRoom__name"),
+        operating_room_name=Concat(F("operatingRoom__name"), Value(' '), F("operatingRoom__number"),
+                                   output_field=models.CharField()),
                     doctor_name=Concat(F('doctor__firstName'), V(' '), F('doctor__lastName'), output_field=CharField()),
                     price=F("typeOf__prices__price"),
                     duration=F("typeOf__duration")

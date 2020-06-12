@@ -24,7 +24,9 @@ function ReportsPage(props) {
  
   const { clinic, daily, monthly, weekly, doctors } = props.reports
 
- 
+  useEffect(() => {
+    props.getClinicReports()
+  }, [])
 
   useEffect(() => {
     props.getClinicReports()
