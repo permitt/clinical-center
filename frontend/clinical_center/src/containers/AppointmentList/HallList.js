@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import PropTypes from 'prop-types';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import Alert from '@material-ui/lab/Alert';
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
@@ -75,6 +76,7 @@ function HallList(props) {
   const homeClasses = useHomeStyle();
   const data = props.halls
   const [modal, setModal] = React.useState({open: false, data: {}});
+  const [message, setMessage] = React.useState(false);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
   
@@ -138,7 +140,11 @@ function HallList(props) {
                         </Button>
                     </TableCell>
                       <TableCell align="left">
-                        <IconButton onClick={() => props.assignHall({hall:row.id, app: props.app.id})}>
+                        <IconButton onClick={() => {
+                          props.assignHall({hall:row.id, app: props.app.id})
+                          setMessage(true);}
+                        }
+                          >
                           <AddIcon />
                         </IconButton>
                       </TableCell>
@@ -177,6 +183,24 @@ function HallList(props) {
         <Fade in={modal.open}>
           <div className={homeClasses.paper}>
             <Calendar data={modal.data}/>
+          </div>
+        </Fade>
+      </Modal>
+      <Modal
+          aria-labelledby="transition-modal-title"
+          aria-describedby="transition-modal-description"
+          className={homeClasses.modal}
+          open={message}
+          onClose={() => setMessage(false)}
+          closeAfterTransition
+          BackdropComponent={Backdrop}
+          BackdropProps={{
+            timeout: 500,
+          }}
+        >
+        <Fade in={message}>
+          <div className={homeClasses.paper}>
+            <Alert severity="success">Successfully assigned hall!</Alert>
           </div>
         </Fade>
       </Modal>

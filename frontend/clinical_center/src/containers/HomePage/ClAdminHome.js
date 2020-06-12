@@ -122,6 +122,7 @@ function ClAdminHome(props) {
 
   
   const showList = type => {
+    setSelectedApp(null)
     switch(type) {
       case DOCTOR_TABLE: {
         props.getDoctors()
@@ -182,35 +183,35 @@ function ClAdminHome(props) {
     },
     {
       name: 'Price list',
-      onClick: showAppTypes,
+      onClick: () => {setSelectedApp(null);showAppTypes() },
       icon: ListIcon
     },
     {
       name: 'Appointment requests',
-      onClick: showAppointments,
+      onClick: () => {setSelectedApp(null); showAppointments()},
       icon: DnsIcon
     },
     {
       name: 'Holiday requests',
-      onClick: showRequests,
+      onClick: () => {setSelectedApp(null); showRequests()},
       icon: WorkOffIcon
       
     },
     {
       name: 'Reports',
-      onClick: showReports,
+      onClick: () => {setSelectedApp(null); showReports()},
       icon: TimelineIcon
       
     },
     {
       name: 'Clinic info',
-      onClick: showClinicInfo,
+      onClick:() => {setSelectedApp(null); showClinicInfo()},
       icon: LocalHospitalIcon
       
     },
     {
       name: 'Profile',
-      onClick: () => props.history.push(EDIT_PROFILE),
+      onClick: () => { setSelectedApp(null); props.history.push(EDIT_PROFILE)},
       icon: PersonIcon
     }
   ]

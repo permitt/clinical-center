@@ -92,7 +92,7 @@ export const deleteAppointment = payload => {
 }
 
 
-export const getAvailableAppointments = (payload) => {
+export const getAvailableAppointments = (payload=null) => {
     return {
         type: GET_AVAILABLE_APPOINTMENTS,
         payload

@@ -160,7 +160,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         if hasattr(self.request.user, 'adminAccount'):
             if 'all' in self.request.query_params :
                 return Appointment.objects \
-                    .filter(clinic=self.request.user.adminAccount.employedAt, ).exclude(patient__isnull=True).annotate(
+                    .filter(clinic=self.request.user.adminAccount.employedAt, ).filter(operatingRoom__isnull=True).exclude(patient__isnull=True).annotate(
                     type_name=F("typeOf__typeName"),
                     operating_room_name=F("operatingRoom__name"),
                     doctor_name=Concat(F('doctor__firstName'), V(' '), F('doctor__lastName'), output_field=CharField()),
@@ -597,3 +597,29 @@ def appTerm(request):
                 ).get(pk=appointment.pk)
 
     return Response(status=status.HTTP_200_OK,data={'app': AppointmentSerializer(app,many=False).data})
+
+
+@api_view(["POST"])
+def assign(request):
+    user = request.user
+    if (not user):
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    data = request.data
+    if not 'hall' in data :
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
+    if not 'app' in data:
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
+
+    appObject = Appointment.objects.get(id=data['app'])
+    hallObject = OperatingRoom.objects.get(id=data['hall'])
+    if not appObject:
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
+    if not hallObject:
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
+
+
+    appObject.operatingRoom = hallObject
+    appObject.save()
+
+    return Response(status=status.HTTP_200_OK)

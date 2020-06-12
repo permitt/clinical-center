@@ -21,5 +21,6 @@ urlpatterns = [
         path('income/', views.income),
         path('adminclinic/', views.adminClinic),
         path('appointment/appterm/', views.appTerm),
+        path('operatingroom/assign/', views.assign),
         *router.urls
     ]

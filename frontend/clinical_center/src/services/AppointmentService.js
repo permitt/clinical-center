@@ -51,8 +51,8 @@ class appointmentServiceApi extends ApiService {
         return data;
     }
 
-    getAvailableAppointments = async (payload) => {
-        if (payload.clinicId !== undefined) {
+    getAvailableAppointments = async (payload=null) => {
+        if (payload) {
             const { data } = await this.apiClient.get(ENDPOINTS.AVAILABLE_APPOINTMENT + '?clinic=' + payload.clinicId);
             return data;
         }
