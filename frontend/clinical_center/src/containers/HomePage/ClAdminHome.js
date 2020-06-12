@@ -12,6 +12,7 @@ import ListIcon from '@material-ui/icons/List';
 import PersonIcon from '@material-ui/icons/Person';
 import TimelineIcon from '@material-ui/icons/Timeline';
 import LocalHospitalIcon from '@material-ui/icons/LocalHospital';
+import DnsIcon from '@material-ui/icons/Dns';
 
 import HallSearchBar from '../../containers/SearchBar/HallSearchBar'
 import Sidebar from "../../components/Sidebar/Sidebar"
@@ -33,6 +34,8 @@ import HolidayRequestList from '../HolidayRequestList/HolidayRequestList';
 import { EDIT_PROFILE } from '../../routes';
 import ReportsPage from '../ReportsPage/ReportsPage'
 import Clinic from '../ClinicPage/Clinic'
+import AppointmentList from '../AppointmentList/AppoitnmentList'
+
 
 
 const useStyles = makeStyles(styles);
@@ -85,6 +88,10 @@ function ClAdminHome(props) {
     setTable({render: false, type: ''})
     setRenderTable({ 'types': false, 'requests': false, reports:true, clinic:false  })
     props.getRequests()
+  }
+
+  const showAppointments = () => {
+    
   }
   
   const doctorColumns = [
@@ -168,6 +175,11 @@ function ClAdminHome(props) {
       name: 'Price list',
       onClick: showAppTypes,
       icon: ListIcon
+    },
+    {
+      name: 'Appointment requests',
+      onClick: showAppointments,
+      icon: DnsIcon
     },
     {
       name: 'Holiday requests',
