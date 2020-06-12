@@ -48,3 +48,12 @@ export function* hallEdit(action) {
     yield put(editError(response.data.msg))
   }
 }
+
+export function* hallAssign(action) {
+  try {
+    const response = yield call(() => hallService.assignHall(action.payload))
+    // yield put(setEditedHall(action.payload))
+  } catch (error) {
+    console.log(error)
+  }
+}

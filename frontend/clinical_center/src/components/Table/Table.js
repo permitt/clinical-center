@@ -22,6 +22,7 @@ import Fade from '@material-ui/core/Fade';
 import Menu from '@material-ui/core/Menu';
 import MenuItem from '@material-ui/core/MenuItem';
 import Button from '@material-ui/core/Button';
+import DoneIcon from '@material-ui/icons/Done';
 
 import styles from "../../assets/jss/material-dashboard-react/components/tableStyle.js";
 import toolbarStyles from "../../assets/jss/material-dashboard-react/components/tableToolbarStyle"
@@ -121,9 +122,13 @@ const TableToolbar = props => {
 
 export default function SimpleTable(props) {
   const classes = useStyles();
+
+  console.log("AAAAAAAAAAA", props.selectedApp)
+
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
-  const rows = props.data
+  let rows = props.data
+
   const [edit, setEdit] = React.useState({ openModal: false, selected: {} });
   const [filteredData, setFilteredData] = React.useState(rows)
   const columns = props.columns
@@ -142,6 +147,7 @@ export default function SimpleTable(props) {
     // setEdit({openModal:false, selected: {}})
 
   }, [props])
+
 
   useEffect(() => {
     setEdit({openModal: false, selected: {}})

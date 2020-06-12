@@ -54,11 +54,15 @@ class OperatingRoomView(viewsets.ModelViewSet):
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
-            queryset = queryset.exclude(appointment__date=request.query_params['date'], appointment__time=request.query_params['time'])
+            date = datetime.datetime.strptime(request.query_params['date'], '%Y-%m-%d').date()
 
             hall_list = list(queryset)
             for hall in hall_list:
                 for app in hall.appointment_set.all():
+                    if (not (app.date == date)):
+                        print(date,app.date)
+                        print('ovde')
+                        continue
                     choosenStartTime = datetime.datetime.strptime(request.query_params['time'], '%H:%M').time()
                     choosenEndTime = time_add(choosenStartTime, duration)
                     endsBefore = choosenEndTime < app.time
@@ -158,7 +162,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
                     .filter(clinic=self.request.user.adminAccount.employedAt, ).exclude(patient__isnull=True).annotate(
                     type_name=F("typeOf__typeName"),
                     operating_room_name=F("operatingRoom__name"),
-                    doctor_name=F("doctor__firstName"),
+                    doctor_name=Concat(F('doctor__firstName'), V(' '), F('doctor__lastName'), output_field=CharField()),
                     price=F("typeOf__prices__price"),
                     duration=F("typeOf__duration")
                 )

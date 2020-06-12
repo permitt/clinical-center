@@ -35,8 +35,8 @@ import { EDIT_PROFILE } from '../../routes';
 import ReportsPage from '../ReportsPage/ReportsPage'
 import Clinic from '../ClinicPage/Clinic'
 import AppointmentList from '../AppointmentList/AppoitnmentList'
-
-
+import { getAppointments } from '../../store/actions/AppointmentActions'
+import HallList from '../AppointmentList/HallList'
 
 const useStyles = makeStyles(styles);
 
@@ -47,14 +47,21 @@ function ClAdminHome(props) {
   const classes = useStyles();
   const [modal, setModal] = React.useState({open: false, data: {}});
   const [table, setTable] = React.useState({render: false, type: ''})
+  const [selectedApp, setSelectedApp] = React.useState()
   const [ renderTable, setRenderTable] = React.useState({ 
     'type': false, 
     'requests': false, 
     'reports': true, 
-    'clinic':false 
+    'clinic':false,
+    'app': false
   })
   const [tableData, setTableData] = React.useState({ data: [], title:'', columns:[], form:null})
   const [errorDialogOpen, setErrorDialogOpen] = React.useState(props.error)
+
+  const selectApp = app => {
+    setSelectedApp(app)
+    setRenderTable({ 'types': false, 'requests': false,  reports:false, clinic:false,'app': false })
+  }
 
   useEffect(()=> {
     setErrorDialogOpen(props.error)
@@ -70,28 +77,30 @@ function ClAdminHome(props) {
 
   const showClinicInfo = () => {
     setTable({render: false, type: ''})
-    setRenderTable({ 'types': false, 'requests': false,  reports:false, clinic:true })
+    setRenderTable({ 'types': false, 'requests': false,  reports:false, clinic:true,'app': false })
   }
 
   const showAppTypes = () => {
     setTable({render: false, type: ''})
-    setRenderTable({ 'types': true, 'requests': false,  reports:false, clinic:false })
+    setRenderTable({ 'types': true, 'requests': false,  reports:false, clinic:false, 'app': false })
     props.getTypes()
   }
 
   const showRequests = () => {
     setTable({render: false, type: ''})
-    setRenderTable({ 'types': false, 'requests': true,  reports:false, clinic:false  })
+    setRenderTable({ 'types': false, 'requests': true,  reports:false, clinic:false,'app': false  })
     props.getRequests()
   }
   const showReports = () => {
     setTable({render: false, type: ''})
-    setRenderTable({ 'types': false, 'requests': false, reports:true, clinic:false  })
+    setRenderTable({ 'types': false, 'requests': false, reports:true, clinic:false,'app': false  })
     props.getRequests()
   }
 
   const showAppointments = () => {
-    
+    setTable({render: false, type: ''})
+    setRenderTable({ 'types': false, 'requests': false, reports:false, clinic:false,'app': true  })
+    props.getAppointments()
   }
   
   const doctorColumns = [
@@ -117,12 +126,12 @@ function ClAdminHome(props) {
       case DOCTOR_TABLE: {
         props.getDoctors()
         setTable({render: true, type: type})
-        setRenderTable({ 'types': false, 'requests': false })
+        setRenderTable({ 'types': false, 'requests': false, reports:false, clinic:false,'app': false  })
         break;
       }
       case HALL_TABLE: {
         props.getHalls()
-        setRenderTable({ 'types': false, 'requests': false })
+        setRenderTable({ 'types': false, 'requests': false, reports:false, clinic:false,'app': false })
         setTable({render: true, type: type})
         break;
       }
@@ -151,7 +160,7 @@ function ClAdminHome(props) {
           title: "Operating rooms in clinic", 
           id: 'id',
           allowEdit: true,
-          form: <FormContainer form={<HallForm />} title="Add new operationg room" />}
+          form: <FormContainer form={<HallForm/>} title="Add new operationg room" />}
         ) }
         break;
     default: 
@@ -168,7 +177,7 @@ function ClAdminHome(props) {
     },
     {
       name: 'Operating halls',
-      onClick: () => showList(HALL_TABLE),
+      onClick: () => {setSelectedApp(null); showList(HALL_TABLE)},
       icon: MeetingRoomIcon
     },
     {
@@ -220,9 +229,11 @@ function ClAdminHome(props) {
             }
         />
           <div >
-           {table.type === HALL_TABLE && <HallSearchBar />}
+           {(table.type === HALL_TABLE || selectedApp) && <HallSearchBar selectedApp={selectedApp} />}
+          
           </div>
           <div className={classes.table}>
+          {selectedApp && <HallList data={[]} app={selectedApp}/>}
             {table.render && <Table
               data={tableData.data}
               columns={tableData.columns}
@@ -233,11 +244,17 @@ function ClAdminHome(props) {
               id={tableData.id}
               edit={tableData.allowEdit}
               resetError={props.resetError}
+              selectedApp={selectedApp}
             />}
             {renderTable['types'] && <PriceList data={props.types} delete={props.deleteType}/>}
             {renderTable['requests'] && <HolidayRequestList data={props.requests} delete={props.deleteType}/>}
             {renderTable['reports'] && <ReportsPage />}
             {renderTable['clinic'] && <Clinic />}
+            {renderTable['app'] && 
+              <AppointmentList 
+                  data={props.appointments} 
+                  setSelected={selectApp}
+                />}
           </div>
         </div>
         <Modal
@@ -270,7 +287,8 @@ const mapStateToProps = state => {
     error: state.error.deleteError,
     msg: state.error.errorMsg,
     types: state.type.all,
-    requests: state.request.all
+    requests: state.request.all,
+    appointments: state.appointment.all
   };
 };
 
@@ -282,7 +300,8 @@ const mapDispatchToProps = {
   resetError,
   getTypes,
   deleteType,
-  getRequests
+  getRequests,
+  getAppointments
 };
 
 export default withRouter(

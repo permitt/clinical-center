@@ -4,7 +4,8 @@ const ENDPOINTS = {
   HALLS: '/api/clinics/operatingroom/',
   DELETE: '/api/clinics/operatingroom/:id/',
   EDIT: '/api/clinics/operatingroom/:id/',
-  ADD: '/api/clinics/operatingroom/'
+  ADD: '/api/clinics/operatingroom/',
+  ASSIGN: '/api/clinics/operatingroom/assign/'
 };
 
 class HallService extends ApiService {
@@ -39,6 +40,12 @@ class HallService extends ApiService {
 
   editHall = async info => {
     const { data } = await this.apiClient.put(ENDPOINTS.EDIT.replace(":id", info.id), info)
+
+    return data
+  }
+
+  assignHall = async info => {
+    const { data } = await this.apiClient.post(ENDPOINTS.ASSIGN, info)
 
     return data
   }

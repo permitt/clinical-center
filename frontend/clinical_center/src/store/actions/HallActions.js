@@ -7,7 +7,8 @@ import {
     EDIT_HALL,
     SET_HALL,
     SET_DELETED_HALL,
-    SET_EDITED_HALL
+    SET_EDITED_HALL,
+    ASSIGN_HALL
    } from './ActionTypes';
   
   export const getHalls = () => {
@@ -76,5 +77,14 @@ import {
       payload
     };
   };
+
+  export const assignHall = payload => {
+
+    return {
+      type: ASSIGN_HALL,
+      payload
+    };
+  };
+
 
 

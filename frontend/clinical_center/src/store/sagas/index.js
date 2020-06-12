@@ -12,14 +12,15 @@ import {
   GET_CLINIC_REPORTS, GET_INCOME, GET_ADMIN_CLINIC, GET_AVAILABLE_APPOINTMENTS, SEARCH_DOCTORS, ADD_APPOINTMENT_TERM,
   GET_DOCTOR_RATINGS, GET_CLINIC_RATINGS, POST_CLINIC_RATING, POST_DOCTOR_RATING, PUT_DOCTOR_RATING, PUT_CLINIC_RATING,
   GET_OPERATIONS,
-  GET_HEALTH_CARD
+  GET_HEALTH_CARD,
+  ASSIGN_HALL
 
 } from '../actions/ActionTypes';
 import { userLogin, userRegister, userLogout, userChangePass, profileGet, profileEdit } from './AuthSagas';
 import { doctorsGet, doctorDelete, doctorAdd, doctorSearch } from './DoctorSagas';
 import { clinicsGet, adminClinicGet, adminClinicEdit } from './ClinicSagas';
 import { appointmentTypesGet, appointmentChecking, appointmentPost, appointmentsGet, appointmentSchedule, availableAppointmentsGet, appointmentDelete, availableAppointmentCreate, appointmentPut } from './AppointmentSagas';
-import { hallsGet, hallsSearch, hallDelete, hallAdd, hallEdit } from './HallSaga'
+import { hallsGet, hallsSearch, hallDelete, hallAdd, hallEdit,hallAssign } from './HallSaga'
 import { typesGet, typesSearch, typeDelete, typeAdd, typeEdit } from './AppointmentTypeSagas'
 import { patientsGet, patientGet, patientPut, patientsSearch } from './PatientSagas'
 import { requestResolve, requestsGet, requestCreate } from './HolidayRequestSagas'
@@ -61,6 +62,7 @@ export default function* rootSaga() {
     takeLatest(DELETE_HALL, hallDelete),
     takeLatest(ADD_HALL, hallAdd),
     takeLatest(EDIT_HALL, hallEdit),
+    takeLatest(ASSIGN_HALL, hallAssign),
 
     takeLatest(GET_PATIENTS, patientsGet),
     takeLatest(GET_PATIENT, patientGet),
