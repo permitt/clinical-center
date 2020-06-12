@@ -468,7 +468,8 @@ def income(request):
         .all()\
         .aggregate(income=Coalesce(Sum('typeOf__prices__price'),0))
 
-    return Response(status=status.HTTP_200_OK, data={'income': income})
+
+    return Response(status=status.HTTP_200_OK, data=income)
 
 @api_view(["GET"])
 def reports(request):
@@ -503,7 +504,7 @@ def reports(request):
                   )
 
     clinicSerializer = ClinicSerializer(clinic, many=False)
-    doctorSerializer = DoctorSerializer(clinic.doctors.annotate(rating=Avg('ratings__rating')), many=True)
+    doctorSerializer = DoctorSerializer(clinic.doctors.annotate(rating=Coalesce(Avg('ratings__rating'),0)), many=True)
 
     return Response(status=status.HTTP_200_OK, data={
         'clinic': clinicSerializer.data,

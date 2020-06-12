@@ -9,7 +9,7 @@ const reportReducer = (state = initialState, action) => {
     case SET_CLINIC_REPORTS:
       return { ...state, clinicReports: action.payload }
     case SET_INCOME:
-      return { ...state, income: action.income }
+      return { ...state, income: action.payload }
     default:
       return state;
   }

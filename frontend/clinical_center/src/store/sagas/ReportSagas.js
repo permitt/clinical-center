@@ -15,7 +15,9 @@ export function* clinicReportsGet(action) {
 export function* incomeGet(action) {
   try {
     const resp = yield call(() => reportService.getIncome(action.payload));
-    yield put(setIncome(resp));
+    console.log(resp)
+    yield put(setIncome(resp.income));
+    
   } catch (error) {
     console.log({ error });
   }
