@@ -61,8 +61,6 @@ class OperatingRoomView(viewsets.ModelViewSet):
             for hall in hall_list:
                 for app in hall.appointment_set.all():
                     if (not (app.date == date)):
-                        print(date,app.date)
-                        print('ovde')
                         continue
                     choosenStartTime = datetime.datetime.strptime(request.query_params['time'], '%H:%M').time()
                     choosenEndTime = time_add(choosenStartTime, duration)
