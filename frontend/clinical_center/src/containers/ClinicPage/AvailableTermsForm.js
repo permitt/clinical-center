@@ -88,7 +88,6 @@ const handleDoctorChange = e => {
 }
 
 useEffect(() => {
-  console.log(selectedDate)
   if (!selectedDate || !selectedAppType)
     return;
   const dateTime = selectedDate.split('T')

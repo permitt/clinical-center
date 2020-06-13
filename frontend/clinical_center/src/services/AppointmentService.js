@@ -37,6 +37,7 @@ class appointmentServiceApi extends ApiService {
     getAppointments = async () => {
         const queryString = 'all=true'
         const { data } = await this.apiClient.get(ENDPOINTS.APPOINTMENT + `?${queryString}`);
+        console.log('u service', data)
         return data;
     }
     scheduleAppointment = async (payload) => {

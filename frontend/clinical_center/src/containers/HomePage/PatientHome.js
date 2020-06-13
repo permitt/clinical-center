@@ -117,7 +117,6 @@ function PatientHome(props) {
 
     };
     const handleCheckClick = (e) => {
-        console.log("PARAMS ", queryParams);
 
         if (queryParams.clinicMinRating > queryParams.clinicMaxRating) {
             alert('Min rating must be less than max.');
@@ -209,7 +208,6 @@ function PatientHome(props) {
     const reserveAppointment = (data) => {
 
         props.putAppointment({ ...data, patient: props.email });
-        console.log('reserved app ', data);
         alert("Reserved an appointment!");
         props.history.push('/');
     }
@@ -231,7 +229,6 @@ function PatientHome(props) {
         if (props.appointmentTerms[0] === undefined)
             return [];
 
-        console.log(props.doctors, '   ', chosenClinic);
         return props.doctors.filter(doc => doc.employedAt === chosenClinic).map(doctor => {
             const selector = (<Select displayEmpty value={appointmentTime} onChange={(e) => setAppointmentTime(e.target.value)} >
                 <MenuItem disabled value=""> Select Appointment Time </MenuItem>

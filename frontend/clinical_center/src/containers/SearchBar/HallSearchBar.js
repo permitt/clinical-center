@@ -22,11 +22,11 @@ function HallSearchBar(props) {
  const [number, setNumber] = React.useState()
  const [selectedType, setSelectedType] = React.useState()
 
- console.log(props.selectedApp)
 
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+
 
   const handleClick = () => {
       let query = {}
@@ -46,7 +46,6 @@ function HallSearchBar(props) {
     }
 
     }
-      console.log(query)
       props.searchHalls(query)
   }
 
@@ -56,7 +55,6 @@ function HallSearchBar(props) {
 
   useEffect(() => {
     let query = {}
-    console.log('ovde buraz')
     if (props.selectedApp) {
       query['date'] = props.selectedApp.date
       query['time'] = props.selectedApp.time.slice(0,-3)
@@ -140,7 +138,8 @@ return (
 
 const mapStateToProps = state => {
     return {
-      types: state.type.all
+      types: state.type.all,
+      selectedApp: state.appointment.selectedApp
     };
   };
   

@@ -8,13 +8,16 @@ const initialState = {
 const clinicReducer = (state = initialState, action) => {
     switch (action.type) {
         case GET_APPOINTMENT_CHECK:
+            
             return { ...state, available: [] }
         case SET_CLINICS:
+
             return { ...state, all: action.payload }
         case SET_AVAILABLE_CLINICS:
+
             return { ...state, available: action.payload.length === 0 ? 'empty' : action.payload }
         case SET_ADMIN_CLINIC:
-            console.log(action.payload, 'reducer')
+
             return { ...state, adminClinic: action.payload }
         default:
             return state;

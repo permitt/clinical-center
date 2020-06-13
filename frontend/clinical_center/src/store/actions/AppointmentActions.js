@@ -13,7 +13,8 @@ import {
     SET_AVAILABLE_APPOINTMENTS,
     GET_AVAILABLE_APPOINTMENTS,
     ADD_APPOINTMENT_TERM,
-    SET_ADDED_APPOINTMENT_TERM
+    SET_ADDED_APPOINTMENT_TERM,
+    SET_SELECTED_APP
 } from './ActionTypes';
 
 export const getAppointmentTypes = () => {
@@ -116,6 +117,14 @@ export const addAvailableAppointment = payload => {
 export const setAddedAvailableAppointment = payload => {
     return {
         type: SET_ADDED_APPOINTMENT_TERM,
+        payload
+    };
+}
+
+
+export const setSelectedApp = payload => {
+    return {
+        type: SET_SELECTED_APP,
         payload
     };
 }

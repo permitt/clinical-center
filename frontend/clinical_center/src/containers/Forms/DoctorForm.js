@@ -74,7 +74,6 @@ function DoctorForm (props) {
       return;
     }
     values.specialization = specialization
-    console.log(values)
     props.addDoctor(values)
   };
   return (

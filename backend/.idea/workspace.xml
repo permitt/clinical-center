@@ -3,9 +3,15 @@
   <component name="ChangeListManager">
     <list default="true" id="718922fe-32ea-43c9-a3ef-49eaaebdcd3a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clinical_center/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinical_center/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clinics/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinics/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/clinics/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinics/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/AppointmentList/AppoitnmentList.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/AppointmentList/AppoitnmentList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/AppointmentList/HallList.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/AppointmentList/HallList.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/HomePage/ClAdminHome.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/HomePage/ClAdminHome.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/SearchBar/HallSearchBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/SearchBar/HallSearchBar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/store/actions/ActionTypes.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/store/actions/ActionTypes.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/store/actions/AppointmentActions.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/store/actions/AppointmentActions.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/store/reducers/AppointmentReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/store/reducers/AppointmentReducer.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -17,10 +23,21 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/users/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="121">
-              <caret line="113" column="92" selection-start-line="113" selection-start-column="88" selection-end-line="113" selection-end-column="92" />
+            <state relative-caret-position="-2134">
+              <caret line="133" column="19" selection-start-line="133" selection-start-column="19" selection-end-line="133" selection-end-column="19" />
               <folding>
                 <element signature="e#0#43#0" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/users/serializers.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-1479">
+              <folding>
+                <element signature="e#0#15#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -41,8 +58,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/clinics/views.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="162" column="113" selection-start-line="162" selection-start-column="113" selection-end-line="162" selection-end-column="113" />
+            <state relative-caret-position="271">
+              <caret line="626" column="71" selection-start-line="626" selection-start-column="71" selection-end-line="626" selection-end-column="71" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
                 <element signature="e#1841#6125#0" />
@@ -52,6 +69,15 @@
                 <element signature="e#4452#5166#0" />
                 <element signature="e#8527#10416#0" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../frontend/clinical_center/src/containers/AppointmentList/HallList.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="513">
+              <caret line="118" selection-start-line="118" selection-end-line="118" />
             </state>
           </provider>
         </entry>
@@ -110,13 +136,6 @@
           </provider>
         </entry>
       </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/users/custom_permissions.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-153" />
-          </provider>
-        </entry>
-      </file>
     </leaf>
   </component>
   <component name="FindInProjectRecents">
@@ -125,6 +144,8 @@
       <find>datetime.datetime.strptime</find>
       <find>time</find>
       <find>duration</find>
+      <find>OperatingRoomV</find>
+      <find>strptime</find>
     </findStrings>
     <dirStrings>
       <dir>C:\Users\bekim\Desktop\noviISAnovi\clinical-center\backend</dir>
@@ -139,9 +160,16 @@
         <option value="$PROJECT_DIR$/clinics/serializers.py" />
         <option value="$PROJECT_DIR$/clinical_center/settings.py" />
         <option value="$PROJECT_DIR$/clinics/urls.py" />
+        <option value="$PROJECT_DIR$/users/views.py" />
         <option value="$PROJECT_DIR$/clinics/views.py" />
       </list>
     </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="159" />
+    <option name="y" value="21" />
+    <option name="width" value="975" />
+    <option name="height" value="747" />
   </component>
   <component name="ProjectId" id="1dDB9tZC5ji3q99CaHxpz6wWYVG" />
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
@@ -253,11 +281,11 @@
     <editor active="true" />
     <layout>
       <window_info id="Favorites" side_tool="true" />
-      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.13513513" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.15500794" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="bottom" id="Version Control" />
-      <window_info anchor="bottom" id="Python Console" />
-      <window_info anchor="bottom" id="Terminal" visible="true" weight="0.049751244" />
+      <window_info anchor="bottom" id="Python Console" weight="0.3283582" />
+      <window_info active="true" anchor="bottom" id="Terminal" visible="true" weight="0.22719735" />
       <window_info anchor="bottom" id="Event Log" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
@@ -292,16 +320,6 @@
           <caret line="130" column="14" selection-start-line="130" selection-start-column="6" selection-end-line="130" selection-end-column="14" />
           <folding>
             <element signature="e#0#38#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/users/views.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="121">
-          <caret line="113" column="92" selection-start-line="113" selection-start-column="88" selection-end-line="113" selection-end-column="92" />
-          <folding>
-            <element signature="e#0#43#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -350,10 +368,36 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/../frontend/clinical_center/src/containers/AppointmentList/HallList.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="513">
+          <caret line="118" selection-start-line="118" selection-end-line="118" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/users/serializers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1479">
+          <folding>
+            <element signature="e#0#15#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/users/views.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-2134">
+          <caret line="133" column="19" selection-start-line="133" selection-start-column="19" selection-end-line="133" selection-end-column="19" />
+          <folding>
+            <element signature="e#0#43#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/clinics/views.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="162" column="113" selection-start-line="162" selection-start-column="113" selection-end-line="162" selection-end-column="113" />
+        <state relative-caret-position="271">
+          <caret line="626" column="71" selection-start-line="626" selection-start-column="71" selection-end-line="626" selection-end-column="71" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
             <element signature="e#1841#6125#0" />

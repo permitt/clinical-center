@@ -124,6 +124,7 @@ class DoctorViewset(viewsets.ModelViewSet):
                     endDate__gte=date
                 )))
                 #check if doctor works that day in that time
+                print(time)
                 typeObject = AppointmentType.objects.get(id=type)
                 query = query.filter(Exists(Schedule.objects.filter(
                     employee__pk=OuterRef('pk'),

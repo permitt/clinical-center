@@ -22,6 +22,7 @@ import Paper from '@material-ui/core/Paper';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import AddIcon from '@material-ui/icons/Add';
+import CircularProgress from '@material-ui/core/CircularProgress';
 
 import Calendar from '../../components/Calendar/Calendar'
 import styles from "../../assets/jss/material-dashboard-react/components/tableStyle.js";
@@ -29,7 +30,8 @@ import homeStyle from "../../assets/jss/material-dashboard-react/layouts/homeSty
 import { toolBarstyle, tableStyle } from "../../assets/jss/material-dashboard-react/components/patientListStyle.js";
 import { getAvailableAppointments, deleteAppointment } from '../../store/actions/AppointmentActions'
 import { formatHours } from '../../utils/utils'
-import { assignHall } from '../../store/actions/HallActions'
+import { assignHall, searchHalls } from '../../store/actions/HallActions'
+import EditAppointment from './EditAppointment'
 
 
 function EnhancedTableHead(props) {
@@ -74,13 +76,10 @@ const useHomeStyle = makeStyles(homeStyle);
 function HallList(props) {
   const classes = useStyles();
   const homeClasses = useHomeStyle();
-  const data = props.halls
   const [modal, setModal] = React.useState({open: false, data: {}});
   const [message, setMessage] = React.useState(false);
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  
-  console.log("OVO SE RENDERUJE OPET ", data)
 
   const headCells = [
     { id: 'name', label: 'Name', minWidth: 60 },
@@ -89,6 +88,18 @@ function HallList(props) {
     { id: 'action', label: 'Reserved dates', minWidth: 30, align: 'center' },
     { id: 'action2', label: 'Assign hall', minWidth: 30, align: 'center' },
   ];
+
+  useEffect(() => {
+    let query = {}
+    if (props.app) {
+      query['date'] = props.app.date
+      query['time'] = props.app.time.slice(0,-3)
+      query['duration'] = props.app.duration
+      props.searchHalls(query)
+      
+    }
+  },[props.app])
+
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -103,10 +114,12 @@ function HallList(props) {
     setModal({open: true, data});
   };
 
-  const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.data.length - page * rowsPerPage);
-
+  const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.halls.length - page * rowsPerPage);
+  console.log('here')
   return (
       <Paper className={classes.root} >
+        { props.halls.length == 0 ? <EditAppointment app={props.app} /> :
+        <>
         <EnhancedTableToolbar sort={props.sort}/>
         <TableContainer className={classes.container}>
           <Table
@@ -121,10 +134,9 @@ function HallList(props) {
               cells={headCells}
             />
             <TableBody>
-              {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              {props.halls.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
-                  console.log('red', row)
                   return (
                     <TableRow
                       hover
@@ -162,7 +174,7 @@ function HallList(props) {
         <TablePagination
           rowsPerPageOptions={[5, 10, 25]}
           component="div"
-          count={data.length}
+          count={props.halls.length}
           rowsPerPage={rowsPerPage}
           page={page}
           onChangePage={handleChangePage}
@@ -204,18 +216,20 @@ function HallList(props) {
           </div>
         </Fade>
       </Modal>
+      </>
+    }
       </Paper>
   );
 }
 const mapStateToProps = state => {
   return {
-    halls: state.hall.all
+    halls: state.hall.all || []
   };
 };
 
 
 const mapDispatchToProps = {
-    assignHall
+    assignHall,searchHalls
  };
  
  export default withRouter(

@@ -34,7 +34,8 @@ export function* hallDelete(action) {
 export function* hallAdd(action) {
   try {
     const response = yield call(() => hallService.addHall(action.payload))
-    yield put(setHall(action.payload))
+    console.log('odg', response)
+    yield put(setHall(response))
   } catch ({response}) {
     yield put(addError(response.data.msg))
   }

@@ -33,7 +33,6 @@ function ReportsPage(props) {
   }, [props.income])
 
 
-  console.log(props.reports)
 
   return (
     <div>

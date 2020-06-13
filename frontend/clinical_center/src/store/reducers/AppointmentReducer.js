@@ -1,4 +1,4 @@
-import { SET_APPOINTMENT_TYPES, SET_APPOINTMENT_TERMS, SET_APPOINTMENT, GET_APPOINTMENT_CHECK, SET_APPOINTMENTS, SET_SCHEDULED_APPOINTMENT, SET_AVAILABLE_APPOINTMENTS, DELETE_APPOINTMENT, SET_ADDED_APPOINTMENT_TERM } from '../actions/ActionTypes';
+import { SET_APPOINTMENT_TYPES, SET_SELECTED_APP, SET_APPOINTMENT_TERMS, SET_APPOINTMENT, GET_APPOINTMENT_CHECK, SET_APPOINTMENTS, SET_SCHEDULED_APPOINTMENT, SET_AVAILABLE_APPOINTMENTS, DELETE_APPOINTMENT, SET_ADDED_APPOINTMENT_TERM } from '../actions/ActionTypes';
 
 const initialState = {
     types: [],
@@ -6,6 +6,7 @@ const initialState = {
     scheduled: { show: false, succes: false, msg: '' },
     available: [],
     availableTerms: [],
+    selected: null
 };
 const appointmetReducer = (state = initialState, action) => {
     let changedArr;
@@ -22,7 +23,7 @@ const appointmetReducer = (state = initialState, action) => {
 
             return { ...state, scheduled: action.payload }
         case SET_AVAILABLE_APPOINTMENTS:
-
+            console.log('u akciji', action)
             return { ...state, available: action.payload }
 
         case SET_ADDED_APPOINTMENT_TERM:
@@ -31,10 +32,13 @@ const appointmetReducer = (state = initialState, action) => {
 
             return { ...state, available: changedArr }
         case DELETE_APPOINTMENT:
-            console.log(action.payload, 'U REDUCERU')
-            changedArr = state.available.filter(app => { console.log(app.id); return app.id !== action.payload });
+    
+            changedArr = state.available.filter(app => app.id !== action.payload );
 
             return { ...state, available: changedArr }
+        case SET_SELECTED_APP:
+        
+            return { ...state, selected: action.payload }
         default:
             return state;
     }

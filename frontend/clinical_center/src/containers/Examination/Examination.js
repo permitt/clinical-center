@@ -131,7 +131,7 @@ useEffect(() => {
   if(!props.choosen)
     props.getPatients()
 },[props.choosen])
-console.log(props.choosen)
+
 return (
     <Container component="main">
     <Paper style={paper} elevation={3}>

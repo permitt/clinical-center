@@ -618,8 +618,18 @@ def assign(request):
     if not hallObject:
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
 
+    try:
+        if 'date' in data:
+            dateTime = data['date'].split('  ')
+            appObject.date = datetime.datetime.strptime(dateTime[1],'%Y-%m-%d')
+            appObject.time =  datetime.datetime.strptime(dateTime[0], '%H:%M')
+        if 'doctor' in data:
+            appObject.doctor = Doctor.objects.get(email=data['doctor'])
 
-    appObject.operatingRoom = hallObject
-    appObject.save()
+        appObject.operatingRoom = hallObject
+        appObject.save()
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
+
 
     return Response(status=status.HTTP_200_OK)

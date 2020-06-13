@@ -109,7 +109,6 @@ function AvailableTermsTable(props) {
   
 
   useEffect(() => {
-    console.log('heree')
     props.getAvailableAppointments()
   },[])
 

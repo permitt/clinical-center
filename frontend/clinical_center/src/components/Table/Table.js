@@ -122,9 +122,6 @@ const TableToolbar = props => {
 
 export default function SimpleTable(props) {
   const classes = useStyles();
-
-  console.log("AAAAAAAAAAA", props.selectedApp)
-
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(10);
   let rows = props.data

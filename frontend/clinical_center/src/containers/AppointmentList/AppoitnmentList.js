@@ -17,13 +17,16 @@ import Fade from '@material-ui/core/Fade';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Paper from '@material-ui/core/Paper';
+import Alert from '@material-ui/lab/Alert';
 import DeleteIcon from '@material-ui/icons/Delete';
 import IconButton from '@material-ui/core/IconButton';
 import SearchIcon from '@material-ui/icons/Search';
+import HallList from '../AppointmentList/HallList'
 
 import { toolBarstyle, tableStyle } from "../../assets/jss/material-dashboard-react/components/patientListStyle.js";
 import { formatHours } from '../../utils/utils'
-
+import { setSelectedApp } from '../../store/actions/AppointmentActions'
+import { getAppointments } from '../../store/actions/AppointmentActions'
 
 const headCells = [
   { id: 'date', numeric: false, label: 'Date' },
@@ -75,10 +78,13 @@ const useStyles = makeStyles(tableStyle);
 
 function AppointmentList(props) {
   const classes = useStyles();
-  const { data } = props
   const [page, setPage] = React.useState(0);
   const [rowsPerPage, setRowsPerPage] = React.useState(5);
-  
+  const [app, setApp] = React.useState(false)
+
+  useEffect(() => {
+    props.getAppointments();
+  },[])
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -90,9 +96,15 @@ function AppointmentList(props) {
   };
 
   const emptyRows = rowsPerPage - Math.min(rowsPerPage, props.data.length - page * rowsPerPage);
-
+  console.log('duzinaaa', props.data)
   return (
-    <div className={classes.root}>
+    <>
+      {props.data.length == 1 && props.data[0] === "empty" ? <Alert severity="info">
+        <Typography className={classes.title} variant="h5" id="tableTitle" component="div">
+            There are no new appointment requests.
+       </Typography>
+         </Alert> : !app && !(props.data.length == 1 && props.data[0] === "empty") ?
+      <div className={classes.root}>
       <Paper className={classes.paper}>
         <EnhancedTableToolbar sort={props.sort}/>
         <TableContainer>
@@ -106,7 +118,7 @@ function AppointmentList(props) {
               classes={classes}
             />
             <TableBody>
-              {data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+              {props.data.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
                 .map((row, index) => {
                   const labelId = `enhanced-table-checkbox-${index}`;
                   return (
@@ -122,7 +134,7 @@ function AppointmentList(props) {
                       <TableCell align="left">{row.doctor_name}</TableCell>
                       <TableCell align="left">{row.price} $</TableCell>
                       <TableCell align="left">
-                        <IconButton onClick={() => props.setSelected(row)}>
+                        <IconButton onClick={() => setApp(row)}>
                           <SearchIcon />
                         </IconButton>
                       </TableCell>
@@ -147,17 +159,19 @@ function AppointmentList(props) {
           onChangeRowsPerPage={handleChangeRowsPerPage}
         />
       </Paper>
-    </div>
+      </div> : <HallList app={app}/>}
+      </>
   );
 }
 const mapStateToProps = state => {
   return {
+    data: state.appointment.all || []
   };
 };
 
 
 const mapDispatchToProps = {
-
+  setSelectedApp, getAppointments
  };
  
  export default withRouter(
