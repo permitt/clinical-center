@@ -109,6 +109,7 @@ class Appointment(models.Model):
                   fail_silently=True)
 
 
+
     def __str__(self):
         return f'{self.clinic.name} - {self.typeOf.typeName} - {self.date} : {self.time}, {self.operatingRoom}'
 

@@ -14,6 +14,7 @@ from .serializers import *
 from django.core.mail import send_mail
 from .holidayEmail import *
 import datetime
+from .hallEmail import *
 from users.models import Patient
 from django.db.models.functions import Concat
 from django.db import IntegrityError
@@ -628,6 +629,17 @@ def assign(request):
 
         appObject.operatingRoom = hallObject
         appObject.save()
+
+        to_emails = [appObject.doctor.email, appObject.patient.email]
+
+        send_mail(HALL_ASSIGNED_TITLE,
+                  HALL_ASSIGNED_BODY % (
+                      appObject.date, appObject.time, appObject.operatingRoom.name),
+                  settings.EMAIL_HOST_USER,
+                  to_emails,
+                  fail_silently=True)
+
+
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
 
