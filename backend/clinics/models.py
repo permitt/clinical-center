@@ -115,7 +115,7 @@ class Appointment(models.Model):
 
 
     def __str__(self):
-        return f'{self.clinic.name} - {self.typeOf.typeName} - {self.date} : {self.time}, {self.operatingRoom}, {self.doctor.email}'
+        return f'{self.clinic.name} - {self.typeOf.typeName} - {self.date} : {self.time},  {self.doctor.email}, {self.operatingRoom},'
 
 class Ratings(models.IntegerChoices):
     ONE = 1
