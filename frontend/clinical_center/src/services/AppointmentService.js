@@ -30,7 +30,7 @@ class appointmentServiceApi extends ApiService {
     }
 
     putAppointment = async (payload) => {
-        const { data } = await this.apiClient.put(ENDPOINTS.APPOINTMENT + payload.id + '/', payload);
+        const { data } = await this.apiClient.put(ENDPOINTS.APPOINTMENT     + payload.id + '/', payload);
         return data;
     }
 
