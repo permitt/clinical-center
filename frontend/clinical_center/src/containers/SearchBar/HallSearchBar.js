@@ -17,14 +17,16 @@ import { getTypes } from '../../store/actions/AppointmentTypeActions'
 const formatDate = date =>  date.getFullYear() + '-' + ('0' + (date.getMonth()+1)).slice(-2) + '-' + ('0' + date.getDate()).slice(-2) + 'T00:00'
 
 function HallSearchBar(props) {
- const [selectedDate, setSelectedDate] = React.useState(formatDate(new Date()));
+ const [selectedDate, setSelectedDate] = React.useState();
  const [name, setName] = React.useState()
  const [number, setNumber] = React.useState()
  const [selectedType, setSelectedType] = React.useState()
 
+
   const handleDateChange = (date) => {
     setSelectedDate(date);
   };
+
 
   const handleClick = () => {
       let query = {}
@@ -44,13 +46,23 @@ function HallSearchBar(props) {
     }
 
     }
-      console.log(query)
       props.searchHalls(query)
   }
 
   useEffect(() => {
     props.getTypes()
   }, [])
+
+  useEffect(() => {
+    let query = {}
+    if (props.selectedApp) {
+      query['date'] = props.selectedApp.date
+      query['time'] = props.selectedApp.time.slice(0,-3)
+      query['duration'] = props.selectedApp.duration
+      props.searchHalls(query)
+      
+    }
+  },[props.selectedApp])
 
 return (
     <Grid container justify="center">
@@ -126,7 +138,8 @@ return (
 
 const mapStateToProps = state => {
     return {
-      types: state.type.all
+      types: state.type.all,
+      selectedApp: state.appointment.selectedApp
     };
   };
   

@@ -8,11 +8,11 @@ from rest_framework_simplejwt.views import TokenObtainPairView
 from .models import *
 from rest_framework.decorators import api_view
 from . import custom_permissions
-from django.db.models import Avg, Q, Count, Exists, OuterRef
+from django.db.models import Avg, Q, Count, Exists, OuterRef, DurationField, F, ExpressionWrapper, Value
 from clinics.models import Holiday, Appointment, Operation, AppointmentType
 from clinics.views import time_add
-
 from clinics.models import HealthCard
+from datetime import date, timedelta
 
 
 class PatientViewset(viewsets.ModelViewSet):
@@ -124,6 +124,7 @@ class DoctorViewset(viewsets.ModelViewSet):
                     endDate__gte=date
                 )))
                 #check if doctor works that day in that time
+                print(time)
                 typeObject = AppointmentType.objects.get(id=type)
                 query = query.filter(Exists(Schedule.objects.filter(
                     employee__pk=OuterRef('pk'),

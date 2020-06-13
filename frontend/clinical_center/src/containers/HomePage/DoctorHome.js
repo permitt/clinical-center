@@ -76,7 +76,7 @@ function DoctorHome(props) {
   }
 
   const showPatient = email => {
-    console.log(email)
+
     setState({
       renderTable: false, 
       viewPatient: true, 

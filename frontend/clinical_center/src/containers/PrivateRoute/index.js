@@ -14,7 +14,7 @@ export function PrivateRoute({
   role,
   ...rest
 }) {
-  console.log('u private', changedPass)
+
   return (
     <Route {...rest} 
         render={props => {

@@ -14,6 +14,7 @@ from .serializers import *
 from django.core.mail import send_mail
 from .holidayEmail import *
 import datetime
+from .hallEmail import *
 from users.models import Patient
 from django.db.models.functions import Concat
 from django.db import IntegrityError
@@ -54,11 +55,13 @@ class OperatingRoomView(viewsets.ModelViewSet):
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
-            queryset = queryset.exclude(appointment__date=request.query_params['date'], appointment__time=request.query_params['time'])
+            date = datetime.datetime.strptime(request.query_params['date'], '%Y-%m-%d').date()
 
             hall_list = list(queryset)
             for hall in hall_list:
                 for app in hall.appointment_set.all():
+                    if (not (app.date == date)):
+                        continue
                     choosenStartTime = datetime.datetime.strptime(request.query_params['time'], '%H:%M').time()
                     choosenEndTime = time_add(choosenStartTime, duration)
                     endsBefore = choosenEndTime < app.time
@@ -156,10 +159,10 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         if hasattr(self.request.user, 'adminAccount'):
             if 'all' in self.request.query_params :
                 return Appointment.objects \
-                    .filter(clinic=self.request.user.adminAccount.employedAt, ).exclude(patient__isnull=True).annotate(
+                    .filter(clinic=self.request.user.adminAccount.employedAt, ).filter(operatingRoom__isnull=True).exclude(patient__isnull=True).annotate(
                     type_name=F("typeOf__typeName"),
                     operating_room_name=F("operatingRoom__name"),
-                    doctor_name=F("doctor__firstName"),
+                    doctor_name=Concat(F('doctor__firstName'), V(' '), F('doctor__lastName'), output_field=CharField()),
                     price=F("typeOf__prices__price"),
                     duration=F("typeOf__duration")
                 )
@@ -593,3 +596,50 @@ def appTerm(request):
                 ).get(pk=appointment.pk)
 
     return Response(status=status.HTTP_200_OK,data={'app': AppointmentSerializer(app,many=False).data})
+
+
+@api_view(["POST"])
+def assign(request):
+    user = request.user
+    if (not user):
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    data = request.data
+    if not 'hall' in data :
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
+    if not 'app' in data:
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
+
+    appObject = Appointment.objects.get(id=data['app'])
+    hallObject = OperatingRoom.objects.get(id=data['hall'])
+    if not appObject:
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
+    if not hallObject:
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
+
+    try:
+        if 'date' in data:
+            dateTime = data['date'].split('  ')
+            appObject.date = datetime.datetime.strptime(dateTime[1],'%Y-%m-%d')
+            appObject.time =  datetime.datetime.strptime(dateTime[0], '%H:%M')
+        if 'doctor' in data:
+            appObject.doctor = Doctor.objects.get(email=data['doctor'])
+
+        appObject.operatingRoom = hallObject
+        appObject.save()
+
+        to_emails = [appObject.doctor.email, appObject.patient.email]
+
+        send_mail(HALL_ASSIGNED_TITLE,
+                  HALL_ASSIGNED_BODY % (
+                      appObject.date, appObject.time, appObject.operatingRoom.name),
+                  settings.EMAIL_HOST_USER,
+                  to_emails,
+                  fail_silently=True)
+
+
+    except:
+        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
+
+
+    return Response(status=status.HTTP_200_OK)

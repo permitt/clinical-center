@@ -30,7 +30,7 @@ export default function HolidayRequest(props) {
   const reject = () => {
     props.resolve({id: request.id, decision: false, text: text})
   }
-  console.log(request)
+
   return (
     <Card className={classes.root} variant="outlined">
       <CardContent>

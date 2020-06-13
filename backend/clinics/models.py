@@ -5,6 +5,7 @@ from django.contrib.auth.models import User
 from django.core.mail import send_mail
 from users.models import ClinicAdmin
 from django.conf import settings
+from datetime import date, timedelta
 
 class Clinic(models.Model):
     name = models.CharField(max_length=30)
@@ -95,7 +96,10 @@ class Appointment(models.Model):
         ordering = ['typeOf', 'date']
 
     def save(self, *args, **kwargs):
+        if (not self.created):
+            self.created = date.today()
         super(Appointment, self).save(*args, **kwargs)
+
 
         if self.operatingRoom is None:
             clinic_admins = ClinicAdmin.objects.select_related('employedAt').filter(employedAt=self.clinic)
@@ -109,8 +113,9 @@ class Appointment(models.Model):
                   fail_silently=True)
 
 
+
     def __str__(self):
-        return f'{self.clinic.name} - {self.typeOf.typeName} - {self.date} : {self.time}, {self.operatingRoom}'
+        return f'{self.clinic.name} - {self.typeOf.typeName} - {self.date} : {self.time},  {self.doctor.email}, {self.operatingRoom},'
 
 class Ratings(models.IntegerChoices):
     ONE = 1

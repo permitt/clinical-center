@@ -34,7 +34,8 @@ export function* hallDelete(action) {
 export function* hallAdd(action) {
   try {
     const response = yield call(() => hallService.addHall(action.payload))
-    yield put(setHall(action.payload))
+    console.log('odg', response)
+    yield put(setHall(response))
   } catch ({response}) {
     yield put(addError(response.data.msg))
   }
@@ -46,5 +47,14 @@ export function* hallEdit(action) {
     yield put(setEditedHall(action.payload))
   } catch ({response}) {
     yield put(editError(response.data.msg))
+  }
+}
+
+export function* hallAssign(action) {
+  try {
+    const response = yield call(() => hallService.assignHall(action.payload))
+    // yield put(setEditedHall(action.payload))
+  } catch (error) {
+    console.log(error)
   }
 }
