@@ -2,43 +2,10 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="718922fe-32ea-43c9-a3ef-49eaaebdcd3a" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/README.txt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/clinics/hallEmail.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/clinics/management/commands/assignHall.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/removeTask.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/runserver.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/scheduleTask.bat" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/AppointmentList/EditAppointment.js" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/AppointmentList/HallList.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/clinical_center/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinical_center/settings.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clinics/management/commands/scheduleTask.py" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/clinics/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinics/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/clinics/urls.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinics/urls.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/clinics/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/clinics/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/views.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/components/Table/Table.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/components/Table/Table.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/AppointmentList/AppoitnmentList.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/AppointmentList/AppoitnmentList.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/ClinicPage/AvailableTermsForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/ClinicPage/AvailableTermsForm.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/Examination/Examination.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/Examination/Examination.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/Forms/DoctorForm.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/Forms/DoctorForm.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/HolidayRequestList/HolidayRequest.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/HolidayRequestList/HolidayRequest.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/HomePage/ClAdminHome.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/HomePage/ClAdminHome.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/HomePage/DoctorHome.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/HomePage/DoctorHome.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/HomePage/PatientHome.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/HomePage/PatientHome.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/PrivateRoute/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/PrivateRoute/index.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/ReportsPage/ReportsPage.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/ReportsPage/ReportsPage.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/SearchBar/HallSearchBar.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/containers/SearchBar/HallSearchBar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/services/AppointmentService.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/services/AppointmentService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/services/HallService.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/services/HallService.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/store/actions/ActionTypes.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/store/actions/ActionTypes.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/store/actions/AppointmentActions.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/store/actions/AppointmentActions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/store/actions/HallActions.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/store/actions/HallActions.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/store/reducers/AppointmentReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/store/reducers/AppointmentReducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/store/reducers/ClinicReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/store/reducers/ClinicReducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/store/reducers/HallReducer.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/store/reducers/HallReducer.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/store/sagas/HallSaga.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/store/sagas/HallSaga.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/../frontend/clinical_center/src/store/sagas/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/../frontend/clinical_center/src/store/sagas/index.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -54,33 +21,6 @@
         <option value="Python Script" />
       </list>
     </option>
-  </component>
-  <component name="FindInProjectRecents">
-    <findStrings>
-      <find>operatinroom</find>
-      <find>datetime.datetime.strptime</find>
-      <find>time</find>
-      <find>duration</find>
-      <find>OperatingRoomV</find>
-      <find>print</find>
-      <find>email</find>
-      <find>holidayEmail</find>
-      <find>F(</find>
-      <find>appoi</find>
-      <find>Pat</find>
-      <find>time_add</find>
-      <find>available</find>
-      <find>strp</find>
-      <find>Appoin</find>
-      <find>Appointment(mo</find>
-      <find>.date(</find>
-      <find>save</find>
-      <find>strptime</find>
-      <find>save(</find>
-    </findStrings>
-    <dirStrings>
-      <dir>C:\Users\bekim\Desktop\noviISAnovi\clinical-center\backend</dir>
-    </dirStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -174,7 +114,7 @@
       <updated>1591948422051</updated>
       <workItem from="1591948423785" duration="1176000" />
       <workItem from="1591949635867" duration="6009000" />
-      <workItem from="1592063422691" duration="38000" />
+      <workItem from="1592063422691" duration="2236000" />
     </task>
     <servers />
   </component>

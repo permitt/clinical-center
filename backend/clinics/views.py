@@ -7,6 +7,7 @@ from django.db.models import DateTimeField, Avg, IntegerField, F, Sum, OuterRef,
 from django.db.models.functions import Coalesce
 from users.models import Doctor, Schedule
 from django.db.models.functions import TruncMonth, TruncDay, TruncWeek
+from django.db import transaction
 from users.serializers import DoctorSerializer
 from rest_framework import viewsets, generics, filters, permissions
 from .custom_permissions import *
@@ -14,7 +15,6 @@ from .serializers import *
 from django.core.mail import send_mail
 from .holidayEmail import *
 import datetime
-from .hallEmail import *
 from users.models import Patient
 from django.db.models.functions import Concat
 from django.db import IntegrityError
@@ -55,13 +55,11 @@ class OperatingRoomView(viewsets.ModelViewSet):
             except:
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
-            date = datetime.datetime.strptime(request.query_params['date'], '%Y-%m-%d').date()
+            queryset = queryset.exclude(appointment__date=request.query_params['date'], appointment__time=request.query_params['time'])
 
             hall_list = list(queryset)
             for hall in hall_list:
                 for app in hall.appointment_set.all():
-                    if (not (app.date == date)):
-                        continue
                     choosenStartTime = datetime.datetime.strptime(request.query_params['time'], '%H:%M').time()
                     choosenEndTime = time_add(choosenStartTime, duration)
                     endsBefore = choosenEndTime < app.time
@@ -132,6 +130,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentSerializer
     queryset = Appointment.objects.all()
     ordering_fields = ['typeOf', 'date']
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
 
@@ -159,10 +158,10 @@ class AppointmentViewSet(viewsets.ModelViewSet):
         if hasattr(self.request.user, 'adminAccount'):
             if 'all' in self.request.query_params :
                 return Appointment.objects \
-                    .filter(clinic=self.request.user.adminAccount.employedAt, ).filter(operatingRoom__isnull=True).exclude(patient__isnull=True).annotate(
+                    .filter(clinic=self.request.user.adminAccount.employedAt, ).exclude(patient__isnull=True).annotate(
                     type_name=F("typeOf__typeName"),
                     operating_room_name=F("operatingRoom__name"),
-                    doctor_name=Concat(F('doctor__firstName'), V(' '), F('doctor__lastName'), output_field=CharField()),
+                    doctor_name=F("doctor__firstName"),
                     price=F("typeOf__prices__price"),
                     duration=F("typeOf__duration")
                 )
@@ -181,7 +180,34 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 
 
         return Appointment.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
+
+    @transaction.atomic
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            serializer.save()
+            if len(Appointment.objects.filter(doctor=request.data['doctor'], date=request.data['date'], time=request.data['date'])) >1:
+                raise IntegrityError
+
+        except IntegrityError as ext:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED,
+                            data={'msg': "Someone booked an appointment at that time."})
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def update(self):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        try:
+            serializer.save()
+        except RecordModifiedError:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED,data={'msg': "Someone booked an appointment at that time."})
+
+        return Response(serializer.data)
 
 
 class AppointmentTypeView(viewsets.ModelViewSet):
@@ -596,50 +622,3 @@ def appTerm(request):
                 ).get(pk=appointment.pk)
 
     return Response(status=status.HTTP_200_OK,data={'app': AppointmentSerializer(app,many=False).data})
-
-
-@api_view(["POST"])
-def assign(request):
-    user = request.user
-    if (not user):
-        return Response(status=status.HTTP_401_UNAUTHORIZED)
-
-    data = request.data
-    if not 'hall' in data :
-        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
-    if not 'app' in data:
-        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
-
-    appObject = Appointment.objects.get(id=data['app'])
-    hallObject = OperatingRoom.objects.get(id=data['hall'])
-    if not appObject:
-        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
-    if not hallObject:
-        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
-
-    try:
-        if 'date' in data:
-            dateTime = data['date'].split('  ')
-            appObject.date = datetime.datetime.strptime(dateTime[1],'%Y-%m-%d')
-            appObject.time =  datetime.datetime.strptime(dateTime[0], '%H:%M')
-        if 'doctor' in data:
-            appObject.doctor = Doctor.objects.get(email=data['doctor'])
-
-        appObject.operatingRoom = hallObject
-        appObject.save()
-
-        to_emails = [appObject.doctor.email, appObject.patient.email]
-
-        send_mail(HALL_ASSIGNED_TITLE,
-                  HALL_ASSIGNED_BODY % (
-                      appObject.date, appObject.time, appObject.operatingRoom.name),
-                  settings.EMAIL_HOST_USER,
-                  to_emails,
-                  fail_silently=True)
-
-
-    except:
-        return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
-
-
-    return Response(status=status.HTTP_200_OK)

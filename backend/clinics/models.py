@@ -6,6 +6,7 @@ from django.core.mail import send_mail
 from users.models import ClinicAdmin
 from django.conf import settings
 from datetime import date, timedelta
+from concurrency.fields import AutoIncVersionField
 
 class Clinic(models.Model):
     name = models.CharField(max_length=30)
@@ -88,7 +89,8 @@ class Appointment(models.Model):
     # if the patient is null => the appointment was set inAdvance
     patient = models.ForeignKey(to='users.Patient', on_delete=models.CASCADE, related_name='appointments', null=True, blank=True)
     created = models.DateField(null=True, blank=True)
-    
+    version = AutoIncVersionField(default=1)
+
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['clinic', 'date', 'time', 'doctor'], name='unique doctor date time for a clinic')
@@ -96,6 +98,7 @@ class Appointment(models.Model):
         ordering = ['typeOf', 'date']
 
     def save(self, *args, **kwargs):
+
         if (not self.created):
             self.created = date.today()
         super(Appointment, self).save(*args, **kwargs)
