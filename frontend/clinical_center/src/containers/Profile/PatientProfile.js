@@ -75,6 +75,7 @@ function PatientProfile(props) {
 
         delete values.password2;
         // jos neka validacija
+        console.log(values, ' za pacijenta');
         props.putPatient(values);
     };
 

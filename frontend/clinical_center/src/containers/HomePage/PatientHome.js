@@ -201,7 +201,6 @@ function PatientHome(props) {
 
     const confirmReservation = (data) => {
         props.postAppointment(data);
-        alert("Reserved an appointment!");
         props.history.push('/');
     }
 
@@ -226,6 +225,10 @@ function PatientHome(props) {
     }
 
     const prepareDoctorData = () => {
+
+        if (props.doctors.length === 0)
+            return false
+
         if (props.appointmentTerms[0] === undefined)
             return [];
 

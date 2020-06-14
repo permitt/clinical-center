@@ -40,19 +40,28 @@ export function* appointmentChecking(action) {
 export function* appointmentPost(action) {
     try {
         const resp = yield call(() => appointmentService.postAppointment(action.payload));
+        console.log("APP POSTING : ", resp, '  data   ', action.payload);
+        alert("Reserved an appointment!");
         yield put(push(DASHBOARD));
-        console.log("APP POSTING : ", resp);
     } catch (err) {
-
+        if (err.msg)
+            alert(err.msg);
+        else
+            alert("Failed to reserve an appointment!");
     }
 }
 
 export function* appointmentPut(action) {
     try {
         const resp = yield call(() => appointmentService.putAppointment(action.payload));
+        alert("Appointment reserved!!");
+
         console.log("APP PUT : ", resp);
     } catch (err) {
-
+        if (err.msg)
+            alert(err.msg);
+        else
+            alert("Failed to reserve an appointment!");
     }
 }
 

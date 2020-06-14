@@ -45,7 +45,13 @@ class PatientSerializer(serializers.ModelSerializer):
             user = User.objects.get(email=instance.email)
             user.set_password(validated_data['password'])
             user.save()
-
+        instance.firstName = validated_data.get('firstName', instance.firstName)
+        instance.lastName = validated_data.get('lastName', instance.lastName)
+        instance.address = validated_data.get('address', instance.address)
+        instance.city = validated_data.get('city', instance.city)
+        instance.country = validated_data.get('country', instance.country)
+        instance.phoneNumber = validated_data.get('phoneNumber', instance.phoneNumber)
+        instance.save()
         return instance
 
 def generate_link(email, timestamp):

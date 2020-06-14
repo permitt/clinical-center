@@ -187,15 +187,16 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 
         return Appointment.objects.all()
 
-    @transaction.atomic
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         try:
-            serializer.save()
-            if len(Appointment.objects.filter(doctor=request.data['doctor'], date=request.data['date'],
-                                              time=request.data['date'])) > 1:
-                raise IntegrityError
+            with transaction.atomic():
+                serializer.save()
+
+                if len(Appointment.objects.filter(doctor=request.data['doctor'], date=request.data['date'],
+                                              time=request.data['time'])) > 1:
+                    raise IntegrityError
 
         except IntegrityError as ext:
             return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED,
