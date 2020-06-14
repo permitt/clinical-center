@@ -26,6 +26,8 @@ koji se nalaze unutar foldera backend
 
 Info: dvoklik na ove fajlove dovodi do njihovog izvrsanja, za editovanje je potrebno otvoriti ih u notepadu
 
+Nakon promene ovih fajlova server se pokrece dvoklikom na fajl runserver.bat
+
 Nakon gasenja servera potrebno je pokrenuti fajl removeTask.bat iz foldera backend.
 
 
