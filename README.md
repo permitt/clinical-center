@@ -13,7 +13,7 @@ Developers:
 ## Starting application:
 Frondend:
 Potrebno je pozicionirati se u folder frontend/clinical_center
-I pokrenuti nmp install i zatim npm star.
+I pokrenuti nmp install i zatim npm start
 
 
 Pokretanje backend dela aplikacije:
