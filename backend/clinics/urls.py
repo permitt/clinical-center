@@ -14,6 +14,7 @@ router.register('doctor-rating', views.DoctorRatingView, basename='doctor-rating
 router.register('clinic-rating', views.ClinicRatingView, basename='clinic-rating')
 
 urlpatterns = [
+        path('app/<str:patient>/<str:id>/', views.declineAppointment),
         path('appointment/check/', views.appointmentCheck),
         path('holiday/resolve/<int:pk>/', views.resolveRequest),
         path('appointment/schedule', views.scheduleAppointment),

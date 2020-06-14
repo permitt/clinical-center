@@ -8,6 +8,7 @@ from django.db.models.functions import Coalesce
 from concurrency.exceptions import RecordModifiedError
 from users.models import Doctor, Schedule
 from django.db.models.functions import TruncMonth, TruncDay, TruncWeek
+from django.shortcuts import render
 from django.db import transaction
 from users.serializers import DoctorSerializer
 from rest_framework import viewsets, generics, filters, permissions
@@ -663,7 +664,7 @@ def assign(request):
         appObject.operatingRoom = hallObject
         appObject.save()
 
-        to_emails = [appObject.doctor.email, appObject.patient.email]
+        to_emails = [appObject.doctor.email]
 
         send_mail(HALL_ASSIGNED_TITLE,
                   HALL_ASSIGNED_BODY % (
@@ -672,9 +673,26 @@ def assign(request):
                   to_emails,
                   fail_silently=True)
 
+        send_mail(HALL_ASSIGNED_CONFIRM_TITLE,
+                  HALL_ASSIGNED_CONFIRM_BODY % (
+                      appObject.date, appObject.time, appObject.operatingRoom.name, appObject.patient.activation_link, appObject.id
+                  ),
+                  settings.EMAIL_HOST_USER,
+                [appObject.patient.email],
+                fail_silently=True
+        )
+
 
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
 
 
     return Response(status=status.HTTP_200_OK)
+
+def declineAppointment(request,patient, id):
+    try:
+        Appointment.objects.delete(patient__activation_link=patient, id=id)
+        return render(request, 'clinical_center/declined.html', context={'success': True})
+
+    except:
+        return render(request, 'clinical_center/declined.html', context={'success': False})
