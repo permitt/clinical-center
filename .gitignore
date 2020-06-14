@@ -20,7 +20,7 @@ media
 *.py[cod]
 *$py.class
 secrets.json
-
+workspace.xml
 
 # C extensions
 *.so

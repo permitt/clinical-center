@@ -43,7 +43,7 @@ class AppointmentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Appointment
-        fields = '__all__'
+        exclude = ['version']
 
 class PriceListSerializer(serializers.ModelSerializer):
     class Meta:
