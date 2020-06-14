@@ -16,7 +16,7 @@ export function* userLogin({ payload }) {
     yield put(setEmail(decoded.email));
     if (decoded.role === PATIENT) {
       yield put(setChangedPass(true))
-    }else {
+    } else {
       yield put(setChangedPass(decoded.changedPass))
     }
     yield put(authUser(true))
@@ -28,8 +28,11 @@ export function* userLogin({ payload }) {
 export function* userRegister({ payload }) {
   try {
     yield call(AuthService.signup, payload)
+    alert("Please check your email to confirm");
     yield put(push(LOGIN))
   } catch (error) {
+    alert("Patient with that email already exists.");
+
     yield put(registerError(true))
   }
 }

@@ -54,8 +54,8 @@ class AuthService extends ApiService {
   };
 
   signup = async signupData => {
+    console.log(signupData);
     const { data } = await this.apiClient.post(ENDPOINTS.REGISTER, signupData)
-
     return data
   };
 
@@ -125,8 +125,8 @@ class AuthService extends ApiService {
       console.log(error)
       return null
     }
-    
-    return decodedToken.changedPass !== undefined ? decodedToken.changedPass: true
+
+    return decodedToken.changedPass !== undefined ? decodedToken.changedPass : true
   }
 
   getUserEmail = () => {
@@ -151,7 +151,7 @@ class AuthService extends ApiService {
 
   getUserProfile = async loginData => {
     const { data } = await this.apiClient.get(ENDPOINTS.PROFILE)
-    
+
     return data
   };
 
@@ -161,17 +161,17 @@ class AuthService extends ApiService {
     console.log(this.getUserRole())
     switch (this.getUserRole()) {
       case DOCTOR:
-          response = await this.apiClient.put(ENDPOINTS.DOCTOR.replace(':email', this.getUserEmail()), info);
+        response = await this.apiClient.put(ENDPOINTS.DOCTOR.replace(':email', this.getUserEmail()), info);
         break;
       case CLINIC_ADMIN:
-          response = await this.apiClient.put(ENDPOINTS.CLINICADMIN.replace(':email', this.getUserEmail()), info);
-       break;
-    
+        response = await this.apiClient.put(ENDPOINTS.CLINICADMIN.replace(':email', this.getUserEmail()), info);
+        break;
+
       default:
         break;
     }
-   
-    
+
+
     return response.data
   };
 }
