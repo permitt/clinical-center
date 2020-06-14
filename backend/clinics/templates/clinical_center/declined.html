@@ -9,7 +9,8 @@
     {% if success %}
       <p>You have successfully declined an appointment.</p>
     {% else %}
-        <p> Sorry, you can't declined this appointment </p>
+        <p> Sorry, you can't decline this appointment </p>
+        {{ msg }}
     {% endif %}
 </body>
 </html>

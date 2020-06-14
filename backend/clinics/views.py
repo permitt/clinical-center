@@ -691,8 +691,16 @@ def assign(request):
 
 def declineAppointment(request,patient, id):
     try:
-        Appointment.objects.delete(patient__activation_link=patient, id=id)
-        return render(request, 'clinical_center/declined.html', context={'success': True})
-
-    except:
-        return render(request, 'clinical_center/declined.html', context={'success': False})
+        app = Appointment.objects.get(patient__activation_link=patient, id=id)
+        date = datetime.datetime.combine(app.date, app.time)
+        currentDate = datetime.datetime.now()
+        print(date, ' je datum')
+        print(currentDate - date, ' je date razlika')
+        if(date - currentDate < timedelta(hours=24)):
+            print("NE MOZE U MANJE OD 24H")
+            return render(request, 'clinical_center/declined.html', context={'success': False, 'msg':'Cannot decline an appointment in under 24 hours.'})
+        app.delete()
+        return render(request, 'clinical_center/declined.html', context={'success': True,'msg':''})
+    except Exception as exc:
+        print(exc)
+        return render(request, 'clinical_center/declined.html', context={'success': False, 'msg':''})
