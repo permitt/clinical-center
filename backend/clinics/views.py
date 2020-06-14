@@ -5,8 +5,10 @@ from rest_framework.response import Response
 from django.db.models import DateTimeField, Avg, IntegerField, F, Sum, OuterRef, Subquery, When, Case, FilteredRelation, \
     Q, Value as V, CharField, TimeField, ExpressionWrapper, Value
 from django.db.models.functions import Coalesce
+from concurrency.exceptions import RecordModifiedError
 from users.models import Doctor, Schedule
 from django.db.models.functions import TruncMonth, TruncDay, TruncWeek
+from django.db import transaction
 from users.serializers import DoctorSerializer
 from rest_framework import viewsets, generics, filters, permissions
 from .custom_permissions import *
@@ -56,6 +58,8 @@ class OperatingRoomView(viewsets.ModelViewSet):
                 return Response(status=status.HTTP_400_BAD_REQUEST)
 
             date = datetime.datetime.strptime(request.query_params['date'], '%Y-%m-%d').date()
+            queryset = queryset.exclude(appointment__date=request.query_params['date'],
+                                        appointment__time=request.query_params['time'])
 
             hall_list = list(queryset)
             for hall in hall_list:
@@ -132,6 +136,7 @@ class AppointmentViewSet(viewsets.ModelViewSet):
     serializer_class = AppointmentSerializer
     queryset = Appointment.objects.all()
     ordering_fields = ['typeOf', 'date']
+    permission_classes = [permissions.IsAuthenticated]
 
     def get_queryset(self):
 
@@ -181,7 +186,36 @@ class AppointmentViewSet(viewsets.ModelViewSet):
 
 
         return Appointment.objects.all()
-    permission_classes = [permissions.IsAuthenticated]
+
+    @transaction.atomic
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        try:
+            serializer.save()
+            if len(Appointment.objects.filter(doctor=request.data['doctor'], date=request.data['date'],
+                                              time=request.data['date'])) > 1:
+                raise IntegrityError
+
+        except IntegrityError as ext:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED,
+                            data={'msg': "Someone booked an appointment at that time."})
+
+        headers = self.get_success_headers(serializer.data)
+        return Response(serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    def update(self, request, *args, **kwargs):
+        partial = kwargs.pop('partial', False)
+        instance = self.get_object()
+        serializer = self.get_serializer(instance, data=request.data, partial=partial)
+        serializer.is_valid(raise_exception=True)
+        try:
+            serializer.save()
+        except RecordModifiedError:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED,
+                            data={'msg': "Someone booked an appointment at that time."})
+
+        return Response(serializer.data)
 
 
 class AppointmentTypeView(viewsets.ModelViewSet):
