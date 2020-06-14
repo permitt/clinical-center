@@ -180,14 +180,14 @@ export default function SimpleTable(props) {
         <Paper style={{ width: 500, marginLeft: 100, padding: 40 }}>
 
 
-            <TableToolbar
+            {/* <TableToolbar
                 title={props.title}
                 form={props.form}
                 sortOptions={props.sortOptions}
                 changeSortBy={props.changeSortBy}
                 search={search}
                 showBack={props.showBack}
-                backClicked={props.backClicked} />
+                backClicked={props.backClicked} /> */}
 
 
             <Typography variant="h5" component="h2">

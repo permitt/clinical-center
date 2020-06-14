@@ -35,9 +35,11 @@ class PatientViewset(viewsets.ModelViewSet):
         if 'policyNumber' in request.query_params:
             query = query.filter(policyNumber=request.query_params['policyNumber'])
         if 'country' in request.query_params:
-            query = query.filter(country=request.query_params['country'])
+            country = request.query_params['country'].replace("%20", " ")
+            query = query.filter(country=country)
         if 'city' in request.query_params:
-            query = query.filter(country=request.query_params['city'])
+            city = request.query_params['city'].replace("%20", " ")
+            query = query.filter(city=city)
         if ('ordering' in request.query_params):
             query = query.order_by(request.query_params['ordering'])
         else:
