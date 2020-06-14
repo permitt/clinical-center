@@ -21,10 +21,13 @@ What things you need to install how to install them
 
 How to get a development env running: 
 
-## Running the tests
-
 
 ## Deployment
+Fully integrated CICD SonarCloud,CircleCI,Heroku at
+Repo where backend is deployed from: https://github.com/permitt/clinical-center-backend 
+It is set to private because of secrets.json file
 
+Heroku deployed front: https://obscure-garden-67271.herokuapp.com
+API requests are sent to backend deployed, example : https://quiet-tor-04502.herokuapp.com/api/users/patient/
 
 
