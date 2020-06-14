@@ -10,6 +10,23 @@ Developers:
  * Backend - Django + Django Rest Framework + PostgresQL database
  * Frontend - React + Redux (JWT auth)
   
+## Starting application:
+Frondend:
+Potrebno je pozicionirati se u folder frontend/clinical_center
+I pokrenuti nmp install i zatim npm star.
+
+
+Pokretanje backend dela aplikacije:
+
+Potrebno je zameniti [[apsolutePathToProject] sa apsolutnom putanjom do backend foldera u projektu.
+(Npr C:\Users\userName\backend ) u fajlovima:
+1. runserver.bat
+2. scheduleTask.bat
+koji se nalaze unutar foldera backend
+
+Info: dvoklik na ove fajlove dovodi do njihovog izvrsanja, za editovanje je potrebno otvoriti ih u notepadu
+
+Nakon gasenja servera potrebno je pokrenuti fajl removeTask.bat iz foldera backend.
 
 
 ### Prerequisites

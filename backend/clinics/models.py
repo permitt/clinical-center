@@ -97,6 +97,7 @@ class Appointment(models.Model):
         ]
         ordering = ['typeOf', 'date']
 
+
     def save(self, *args, **kwargs):
 
         if (not self.created):

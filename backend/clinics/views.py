@@ -604,6 +604,7 @@ def adminClinic(request):
 
     return Response(status=status.HTTP_200_OK, data={'clinic': clinicSerializer.data})
 
+@transaction.atomic
 @api_view(["POST"])
 def appTerm(request):
     user = request.user
@@ -617,6 +618,14 @@ def appTerm(request):
         hall = request.data['hall']
         appointment = Appointment.objects.create(date=date, time=time, typeOf_id=int(type), operatingRoom_id=int(hall),
                                                  doctor_id=doctor, clinic=request.user.adminAccount.employedAt)
+
+        try:
+            if len(Appointment.objects.filter(date=date,time=time,operatingRoom_id=int(hall))) > 1:
+                raise IntegrityError
+        except IntegrityError as ext:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED,
+                            data={'msg': "Operating room has already been assigned for choosen date and time."})
+
     except:
         return Response(status=status.HTTP_400_BAD_REQUEST, data= {'msg':"InvalidParameters"})
 
@@ -633,13 +642,12 @@ def appTerm(request):
 
     return Response(status=status.HTTP_200_OK,data={'app': AppointmentSerializer(app,many=False).data})
 
-
+@transaction.atomic
 @api_view(["POST"])
 def assign(request):
     user = request.user
     if (not user):
         return Response(status=status.HTTP_401_UNAUTHORIZED)
-
     data = request.data
     if not 'hall' in data :
         return Response(status=status.HTTP_400_BAD_REQUEST, data={'msg': "Invalid parameters."})
@@ -662,7 +670,16 @@ def assign(request):
             appObject.doctor = Doctor.objects.get(email=data['doctor'])
 
         appObject.operatingRoom = hallObject
-        appObject.save()
+        try:
+            appObject.save()
+            if len(Appointment.objects.filter(date=appObject.date,
+                                              time=appObject.time,
+                                              operatingRoom=appObject.operatingRoom))> 1:
+                raise IntegrityError
+
+        except IntegrityError as ext:
+            return Response(status=status.HTTP_405_METHOD_NOT_ALLOWED,
+                            data={'msg': "Operating room has already been assigned for choosen date and time."})
 
         to_emails = [appObject.doctor.email]
 
