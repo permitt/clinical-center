@@ -1,9 +1,5 @@
 # Clinical Center 2020 - ISA/MRS Project @ FTN, Novi Sad, Serbia
 
-Developers: 
-* [Milena Laketic](https://github.com/specnazm)
-* [Marko Cvijanovic](https://github.com/markoc98)
-* Mitar Perovic (me)
   
 
 ## Technology stacks:  
