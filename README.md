@@ -27,16 +27,6 @@ Nakon promene ovih fajlova server se pokrece dvoklikom na fajl runserver.bat
 Nakon gasenja servera potrebno je pokrenuti fajl removeTask.bat iz foldera backend.
 
 
-### Prerequisites
-
-What things you need to install how to install them
-
-
-### Installing
-
-How to get a development env running: 
-
-
 ## Deployment
 Fully integrated CICD SonarCloud,CircleCI,Heroku at
 Repo where backend is deployed from: https://github.com/permitt/clinical-center-backend 
